@@ -1,0 +1,131 @@
+body {
+    background: #f5f7fb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f2a44;
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-right: 1px solid #e9edf5;
+    padding: 20px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eef1f6;
+}
+
+.admin-brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.admin-brand h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #183153;
+}
+
+.admin-brand small {
+    color: #6c7a92;
+    font-size: 12px;
+}
+
+.admin-menu .nav-link {
+    color: #33415c;
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-menu .nav-link:hover {
+    background: #eef4ff;
+    color: #0d6efd;
+}
+
+.admin-menu .nav-link.active {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.admin-main {
+    margin-left: 260px;
+    flex: 1;
+    min-height: 100vh;
+}
+
+.admin-topbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e9edf5;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-content {
+    padding: 24px;
+}
+
+.page-box {
+    background: #fff;
+    border: 1px solid #e9edf5;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(15, 34, 58, 0.04);
+    margin-bottom: 24px;
+}
+
+.help-box {
+    background: #f7faff;
+    border: 1px solid #e4eefc;
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 18px;
+}
+
+.help-box img {
+    max-width: 100%;
+    border-radius: 14px;
+    margin-bottom: 14px;
+}
+
+@media (max-width: 991px) {
+    .admin-sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+
+    .admin-wrapper {
+        flex-direction: column;
+    }
+}

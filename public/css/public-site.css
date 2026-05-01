@@ -1,0 +1,110 @@
+body {
+    background: #f6f8fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f2a44;
+}
+
+.public-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e9edf5;
+    box-shadow: 0 2px 8px rgba(15, 34, 58, 0.04);
+}
+
+.public-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.public-brand img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.public-brand-text strong {
+    display: block;
+    font-size: 20px;
+    color: #183153;
+    line-height: 1.1;
+}
+
+.public-brand-text small {
+    color: #6c7a92;
+    font-size: 12px;
+}
+
+.public-page {
+    padding: 28px 0;
+}
+
+.public-hero {
+    background: linear-gradient(90deg, #ffffff 0%, #f3f8ff 100%);
+    border: 1px solid #e9edf5;
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 0 2px 8px rgba(15, 34, 58, 0.04);
+}
+
+.public-hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: #183153;
+}
+
+.public-hero p {
+    font-size: 18px;
+    color: #5f6f89;
+    margin-bottom: 22px;
+}
+
+.public-card {
+    background: #fff;
+    border: 1px solid #e9edf5;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(15, 34, 58, 0.04);
+    height: 100%;
+}
+
+.public-card h4 {
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #183153;
+    margin-bottom: 8px;
+}
+
+.section-subtitle {
+    color: #6c7a92;
+    margin-bottom: 20px;
+}
+
+.public-footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #e9edf5;
+    color: #6c7a92;
+    font-size: 14px;
+}
+
+@media (max-width: 991px) {
+    .public-hero {
+        padding: 24px;
+    }
+
+    .public-hero h1 {
+        font-size: 32px;
+    }
+
+    .public-brand-text strong {
+        font-size: 17px;
+    }
+}
