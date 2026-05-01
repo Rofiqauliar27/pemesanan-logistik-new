@@ -55,9 +55,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     if (auth()->user()->role == 'admin') {
         return redirect('/admin/dashboard');
-    } else {
-        return redirect('/customer/dashboard');
     }
+
+    return redirect()->route('customer.profile');
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/admin/dashboard', function () {
@@ -75,22 +75,8 @@ Route::get('/admin/dashboard', function () {
 })->middleware(['auth', 'role:admin']);
 
 Route::get('/customer/dashboard', function () {
-    $totalPesananSaya = \App\Models\Pesanan::where('user_id', auth()->id())->count();
-
-    $belumBayar = \App\Models\Pesanan::where('user_id', auth()->id())
-        ->whereIn('payment_status', ['belum_bayar', 'menunggu_pembayaran'])
-        ->count();
-
-    $selesai = \App\Models\Pesanan::where('user_id', auth()->id())
-        ->where('status', 'selesai')
-        ->count();
-
-    return view('customer.dashboard', compact(
-        'totalPesananSaya',
-        'belumBayar',
-        'selesai'
-    ));
-})->middleware(['auth', 'role:customer']);
+    return redirect()->route('customer.profile');
+})->middleware(['auth', 'role:customer'])->name('customer.dashboard');
 
 Route::resource('/admin/barang', BarangController::class)
     ->middleware(['auth', 'role:admin'])

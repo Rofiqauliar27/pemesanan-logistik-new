@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel')</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
 </head>
@@ -11,34 +12,39 @@
     <div class="admin-wrapper">
         @include('components.admin-sidebar')
 
-        <div class="admin-main">
-            <div class="admin-topbar">
-                <div>
-                    <strong>Panel Admin</strong>
-                </div>
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div class="admin-topbar-user">
+                    <div class="admin-user-info">
+                        <span>Admin</span>
+                        <strong>{{ auth()->user()->name }}</strong>
+                    </div>
 
-                <div class="d-flex align-items-center gap-3">
-                    <span class="fw-semibold">Admin: {{ auth()->user()->name }}</span>
-
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf
-                        <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+                        <button type="submit" class="btn-admin-logout">
+                            Logout
+                        </button>
                     </form>
                 </div>
-            </div>
+            </header>
 
-            <div class="admin-content">
+            <section class="admin-content">
                 @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
+                    <div class="alert alert-success admin-alert">
+                        {{ session('success') }}
+                    </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
+                    <div class="alert alert-danger admin-alert">
+                        {{ session('error') }}
+                    </div>
                 @endif
 
                 @yield('content')
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

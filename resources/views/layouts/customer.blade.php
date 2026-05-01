@@ -15,7 +15,7 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,24 +27,6 @@
 <body>
 
 <header class="bst-indo-header">
-    <div class="bst-topbar">
-        <div class="bst-header-container bst-topbar-inner">
-            <div class="bst-top-left">
-                <span>▯ Sistem Pemesanan Logistik</span>
-                <span>|</span>
-                <span>Ikuti kami di</span>
-                <span class="bst-social-dot">● ● ● ●</span>
-            </div>
-
-            <div class="bst-top-right">
-                <a href="{{ route('tentang.sistem') }}">Tentang Kami</a>
-                <span>|</span>
-                <a href="{{ route('public.produk') }}">Produk</a>
-                <button type="button">Indonesia ▾</button>
-            </div>
-        </div>
-    </div>
-
     <div class="bst-mainbar">
         <div class="bst-header-container bst-mainbar-inner">
             <a href="{{ url('/') }}" class="bst-brand">
@@ -94,44 +76,38 @@
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="{{ url('/customer/dashboard') }}">
-                                        Dashboard
-                                    </a>
-                                </li>
+    <li>
+        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
+           href="{{ route('customer.profile') }}">
+            Profil Saya
+        </a>
+    </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile') }}">
-                                        Profil Saya
-                                    </a>
-                                </li>
+    <li>
+        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
+           href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
+            Pesanan Saya
+        </a>
+    </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
-                                        Pesanan Saya
-                                    </a>
-                                </li>
+    <li>
+        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
+           href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
+            Pembayaran
+        </a>
+    </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
-                                        Pembayaran
-                                    </a>
-                                </li>
+    <li><hr class="dropdown-divider"></li>
 
-                                <li><hr class="dropdown-divider"></li>
-
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST" class="px-3">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm w-100">
-                                            Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
+    <li>
+        <form action="{{ route('logout') }}" method="POST" class="px-3">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm w-100">
+                Logout
+            </button>
+        </form>
+    </li>
+</ul>
                         </div>
                     @elseif(auth()->user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}" class="bst-login-btn">
@@ -196,22 +172,7 @@
 
             <div class="bst-menu-right">
                 @auth
-                    @if(auth()->user()->role === 'customer')
-                        <a class="{{ request()->is('customer/dashboard') ? 'active' : '' }}"
-                           href="{{ url('/customer/dashboard') }}">
-                            Dashboard
-                        </a>
-
-                        <a class="{{ request()->is('customer/keranjang*') ? 'active' : '' }}"
-                           href="{{ route('customer.keranjang.index') }}">
-                            Keranjang
-                        </a>
-
-                        <a class="{{ request()->is('customer/profile') ? 'active' : '' }}"
-                           href="{{ route('customer.profile') }}">
-                            Akun Saya
-                        </a>
-                    @elseif(auth()->user()->role === 'admin')
+                    @if(auth()->user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}">
                             Admin
                         </a>

@@ -8,35 +8,18 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'CV Bintang Saida Teknik')</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/marketplace.css') }}">
 </head>
 <body>
 
 <header class="bst-indo-header">
-    <div class="bst-topbar">
-        <div class="bst-header-container bst-topbar-inner">
-            <div class="bst-top-left">
-                <span>▯ Sistem Pemesanan Logistik</span>
-                <span>|</span>
-                <span>Ikuti kami di</span>
-                <span class="bst-social-dot">● ● ● ●</span>
-            </div>
-
-            <div class="bst-top-right">
-                <a href="{{ route('tentang.sistem') }}">Tentang Kami</a>
-                <span>|</span>
-                <a href="{{ route('public.produk') }}">Produk</a>
-                <button type="button">Indonesia ▾</button>
-            </div>
-        </div>
-    </div>
-
     <div class="bst-mainbar">
         <div class="bst-header-container bst-mainbar-inner">
             <a href="{{ url('/') }}" class="bst-brand">
@@ -86,44 +69,38 @@
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="{{ url('/customer/dashboard') }}">
-                                        Dashboard
-                                    </a>
-                                </li>
+    <li>
+        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
+           href="{{ route('customer.profile') }}">
+            Profil Saya
+        </a>
+    </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile') }}">
-                                        Profil Saya
-                                    </a>
-                                </li>
+    <li>
+        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
+           href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
+            Pesanan Saya
+        </a>
+    </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
-                                        Pesanan Saya
-                                    </a>
-                                </li>
+    <li>
+        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
+           href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
+            Pembayaran
+        </a>
+    </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
-                                        Pembayaran
-                                    </a>
-                                </li>
+    <li><hr class="dropdown-divider"></li>
 
-                                <li><hr class="dropdown-divider"></li>
-
-                                <li>
-                                    <form action="{{ route('logout') }}" method="POST" class="px-3">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm w-100">
-                                            Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
+    <li>
+        <form action="{{ route('logout') }}" method="POST" class="px-3">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm w-100">
+                Logout
+            </button>
+        </form>
+    </li>
+</ul>
                         </div>
                     @elseif(auth()->user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}" class="bst-login-btn">
@@ -193,19 +170,19 @@
                 </a>
             </div>
 
-           <div class="bst-menu-right">
-    @auth
-        @if(auth()->user()->role === 'admin')
-            <a href="{{ url('/admin/dashboard') }}">
-                Admin
-            </a>
-        @endif
-    @else
-        <a href="{{ route('register') }}">
-            Jadi Customer
-        </a>
-    @endauth
-</div>
+            <div class="bst-menu-right">
+                @auth
+                    @if(auth()->user()->role === 'admin')
+                        <a href="{{ url('/admin/dashboard') }}">
+                            Admin
+                        </a>
+                    @endif
+                @else
+                    <a href="{{ route('register') }}">
+                        Jadi Customer
+                    </a>
+                @endauth
+            </div>
         </div>
     </nav>
 </header>
@@ -218,7 +195,11 @@
 
 <div class="market-footer">
     <div class="container text-center">
-© {{ date('Y') }} {{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }} — {{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}    </div>
+        © {{ date('Y') }} 
+        {{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }} 
+        — 
+        {{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

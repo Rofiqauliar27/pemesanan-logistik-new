@@ -3,35 +3,32 @@
 @section('title', 'Profil Customer')
 
 @section('content')
-    <div class="market-box">
-        <h2 class="mb-1">Akun Customer</h2>
-        <p class="text-muted mb-0">
-            Kelola data akun, pesanan, dan pembayaran Anda dalam satu halaman.
+   <div class="customer-account-hero">
+    <div>
+
+    <h1>Akun Saya</h1>
+        <p>
+            Kelola informasi akun, riwayat pesanan, dan status pembayaran Anda dengan mudah.
         </p>
     </div>
+</div>
 
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="profile-summary-card">
-                <h6>Total Pesanan</h6>
-                <h3>{{ $pesanans->count() }}</h3>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="profile-summary-card">
-                <h6>Perlu Dibayar</h6>
-                <h3>{{ $pesananBelumBayar->count() }}</h3>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="profile-summary-card">
-                <h6>Pesanan Selesai</h6>
-                <h3>{{ $pesanans->where('status', 'selesai')->count() }}</h3>
-            </div>
-        </div>
+<div class="customer-stats-grid">
+    <div class="customer-stat-card">
+        <span>Total Pesanan</span>
+        <strong>{{ $pesanans->count() }}</strong>
     </div>
+
+    <div class="customer-stat-card">
+        <span>Perlu Dibayar</span>
+        <strong>{{ $pesananBelumBayar->count() }}</strong>
+    </div>
+
+    <div class="customer-stat-card">
+        <span>Pesanan Selesai</span>
+        <strong>{{ $pesanans->where('status', 'selesai')->count() }}</strong>
+    </div>
+</div>
 
     <div class="row">
         <div class="col-md-3 mb-4">

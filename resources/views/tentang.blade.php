@@ -11,7 +11,6 @@
 
     <div class="company-profile-hero">
         <div>
-            <span>Profil Perusahaan</span>
             <h2>{{ $profil->nama_perusahaan ?? 'CV Bintang Saida Teknik' }}</h2>
             <p>
                 {{ $profil->deskripsi ?? 'Profil perusahaan belum diisi.' }}

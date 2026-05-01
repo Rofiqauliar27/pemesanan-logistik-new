@@ -8,7 +8,6 @@
 
     <div class="catalog-hero">
         <div>
-            <span>Katalog Produk</span>
             <h1>Temukan Kebutuhan Logistik Perkapalan Anda</h1>
             <p>
                 Pilih produk berdasarkan kategori, cari barang yang dibutuhkan,

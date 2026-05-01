@@ -3,71 +3,118 @@
 @section('title', 'Banner Beranda')
 
 @section('content')
-<div class="container-fluid">
-    <h3>Banner Beranda</h3>
+<div class="admin-page">
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+    <div class="admin-page-header">
+        <div>
+            <span>Pengaturan</span>
+            <h2>Banner Beranda</h2>
+            <p>Kelola banner yang tampil pada halaman beranda marketplace.</p>
         </div>
-    @endif
 
-    <a href="{{ route('admin.home-banners.create') }}" class="btn btn-primary mb-3">
-        Tambah Banner
-    </a>
+        <div class="admin-page-actions">
+            <a href="{{ route('admin.home-banners.create') }}" class="btn-admin-header-light">
+                Tambah Banner
+            </a>
+        </div>
+    </div>
 
-    <div class="card">
-        <div class="card-body table-responsive">
-            <table class="table table-bordered align-middle">
+    <div class="admin-card">
+        <div class="admin-table-header">
+            <div>
+                <h4>Daftar Banner</h4>
+                <p>Total data: {{ $banners->count() }} banner</p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table admin-table align-middle">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Gambar</th>
+                        <th width="60">No</th>
+                        <th width="160">Gambar</th>
                         <th>Judul</th>
                         <th>Posisi</th>
-                        <th>Urutan</th>
+                        <th width="100">Urutan</th>
                         <th>Status</th>
-                        <th width="180">Aksi</th>
+                        <th width="170">Aksi</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse($banners as $banner)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+
                             <td>
-                                <img src="{{ asset('storage/' . $banner->image) }}" width="120">
+                                <img
+                                    src="{{ asset('storage/' . $banner->image) }}"
+                                    alt="{{ $banner->title }}"
+                                    class="admin-banner-thumb"
+                                >
                             </td>
-                            <td>{{ $banner->title }}</td>
+
                             <td>
-                                @if($banner->position === 'main')
-                                    Banner Utama Tengah
+                                <div class="admin-product-name">
+                                    {{ $banner->title }}
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="admin-category-badge">
+                                    @if($banner->position === 'main')
+                                        Banner Utama Tengah
+                                    @else
+                                        Banner Samping Kanan
+                                    @endif
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="admin-stock-badge">
+                                    {{ $banner->sort_order }}
+                                </span>
+                            </td>
+
+                            <td>
+                                @if($banner->is_active)
+                                    <span class="admin-status-badge status-success">
+                                        Aktif
+                                    </span>
                                 @else
-                                    Banner Samping Kanan
+                                    <span class="admin-status-badge status-pending">
+                                        Nonaktif
+                                    </span>
                                 @endif
                             </td>
-                            <td>{{ $banner->sort_order }}</td>
-                            <td>
-                                {{ $banner->is_active ? 'Aktif' : 'Nonaktif' }}
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.home-banners.edit', $banner->id) }}" class="btn btn-sm btn-warning">
-                                    Edit
-                                </a>
 
-                                <form action="{{ route('admin.home-banners.destroy', $banner->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus banner ini?')">
-                                    @csrf
-                                    @method('DELETE')
+                            <td>
+                                <div class="admin-action-group">
+                                    <a href="{{ route('admin.home-banners.edit', $banner->id) }}" class="btn-table-edit">
+                                        Edit
+                                    </a>
 
-                                    <button class="btn btn-sm btn-danger">
-                                        Hapus
-                                    </button>
-                                </form>
+                                    <form
+                                        action="{{ route('admin.home-banners.destroy', $banner->id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Hapus banner ini?')"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="btn-table-delete">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">
-                                Belum ada banner.
+                            <td colspan="7">
+                                <div class="admin-empty-state">
+                                    Belum ada banner beranda.
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -75,5 +122,6 @@
             </table>
         </div>
     </div>
+
 </div>
 @endsection
