@@ -13,58 +13,45 @@
                 <a href="{{ route('public.produk') }}">LIHAT SEMUA</a>
             </div>
 
-           <div class="category-list">
-    @foreach($kategoriMenu as $kategori)
-        <div class="category-item category-item-with-products">
-            <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}" class="category-item-link">
-                <div class="category-main">
-                    <span class="category-icon">
-                        {{ $kategori->icon ?? '▦' }}
-                    </span>
+            <div class="category-list">
+                @foreach($kategoriMenu as $kategori)
+                    <div class="category-item category-item-with-products">
+                        <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}" class="category-item-link">
+                            <div class="category-main">
+                                <span class="category-icon">
+                                    {{ $kategori->icon ?? '▦' }}
+                                </span>
 
-                    <span>
-                        {{ $kategori->nama }}
-                    </span>
-                </div>
-            </a>
+                                <span>
+                                    {{ $kategori->nama }}
+                                </span>
+                            </div>
+                        </a>
 
-            <div class="category-mega product-mega">
-                <div class="product-mega-header">
-                    <h4>{{ $kategori->nama }}</h4>
+                        <div class="category-mega product-mega">
+                            <div class="product-mega-header product-mega-header-end">
+                                <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}">
+                                    Lihat Semua
+                                </a>
+                            </div>
 
-                    <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}">
-                        Lihat Semua
-                    </a>
-                </div>
-
-                @if(isset($produkKategori[$kategori->nama]) && $produkKategori[$kategori->nama]->count() > 0)
-                    <div class="product-mega-grid">
-                        @foreach($produkKategori[$kategori->nama] as $produk)
-                            <a href="{{ route('public.produk.show', $produk->id) }}" class="product-mega-item">
-                                @if($produk->gambar)
-                                    <img src="{{ asset('storage/' . $produk->gambar) }}" alt="{{ $produk->nama_barang }}">
-                                @else
-                                    <div class="product-mega-no-image">
-                                        Produk
-                                    </div>
-                                @endif
-
-                                <div>
-                                    <strong>{{ $produk->nama_barang }}</strong>
-                                    <span>Rp {{ number_format($produk->harga, 0, ',', '.') }}</span>
+                            @if(isset($produkKategori[$kategori->nama]) && $produkKategori[$kategori->nama]->count() > 0)
+                                <div class="product-mega-grid">
+                                    @foreach($produkKategori[$kategori->nama] as $produk)
+                                        <a href="{{ route('public.produk.show', $produk->id) }}" class="product-mega-item">
+                                            {{ $produk->nama_barang }}
+                                        </a>
+                                    @endforeach
                                 </div>
-                            </a>
-                        @endforeach
+                            @else
+                                <div class="product-mega-empty">
+                                    Belum ada produk di kategori ini.
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                @else
-                    <div class="product-mega-empty">
-                        Belum ada produk di kategori ini.
-                    </div>
-                @endif
+                @endforeach
             </div>
-        </div>
-    @endforeach
-</div>
         </aside>
 
         <div class="indo-main-slider">

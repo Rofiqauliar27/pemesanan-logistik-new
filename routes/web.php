@@ -37,11 +37,13 @@ Route::get('/', function () {
     $produkKategori = [];
 
     foreach ($kategoriMenu as $kategori) {
-        $produkKategori[$kategori->nama] = Barang::where('kategori', $kategori->nama)
-            ->latest()
-            ->take(6)
-            ->get();
-    }
+    $produkKategori[$kategori->nama] = Barang::whereRaw('LOWER(TRIM(kategori)) = ?', [
+            strtolower(trim($kategori->nama))
+        ])
+        ->latest()
+        ->take(6)
+        ->get();
+}
 
     return view('welcome', compact(
         'barangs',
