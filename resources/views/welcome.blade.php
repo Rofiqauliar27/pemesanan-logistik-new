@@ -7,52 +7,7 @@
 <div class="indo-page">
 
     <section class="indo-hero-layout">
-        <aside class="indo-category-box">
-            <div class="category-title-row">
-                <strong>KATEGORI</strong>
-                <a href="{{ route('public.produk') }}">LIHAT SEMUA</a>
-            </div>
 
-            <div class="category-list">
-                @foreach($kategoriMenu as $kategori)
-                    <div class="category-item category-item-with-products">
-                        <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}" class="category-item-link">
-                            <div class="category-main">
-                                <span class="category-icon">
-                                    {{ $kategori->icon ?? '▦' }}
-                                </span>
-
-                                <span>
-                                    {{ $kategori->nama }}
-                                </span>
-                            </div>
-                        </a>
-
-                        <div class="category-mega product-mega">
-                            <div class="product-mega-header product-mega-header-end">
-                                <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}">
-                                    Lihat Semua
-                                </a>
-                            </div>
-
-                            @if(isset($produkKategori[$kategori->nama]) && $produkKategori[$kategori->nama]->count() > 0)
-                                <div class="product-mega-grid">
-                                    @foreach($produkKategori[$kategori->nama] as $produk)
-                                        <a href="{{ route('public.produk.show', $produk->id) }}" class="product-mega-item">
-                                            {{ $produk->nama_barang }}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            @else
-                                <div class="product-mega-empty">
-                                    Belum ada produk di kategori ini.
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </aside>
 
         <div class="indo-main-slider">
             @if($mainBanners->count() > 0)
@@ -120,6 +75,79 @@
             @endif
         </aside>
     </section>
+
+<section class="popular-category-section">
+    <div class="popular-category-card">
+        <div class="popular-category-top">
+            <div>
+                <h2>Kategori Populer</h2>
+                <p>Pilih kebutuhan produk berdasarkan kategori yang tersedia.</p>
+            </div>
+
+            <a href="{{ route('public.produk') }}">
+                Lihat Semua
+            </a>
+        </div>
+
+        <div class="popular-category-content">
+            <div class="popular-category-banner">
+                <div>
+                    <h3>Temukan kebutuhan logistik Anda</h3>
+                    <p>
+                        Produk logistik, perlengkapan kapal, alat kebersihan,
+                        safety equipment, dan kebutuhan usaha lainnya.
+                    </p>
+
+                    <a href="{{ route('public.produk') }}">
+                        Cek Sekarang
+                    </a>
+                </div>
+
+                <div class="popular-category-illustration">
+                    📦
+                </div>
+            </div>
+
+            <div class="popular-category-info">
+                <div class="popular-info-header">
+                    <h3>Belanja Lebih Mudah</h3>
+                    <a href="{{ route('public.produk') }}">Lihat Semua</a>
+                </div>
+
+                <div class="popular-info-grid">
+                    <div>
+                        <strong>Produk</strong>
+                        <span>Cari barang sesuai kebutuhan</span>
+                    </div>
+
+                    <div>
+                        <strong>Keranjang</strong>
+                        <span>Simpan produk sebelum checkout</span>
+                    </div>
+
+                    <div>
+                        <strong>Pesanan</strong>
+                        <span>Pantau status pesanan Anda</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="popular-category-list">
+            @foreach($kategoriMenu as $kategori)
+                <a href="{{ route('public.produk', ['kategori' => $kategori->nama]) }}" class="popular-category-pill">
+                    <span class="popular-category-icon">
+                        {{ $kategori->icon ?? '▦' }}
+                    </span>
+
+                    <span>
+                        {{ $kategori->nama }}
+                    </span>
+                </a>
+            @endforeach
+        </div>
+    </div>
+</section>
 
     <section class="home-product-section">
         <div class="home-product-header">

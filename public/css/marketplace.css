@@ -4296,3 +4296,547 @@ transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
     background: #edf5ff;
     color: #1767c8;
 }
+
+/* =====================================================
+   KATEGORI POPULER MODEL MARKETPLACE
+===================================================== */
+
+/* Hero jadi 2 kolom karena sidebar kategori dihapus */
+.indo-hero-layout {
+    grid-template-columns: 1fr 285px !important;
+}
+
+/* Card utama kategori populer */
+.popular-category-section {
+    margin: 18px 0;
+}
+
+.popular-category-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.12);
+    border: 1px solid #e5e7eb;
+}
+
+.popular-category-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.popular-category-top h2 {
+    margin: 0 0 4px;
+    color: #0f172a;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.popular-category-top p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.popular-category-top a {
+    color: #1767c8;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.popular-category-top a:hover {
+    color: #0b5fc7;
+}
+
+/* Bagian banner + info */
+.popular-category-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.popular-category-banner {
+    min-height: 138px;
+    border-radius: 10px;
+    padding: 22px;
+    background: linear-gradient(135deg, #1767c8, #0b3b75);
+    color: #ffffff;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.popular-category-banner::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    bottom: -70px;
+    width: 200px;
+    height: 200px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.popular-category-banner div {
+    position: relative;
+    z-index: 2;
+}
+
+.popular-category-banner span {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.popular-category-banner h3 {
+    margin: 0 0 6px;
+    max-width: 360px;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.popular-category-banner p {
+    margin: 0;
+    max-width: 430px;
+    color: #dbeafe;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.popular-category-banner a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    margin-top: 12px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #ff6900;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.popular-category-banner a:hover {
+    background: #ef5f00;
+    color: #ffffff;
+}
+
+.popular-category-illustration {
+    font-size: 70px;
+    opacity: 0.95;
+    margin-left: 20px;
+}
+
+/* Box info kanan */
+.popular-category-info {
+    min-height: 138px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    padding: 18px;
+}
+
+.popular-info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.popular-info-header h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.popular-info-header a {
+    color: #1767c8;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.popular-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.popular-info-grid div {
+    padding: 16px 12px;
+    background: #f8fafc;
+    border-right: 1px solid #e5e7eb;
+}
+
+.popular-info-grid div:last-child {
+    border-right: none;
+}
+
+.popular-info-grid strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.popular-info-grid span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Pills kategori bawah */
+.popular-category-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.popular-category-list::-webkit-scrollbar {
+    height: 6px;
+}
+
+.popular-category-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+}
+
+.popular-category-pill {
+    min-width: fit-content;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 999px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.popular-category-pill:hover {
+    background: #edf5ff;
+    border-color: #1767c8;
+    color: #1767c8;
+    text-decoration: none;
+}
+
+.popular-category-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #1767c8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .indo-hero-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .indo-side-banner {
+        display: none;
+    }
+
+    .popular-category-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .popular-category-card {
+        padding: 14px;
+    }
+
+    .popular-category-top {
+        flex-direction: column;
+    }
+
+    .popular-category-top h2 {
+        font-size: 22px;
+    }
+
+    .popular-category-banner {
+        padding: 18px;
+    }
+
+    .popular-category-illustration {
+        display: none;
+    }
+
+    .popular-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .popular-info-grid div {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .popular-info-grid div:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Hilangkan scrollbar abu-abu di bawah kategori populer */
+.popular-category-list {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* Edge lama */
+}
+
+.popular-category-list::-webkit-scrollbar {
+    display: none !important; /* Chrome, Edge, Safari */
+}
+
+/* =====================================================
+   BANNER BERANDA MODEL TOKOPEDIA - LEBIH TIPIS
+   Letakkan PALING BAWAH marketplace.css
+===================================================== */
+
+/* Area banner dibuat seperti Tokopedia: lebar tengah, tidak terlalu tinggi */
+.indo-hero-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    max-width: 1208px !important;
+    margin: 22px auto 18px !important;
+    padding: 0 !important;
+    gap: 0 !important;
+}
+
+/* Banner kanan dihilangkan agar tampil seperti Tokopedia */
+.indo-side-banner {
+    display: none !important;
+}
+
+/* Slider utama dibuat lebih tipis */
+.indo-main-slider {
+    width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Pastikan carousel ikut tinggi slider */
+.indo-main-slider .carousel,
+.indo-main-slider .carousel-inner,
+.indo-main-slider .carousel-item {
+    width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+}
+
+/* Gambar banner rapi dan full */
+.indo-main-slider img {
+    width: 100% !important;
+    height: 300px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: 14px !important;
+}
+
+/* Default banner kalau belum upload gambar */
+.default-main-banner {
+    width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    border-radius: 14px !important;
+    padding: 36px 46px !important;
+}
+
+/* Tombol slide dibuat lebih kecil dan elegan */
+.indo-main-slider .carousel-control-prev,
+.indo-main-slider .carousel-control-next {
+    width: 46px !important;
+    opacity: 0.85 !important;
+}
+
+.indo-main-slider .carousel-control-prev-icon,
+.indo-main-slider .carousel-control-next-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background-size: 55% 55% !important;
+    background-color: rgba(15, 23, 42, 0.35) !important;
+}
+
+/* Agar jarak setelah navbar mirip marketplace */
+.indo-page {
+    padding-top: 16px !important;
+}
+
+/* Responsive tablet */
+@media (max-width: 992px) {
+    .indo-hero-layout {
+        max-width: calc(100% - 28px) !important;
+        margin-top: 18px !important;
+    }
+
+    .indo-main-slider,
+    .indo-main-slider .carousel,
+    .indo-main-slider .carousel-inner,
+    .indo-main-slider .carousel-item,
+    .indo-main-slider img,
+    .default-main-banner {
+        height: 240px !important;
+        min-height: 240px !important;
+    }
+}
+
+/* Responsive HP */
+@media (max-width: 576px) {
+    .indo-hero-layout {
+        max-width: calc(100% - 20px) !important;
+        margin-top: 14px !important;
+    }
+
+    .indo-main-slider,
+    .indo-main-slider .carousel,
+    .indo-main-slider .carousel-inner,
+    .indo-main-slider .carousel-item,
+    .indo-main-slider img,
+    .default-main-banner {
+        height: 180px !important;
+        min-height: 180px !important;
+        border-radius: 10px !important;
+    }
+
+    .default-main-banner {
+        padding: 22px !important;
+    }
+
+    .default-main-banner h1 {
+        font-size: 24px !important;
+    }
+
+    .default-main-banner p {
+        font-size: 13px !important;
+    }
+}
+
+/* =====================================================
+   SEJAJARKAN BANNER DENGAN KOTAK DI BAWAHNYA
+===================================================== */
+
+.indo-page {
+    max-width: 1295px !important;
+    margin: 0 auto !important;
+    padding: 16px 0 40px !important;
+}
+
+/* Banner atas dibuat sama lebar dengan section bawah */
+.indo-hero-layout {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 18px 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+}
+
+/* Kotak kategori juga dibuat sejajar */
+.popular-category-section,
+.home-product-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Banner utama */
+.indo-main-slider {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+}
+
+/* Carousel ikut ukuran banner */
+.indo-main-slider .carousel,
+.indo-main-slider .carousel-inner,
+.indo-main-slider .carousel-item {
+    width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+}
+
+/* Gambar banner */
+.indo-main-slider img {
+    width: 100% !important;
+    height: 300px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: 14px !important;
+}
+
+/* Banner kanan tetap dihilangkan */
+.indo-side-banner {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .indo-page {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .indo-main-slider,
+    .indo-main-slider .carousel,
+    .indo-main-slider .carousel-inner,
+    .indo-main-slider .carousel-item,
+    .indo-main-slider img {
+        height: 240px !important;
+        min-height: 240px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .indo-main-slider,
+    .indo-main-slider .carousel,
+    .indo-main-slider .carousel-inner,
+    .indo-main-slider .carousel-item,
+    .indo-main-slider img {
+        height: 180px !important;
+        min-height: 180px !important;
+    }
+}
