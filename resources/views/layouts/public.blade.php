@@ -22,6 +22,7 @@
 <header class="bst-indo-header">
     <div class="bst-mainbar">
         <div class="bst-header-container bst-mainbar-inner">
+
             <a href="{{ url('/') }}" class="bst-brand">
                 <div class="bst-brand-logo">
                     @if($profilPerusahaan && $profilPerusahaan->logo)
@@ -38,19 +39,19 @@
             </a>
 
             <form action="{{ route('public.produk') }}" method="GET" class="bst-search">
-                <input 
-                    type="text" 
-                    name="search" 
-                    placeholder="Ketik Yang Anda Cari" 
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Ketik Yang Anda Cari"
                     value="{{ request('search') }}"
                 >
 
                 <select name="tipe">
-                    <option value="produk">Produk</option>
-                    <option value="kategori">Kategori</option>
+                    <option value="produk" {{ request('tipe') == 'produk' ? 'selected' : '' }}>Produk</option>
+                    <option value="kategori" {{ request('tipe') == 'kategori' ? 'selected' : '' }}>Kategori</option>
                 </select>
 
-                <button type="submit">
+                <button type="submit" aria-label="Cari">
                     🔍
                 </button>
             </form>
@@ -59,7 +60,7 @@
                 @auth
                     @if(auth()->user()->role === 'customer')
                         <a href="{{ route('customer.keranjang.index') }}" class="bst-cart-btn">
-                            Keranjang 
+                            Keranjang
                             <span id="cart-badge" class="bst-cart-badge">{{ $cartCount }}</span>
                         </a>
 
@@ -69,38 +70,38 @@
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-end">
-    <li>
-        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
-           href="{{ route('customer.profile') }}">
-            Profil Saya
-        </a>
-    </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
+                                       href="{{ route('customer.profile') }}">
+                                        Profil Saya
+                                    </a>
+                                </li>
 
-    <li>
-        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
-           href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
-            Pesanan Saya
-        </a>
-    </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
+                                       href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
+                                        Pesanan Saya
+                                    </a>
+                                </li>
 
-    <li>
-        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
-           href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
-            Pembayaran
-        </a>
-    </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
+                                       href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
+                                        Pembayaran
+                                    </a>
+                                </li>
 
-    <li><hr class="dropdown-divider"></li>
+                                <li><hr class="dropdown-divider"></li>
 
-    <li>
-        <form action="{{ route('logout') }}" method="POST" class="px-3">
-            @csrf
-            <button type="submit" class="btn btn-danger btn-sm w-100">
-                Logout
-            </button>
-        </form>
-    </li>
-</ul>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="px-3">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     @elseif(auth()->user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}" class="bst-login-btn">
@@ -117,6 +118,7 @@
                     </a>
                 @endauth
             </div>
+
         </div>
     </div>
 
@@ -195,9 +197,9 @@
 
 <div class="market-footer">
     <div class="container text-center">
-        © {{ date('Y') }} 
-        {{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }} 
-        — 
+        © {{ date('Y') }}
+        {{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }}
+        —
         {{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}
     </div>
 </div>

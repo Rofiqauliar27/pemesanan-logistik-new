@@ -3144,3 +3144,1155 @@ transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
 .scroll-reveal-right.active {
     pointer-events: auto;
 }
+
+/* ==============================
+   HALAMAN BUAT PESANAN MODERN
+============================== */
+
+.order-create-page {
+    padding: 24px;
+    background: #f1f5f9;
+    min-height: calc(100vh - 120px);
+}
+
+.order-hero {
+    background: linear-gradient(135deg, #2563eb, #0f172a);
+    color: #ffffff;
+    border-radius: 24px;
+    padding: 34px;
+    margin-bottom: 24px;
+    box-shadow: 0 18px 42px rgba(37, 99, 235, 0.18);
+}
+
+.order-hero span {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 13px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.order-hero h1 {
+    margin: 0 0 8px;
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+}
+
+.order-hero p {
+    margin: 0;
+    max-width: 720px;
+    color: #dbeafe;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.order-alert {
+    border-radius: 16px;
+    margin-bottom: 22px;
+}
+
+.order-create-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) 420px;
+    gap: 24px;
+    align-items: start;
+}
+
+.order-form-card,
+.order-detail-card {
+    background: #ffffff;
+    border-radius: 22px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
+}
+
+.order-form-card {
+    padding: 26px;
+}
+
+.order-card-header {
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.order-card-header span {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.order-card-header h3 {
+    margin: 0 0 6px;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.order-card-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.order-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.order-form-group {
+    margin-bottom: 18px;
+}
+
+.order-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.order-form-control {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #dbe3ef;
+    border-radius: 14px;
+    background: #f8fafc;
+    color: #0f172a;
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.order-form-control:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.order-form-control[readonly] {
+    background: #f1f5f9;
+    color: #475569;
+    cursor: not-allowed;
+}
+
+.order-textarea {
+    height: auto;
+    min-height: 130px;
+    padding: 14px 15px;
+    resize: vertical;
+    line-height: 1.7;
+}
+
+.order-info-note {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.order-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.order-btn-primary,
+.order-btn-secondary {
+    height: 46px;
+    padding: 0 20px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.order-btn-primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+}
+
+.order-btn-primary:hover {
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px rgba(37, 99, 235, 0.28);
+}
+
+.order-btn-secondary {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+}
+
+.order-btn-secondary:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+/* DETAIL PRODUK */
+
+.order-detail-card {
+    overflow: hidden;
+    position: sticky;
+    top: 90px;
+}
+
+.order-detail-image {
+    width: 100%;
+    height: 270px;
+    background: linear-gradient(135deg, #f8fafc, #eff6ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.order-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 18px;
+}
+
+.order-no-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.order-detail-body {
+    padding: 24px;
+}
+
+.order-detail-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 14px;
+}
+
+.order-detail-body h3 {
+    margin: 0 0 10px;
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.order-price {
+    color: #f97316;
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 18px;
+}
+
+.order-summary-list {
+    display: grid;
+    gap: 12px;
+}
+
+.order-summary-list div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.order-summary-list span {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.order-summary-list strong {
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 900;
+    text-align: right;
+}
+
+@media (max-width: 992px) {
+    .order-create-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .order-detail-card {
+        position: static;
+    }
+}
+
+@media (max-width: 576px) {
+    .order-create-page {
+        padding: 14px;
+    }
+
+    .order-hero {
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    .order-hero h1 {
+        font-size: 28px;
+    }
+
+    .order-form-card {
+        padding: 20px;
+    }
+
+    .order-form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .order-form-actions {
+        flex-direction: column;
+    }
+
+    .order-btn-primary,
+    .order-btn-secondary {
+        width: 100%;
+    }
+
+    .order-detail-image {
+        height: 220px;
+    }
+}
+
+.home-btn-detail,
+.home-btn-cart {
+    height: 38px;
+    border-radius: 10px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.home-btn-detail {
+    background: #eaf2ff;
+    color: #0b63ce;
+}
+
+.home-btn-detail:hover {
+    background: #dbeafe;
+    color: #0b63ce;
+}
+
+.home-btn-cart {
+    width: 100%;
+    background: #ff7300;
+    color: #ffffff;
+}
+
+.home-btn-cart:hover {
+    background: #ea580c;
+    color: #ffffff;
+}
+
+.home-cart-form {
+    margin: 0;
+}
+
+/* ===============================
+   TOMBOL PRODUK BERANDA - SAMA SEPERTI HALAMAN PRODUK
+================================ */
+
+.home-product-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.home-btn-detail,
+.home-btn-cart {
+    height: 38px;
+    border-radius: 10px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+
+.home-btn-detail {
+    width: 86px;
+    background: #eaf2ff;
+    color: #0b63ce;
+}
+
+.home-btn-detail:hover {
+    background: #dbeafe;
+    color: #0b63ce;
+}
+
+.home-cart-form {
+    margin: 0;
+    flex: 1;
+}
+
+.home-btn-cart {
+    width: 100%;
+    background: #ff7300;
+    color: #ffffff;
+    padding: 0 10px;
+}
+
+.home-btn-cart:hover {
+    background: #ea580c;
+    color: #ffffff;
+}
+
+/* ===============================
+   HEADER PUBLIC - SEARCH LEBIH KECIL
+================================ */
+
+.bst-mainbar-inner {
+    gap: 18px;
+}
+
+.bst-brand {
+    min-width: 300px;
+    max-width: 330px;
+    flex-shrink: 0;
+}
+
+.bst-brand-text {
+    min-width: 0;
+}
+
+.bst-brand-text strong {
+    display: block;
+    max-width: 235px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bst-brand-text small {
+    display: block;
+    max-width: 235px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bst-search {
+    max-width: 620px;
+    width: 100%;
+    flex: 0 1 500px;
+}
+
+.bst-search input {
+    min-width: 0;
+}
+
+.bst-search select {
+    width: 130px;
+    flex-shrink: 0;
+}
+
+.bst-search button {
+    width: 58px;
+    flex-shrink: 0;
+}
+
+.bst-auth-area {
+    flex-shrink: 0;
+}
+
+/* Untuk layar laptop sedang */
+@media (max-width: 1200px) {
+    .bst-brand {
+        min-width: 270px;
+        max-width: 290px;
+    }
+
+    .bst-brand-text strong,
+    .bst-brand-text small {
+        max-width: 200px;
+    }
+
+    .bst-search {
+        max-width: 520px;
+        flex-basis: 520px;
+    }
+
+    .bst-search select {
+        width: 115px;
+    }
+
+    .bst-search button {
+        width: 54px;
+    }
+}
+
+/* Untuk layar lebih kecil */
+@media (max-width: 992px) {
+    .bst-mainbar-inner {
+        flex-wrap: wrap;
+    }
+
+    .bst-brand {
+        max-width: none;
+        width: auto;
+    }
+
+    .bst-brand-text strong,
+    .bst-brand-text small {
+        max-width: 260px;
+    }
+
+    .bst-search {
+        order: 3;
+        max-width: 100%;
+        flex-basis: 100%;
+        width: 100%;
+    }
+
+    .bst-auth-area {
+        margin-left: auto;
+    }
+}
+
+/* ===============================
+   FIX HEADER SEARCH TERLALU LEBAR
+   Letakkan paling bawah CSS
+================================ */
+
+.bst-mainbar-inner {
+    display: grid !important;
+    grid-template-columns: 315px 560px auto !important;
+    gap: 18px !important;
+    align-items: center !important;
+}
+
+.bst-brand {
+    min-width: 0 !important;
+    max-width: 315px !important;
+    width: 315px !important;
+    overflow: hidden !important;
+}
+
+.bst-brand-text {
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+.bst-brand-text strong {
+    max-width: 230px !important;
+    display: block !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.bst-brand-text small {
+    max-width: 230px !important;
+    display: block !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.bst-search {
+    width: 560px !important;
+    max-width: 560px !important;
+    min-width: 0 !important;
+}
+
+.bst-search {
+    grid-template-columns: 1fr 115px 54px !important;
+}
+
+.bst-search select {
+    width: 115px !important;
+}
+
+.bst-search button {
+    width: 54px !important;
+}
+
+.bst-auth-area {
+    justify-self: end !important;
+    white-space: nowrap !important;
+}
+
+/* Laptop sedang */
+@media (max-width: 1200px) {
+    .bst-mainbar-inner {
+        grid-template-columns: 300px 480px auto !important;
+        gap: 14px !important;
+    }
+
+    .bst-brand {
+        width: 300px !important;
+        max-width: 300px !important;
+    }
+
+    .bst-brand-text strong,
+    .bst-brand-text small {
+        max-width: 215px !important;
+    }
+
+    .bst-search {
+        width: 480px !important;
+        max-width: 480px !important;
+    }
+
+    .bst-search {
+        grid-template-columns: 1fr 105px 52px !important;
+    }
+
+    .bst-search select {
+        width: 105px !important;
+    }
+
+    .bst-search button {
+        width: 52px !important;
+    }
+}
+
+/* Tablet / HP */
+@media (max-width: 992px) {
+    .bst-mainbar-inner {
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        height: auto !important;
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+    }
+
+    .bst-brand {
+        width: auto !important;
+        max-width: 100% !important;
+    }
+
+    .bst-brand-text strong,
+    .bst-brand-text small {
+        max-width: 240px !important;
+    }
+
+    .bst-search {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        order: 3 !important;
+    }
+
+    .bst-auth-area {
+        justify-self: end !important;
+    }
+}
+
+/* ===============================
+   HALAMAN KERANJANG MODERN
+================================ */
+
+.cart-page {
+    padding: 22px 0 45px;
+}
+
+.cart-hero {
+    background: linear-gradient(135deg, #1767c8, #0b3b75);
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 28px 30px;
+    margin-bottom: 18px;
+    box-shadow: 0 14px 34px rgba(23, 103, 200, 0.18);
+}
+
+.cart-hero span {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 13px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.cart-hero h2 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+
+.cart-hero p {
+    margin: 0;
+    color: #eaf3ff;
+    font-size: 15px;
+}
+
+.cart-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+}
+
+.cart-table {
+    margin: 0;
+}
+
+.cart-table thead th {
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 14px;
+}
+
+.cart-table tbody td {
+    vertical-align: middle;
+    padding: 14px;
+    color: #334155;
+    font-size: 14px;
+    border-color: #edf0f4;
+}
+
+.cart-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.cart-product-name {
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.cart-price {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.cart-subtotal {
+    font-weight: 900;
+    color: #ff4b00;
+}
+
+.cart-check {
+    width: 16px;
+    height: 16px;
+    accent-color: #1767c8;
+}
+
+.cart-qty-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.cart-qty-input {
+    width: 78px !important;
+    height: 38px;
+    border-radius: 9px;
+    border: 1px solid #dbe2ea;
+    text-align: center;
+    font-weight: 800;
+}
+
+.cart-update-btn {
+    height: 38px;
+    border: none;
+    border-radius: 9px;
+    padding: 0 14px;
+    background: #1767c8;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.cart-update-btn:hover {
+    background: #0f58af;
+}
+
+.cart-delete-btn {
+    height: 38px;
+    border: none;
+    border-radius: 9px;
+    padding: 0 14px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.cart-delete-btn:hover {
+    background: #dc2626;
+}
+
+.cart-bottom {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 18px;
+    align-items: start;
+}
+
+.cart-note-card,
+.cart-summary-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+    padding: 20px;
+}
+
+.cart-note-card h4,
+.cart-summary-card h4 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.cart-note-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.cart-total-box {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+}
+
+.cart-total-box span {
+    display: block;
+    color: #9a3412;
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.cart-total-box strong {
+    display: block;
+    color: #ff4b00;
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.cart-action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.cart-continue-btn,
+.cart-checkout-btn {
+    height: 44px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.cart-continue-btn {
+    background: #edf5ff;
+    color: #1767c8;
+}
+
+.cart-continue-btn:hover {
+    background: #dcecff;
+    color: #0f58af;
+}
+
+.cart-checkout-btn {
+    background: #ff6900;
+    color: #ffffff;
+}
+
+.cart-checkout-btn:hover {
+    background: #ef5f00;
+    color: #ffffff;
+}
+
+.cart-empty {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 36px;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+}
+
+.cart-empty h4 {
+    color: #0f172a;
+    font-weight: 900;
+}
+
+.cart-empty p {
+    color: #64748b;
+}
+
+@media (max-width: 992px) {
+    .cart-bottom {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-table {
+        min-width: 850px;
+    }
+
+    .cart-card {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .cart-hero {
+        padding: 24px;
+    }
+
+    .cart-hero h2 {
+        font-size: 26px;
+    }
+
+    .cart-action-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===============================
+   FIX HEADER CUSTOMER/PUBLIC
+   Search lebih kecil, agak kanan, nama CV full
+================================ */
+
+.bst-mainbar-inner {
+    display: grid !important;
+    grid-template-columns: 330px 520px auto !important;
+    gap: 28px !important;
+    align-items: center !important;
+}
+
+.bst-brand {
+    width: 330px !important;
+    max-width: 330px !important;
+    min-width: 330px !important;
+    overflow: visible !important;
+}
+
+.bst-brand-logo {
+    width: 54px !important;
+    height: 54px !important;
+}
+
+.bst-brand-text {
+    min-width: 0 !important;
+    overflow: visible !important;
+}
+
+.bst-brand-text strong {
+    display: block !important;
+    max-width: none !important;
+    width: auto !important;
+    color: #ffffff !important;
+    font-size: 19px !important;
+    font-weight: 900 !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+}
+
+.bst-brand-text small {
+    display: none !important;
+}
+
+.bst-search {
+    width: 520px !important;
+    max-width: 520px !important;
+    min-width: 0 !important;
+    justify-self: start !important;
+    margin-left: 12px !important;
+    grid-template-columns: 1fr 105px 52px !important;
+}
+
+.bst-search input {
+    min-width: 0 !important;
+    padding-left: 18px !important;
+}
+
+.bst-search select {
+    width: 105px !important;
+    padding-left: 14px !important;
+    padding-right: 10px !important;
+}
+
+.bst-search button {
+    width: 52px !important;
+}
+
+.bst-auth-area {
+    justify-self: end !important;
+    white-space: nowrap !important;
+}
+
+/* Laptop sedang */
+@media (max-width: 1200px) {
+    .bst-mainbar-inner {
+        grid-template-columns: 320px 470px auto !important;
+        gap: 20px !important;
+    }
+
+    .bst-brand {
+        width: 320px !important;
+        max-width: 320px !important;
+        min-width: 320px !important;
+    }
+
+    .bst-brand-text strong {
+        font-size: 18px !important;
+    }
+
+    .bst-search {
+        width: 470px !important;
+        max-width: 470px !important;
+        margin-left: 8px !important;
+        grid-template-columns: 1fr 100px 50px !important;
+    }
+
+    .bst-search select {
+        width: 100px !important;
+    }
+
+    .bst-search button {
+        width: 50px !important;
+    }
+}
+
+/* Tablet / HP */
+@media (max-width: 992px) {
+    .bst-mainbar-inner {
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        height: auto !important;
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+        gap: 14px !important;
+    }
+
+    .bst-brand {
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .bst-brand-text strong {
+        font-size: 18px !important;
+    }
+
+    .bst-search {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    .bst-auth-area {
+        justify-self: end !important;
+    }
+}
+
+/* Hilangkan garis bawah pada kategori beranda */
+.category-list a,
+.category-item-link,
+.category-main a,
+.category-main span {
+    text-decoration: none !important;
+}
+
+.category-item-link:hover,
+.category-list a:hover {
+    text-decoration: none !important;
+}
+
+/* Biar tampilan kategori lebih rapi */
+.category-item-link {
+    display: block;
+    color: inherit;
+}
+
+.category-main {
+    color: #111827;
+}
+
+.category-main:hover {
+    background: #edf5ff;
+    color: #1767c8;
+}

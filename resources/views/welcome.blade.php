@@ -148,6 +148,20 @@
                         <div class="product-price">
                             Rp {{ number_format($barang->harga, 0, ',', '.') }}
                         </div>
+
+                        <div class="home-product-actions">
+                            <a href="{{ route('public.produk.show', $barang->id) }}" class="home-btn-detail">
+                                Detail
+                            </a>
+
+                            <form action="{{ route('customer.keranjang.store', ['barangId' => $barang->id]) }}" method="POST" class="home-cart-form">
+                                @csrf
+
+                                <button type="submit" class="home-btn-cart">
+                                    + Keranjang
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @empty

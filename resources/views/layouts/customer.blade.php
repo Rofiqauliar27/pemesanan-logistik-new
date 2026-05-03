@@ -39,9 +39,8 @@
                 </div>
 
                 <div class="bst-brand-text">
-                    <strong>{{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }}</strong>
-                    <small>{{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}</small>
-                </div>
+    <strong>{{ $profilPerusahaan->nama_perusahaan ?? 'CV. Bintang Saida Teknik' }}</strong>
+</div>
             </a>
 
             <form action="{{ route('public.produk') }}" method="GET" class="bst-search">

@@ -3,98 +3,157 @@
 @section('title', 'Buat Pesanan')
 
 @section('content')
-    <div class="market-box">
-        <h2 class="mb-1">Buat Pesanan</h2>
-        <p class="text-muted mb-0">
-            Silakan isi jumlah barang dan catatan pesanan Anda.
-        </p>
+<div class="order-create-page">
+
+    <div class="order-hero">
+        <div>
+            <span>Form Pemesanan</span>
+            <h1>Buat Pesanan</h1>
+            <p>
+                Lengkapi jumlah barang dan catatan pesanan Anda sebelum melanjutkan ke pembayaran.
+            </p>
+        </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-7 mb-4">
-            <div class="market-box">
-                <h4 class="mb-3">Form Pemesanan</h4>
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form action="{{ route('customer.pesanan.store') }}" method="POST">
-                    @csrf
-
-                    <input type="hidden" name="barang_id" value="{{ $barang->id }}">
-
-                    <div class="mb-3">
-                        <label class="form-label">Nama Barang</label>
-                        <input type="text" class="form-control" value="{{ $barang->nama_barang }}" readonly>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" class="form-control" value="{{ $barang->kategori ?? '-' }}" readonly>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Harga Satuan</label>
-                            <input type="text" class="form-control" value="Rp {{ number_format($barang->harga, 0, ',', '.') }}" readonly>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Jumlah Pesan</label>
-                        <input type="number" name="jumlah" class="form-control" min="1" value="{{ old('jumlah', 1) }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Catatan Pesanan</label>
-                        <textarea name="catatan" class="form-control" rows="4" placeholder="Contoh: warna merah, ukuran besar, pengiriman cepat...">{{ old('catatan') }}</textarea>
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-2">
-                        <button type="submit" class="btn btn-success">
-                            Buat Pesanan
-                        </button>
-
-                        <a href="{{ route('public.produk') }}" class="btn btn-outline-secondary">
-                            Kembali ke Produk
-                        </a>
-                    </div>
-                </form>
-            </div>
+    @if ($errors->any())
+        <div class="alert alert-danger order-alert">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
+    @endif
 
-        <div class="col-md-5 mb-4">
-            <div class="market-box">
-                <h4 class="mb-3">Detail Barang</h4>
+    <div class="order-create-layout">
 
-                @if($barang->gambar)
-                    <img src="{{ asset('storage/' . $barang->gambar) }}"
-                         alt="{{ $barang->nama_barang }}"
-                         class="img-fluid rounded mb-3"
-                         style="height: 240px; width: 100%; object-fit: cover;">
-                @else
-                    <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3"
-                         style="height: 240px;">
-                        <span class="text-muted">Tidak ada gambar</span>
-                    </div>
-                @endif
-
-                <h5 class="fw-bold">{{ $barang->nama_barang }}</h5>
-                <p class="text-muted mb-2">Kategori: {{ $barang->kategori ?? '-' }}</p>
-                <p class="text-muted mb-2">Stok tersedia: {{ $barang->stok }}</p>
-                <div class="price mb-3">Rp {{ number_format($barang->harga, 0, ',', '.') }}</div>
-
-                <div class="alert alert-info mb-0">
-                    Setelah pesanan dibuat, Anda akan diarahkan ke halaman pembayaran.
+        <div class="order-form-card">
+            <div class="order-card-header">
+                <div>
+                    <span>Data Pesanan</span>
+                    <h3>Informasi Pemesanan</h3>
+                    <p>Pastikan jumlah dan catatan pesanan sudah sesuai.</p>
                 </div>
             </div>
+
+            <form action="{{ route('customer.pesanan.store') }}" method="POST">
+                @csrf
+
+                <input type="hidden" name="barang_id" value="{{ $barang->id }}">
+
+                <div class="order-form-group">
+                    <label>Nama Barang</label>
+                    <input
+                        type="text"
+                        class="order-form-control"
+                        value="{{ $barang->nama_barang }}"
+                        readonly
+                    >
+                </div>
+
+                <div class="order-form-row">
+                    <div class="order-form-group">
+                        <label>Kategori</label>
+                        <input
+                            type="text"
+                            class="order-form-control"
+                            value="{{ $barang->kategori ?? '-' }}"
+                            readonly
+                        >
+                    </div>
+
+                    <div class="order-form-group">
+                        <label>Harga Satuan</label>
+                        <input
+                            type="text"
+                            class="order-form-control"
+                            value="Rp {{ number_format($barang->harga, 0, ',', '.') }}"
+                            readonly
+                        >
+                    </div>
+                </div>
+
+                <div class="order-form-group">
+                    <label>Jumlah Pesan</label>
+                    <input
+                        type="number"
+                        name="jumlah"
+                        class="order-form-control"
+                        min="1"
+                        max="{{ $barang->stok }}"
+                        value="{{ old('jumlah', 1) }}"
+                        required
+                    >
+                </div>
+
+                <div class="order-form-group">
+                    <label>Catatan Pesanan</label>
+                    <textarea
+                        name="catatan"
+                        class="order-form-control order-textarea"
+                        rows="5"
+                        placeholder="Contoh: warna merah, ukuran besar, pengiriman cepat..."
+                    >{{ old('catatan') }}</textarea>
+                </div>
+
+                <div class="order-info-note">
+                    Setelah pesanan dibuat, Anda akan diarahkan ke halaman pembayaran.
+                </div>
+
+                <div class="order-form-actions">
+                    <a href="{{ route('public.produk') }}" class="order-btn-secondary">
+                        Kembali ke Produk
+                    </a>
+
+                    <button type="submit" class="order-btn-primary">
+                        Buat Pesanan
+                    </button>
+                </div>
+            </form>
         </div>
+
+        <aside class="order-detail-card">
+            <div class="order-detail-image">
+                @if($barang->gambar)
+                    <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}">
+                @else
+                    <div class="order-no-image">
+                        Tidak ada gambar
+                    </div>
+                @endif
+            </div>
+
+            <div class="order-detail-body">
+                <span class="order-detail-badge">
+                    {{ $barang->kategori ?? 'Produk' }}
+                </span>
+
+                <h3>{{ $barang->nama_barang }}</h3>
+
+                <div class="order-price">
+                    Rp {{ number_format($barang->harga, 0, ',', '.') }}
+                </div>
+
+                <div class="order-summary-list">
+                    <div>
+                        <span>Kategori</span>
+                        <strong>{{ $barang->kategori ?? '-' }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Stok Tersedia</span>
+                        <strong>{{ $barang->stok }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Status</span>
+                        <strong>Tersedia</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
     </div>
+
+</div>
 @endsection

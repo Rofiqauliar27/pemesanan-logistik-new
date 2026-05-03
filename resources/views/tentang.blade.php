@@ -18,7 +18,7 @@
 
             <h1>
                 Mengenal
-                <span>{{ $profil->nama_perusahaan ?? 'Hanesa Company' }}</span>
+                <span>{{ $profil->nama_perusahaan ?? 'CV. Bintang Saida Teknik' }}</span>
             </h1>
 
             <p>
@@ -46,7 +46,7 @@
                     @endif
                 </div>
 
-                <h3>{{ $profil->nama_perusahaan ?? 'Hanesa Company' }}</h3>
+                <h3>{{ $profil->nama_perusahaan ?? 'CV. Bintang Saida Teknik' }}</h3>
                 <p>{{ $profil->bidang_usaha ?? 'Logistik dan kebutuhan operasional' }}</p>
             </div>
 
@@ -82,7 +82,7 @@
 
                 <div class="about-mini-list">
                     <div>
-                        <strong>{{ $profil->nama_perusahaan ?? 'Hanesa Company' }}</strong>
+                        <strong>{{ $profil->nama_perusahaan ?? 'CV. Bintang Saida Teknik' }}</strong>
                         <span>Nama Perusahaan</span>
                     </div>
 
