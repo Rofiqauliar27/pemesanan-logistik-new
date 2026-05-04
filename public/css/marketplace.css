@@ -129,98 +129,7 @@ body {
 .mega-grid a:hover {
     background: #e8f2ff;
     color: #0b5fc7;
-}
-
-.indo-main-slider,
-.indo-side-banner {
-    min-height: 420px;
-}
-
-.indo-main-slider .carousel,
-.indo-main-slider .carousel-inner,
-.indo-main-slider .carousel-item,
-.indo-side-banner .carousel,
-.indo-side-banner .carousel-inner,
-.indo-side-banner .carousel-item {
-    height: 100%;
-}
-
-.indo-main-slider img,
-.indo-side-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 7px;
-}
-
-.default-main-banner {
-    height: 100%;
-    min-height: 420px;
-    border-radius: 7px;
-    background: linear-gradient(135deg, #0f62c9 0%, #0b3b75 60%, #ff8a00 100%);
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    padding: 48px;
-    position: relative;
-    overflow: hidden;
-}
-
-.default-main-banner::after {
-    content: "";
-    position: absolute;
-    right: -80px;
-    bottom: -80px;
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-}
-
-.default-main-banner span {
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.default-main-banner h1 {
-    margin: 10px 0;
-    font-size: 36px;
-    font-weight: 900;
-}
-
-.default-main-banner p {
-    max-width: 560px;
-    line-height: 1.6;
-}
-
-.default-main-banner a,
-.default-side-banner a {
-    display: inline-block;
-    margin-top: 12px;
-    background: #ff7a00;
-    color: #ffffff;
-    text-decoration: none;
-    padding: 10px 22px;
-    border-radius: 999px;
-    font-weight: 700;
-}
-
-.default-side-banner {
-    height: 100%;
-    min-height: 420px;
-    background: linear-gradient(135deg, #0b3b75, #123f7a);
-    color: #ffffff;
-    border-radius: 7px;
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.default-side-banner h3 {
-    font-size: 28px;
-    margin-bottom: 10px;
-}
+} 
 
 .home-product-section {
     background: #ffffff;
@@ -4623,64 +4532,75 @@ transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
 }
 
 /* =====================================================
-   BANNER BERANDA MODEL TOKOPEDIA - LEBIH TIPIS
-   Letakkan PALING BAWAH marketplace.css
+   FINAL FIX BANNER BERANDA - PRESISI 1295 x 300
 ===================================================== */
 
-/* Area banner dibuat seperti Tokopedia: lebar tengah, tidak terlalu tinggi */
-.indo-hero-layout {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    max-width: 1208px !important;
-    margin: 22px auto 18px !important;
-    padding: 0 !important;
-    gap: 0 !important;
+.indo-page {
+    width: 100% !important;
+    max-width: 1295px !important;
+    margin: 0 auto !important;
+    padding: 16px 0 40px !important;
 }
 
-/* Banner kanan dihilangkan agar tampil seperti Tokopedia */
+.indo-hero-layout {
+    width: 100% !important;
+    max-width: 1295px !important;
+    height: 300px !important;
+    margin: 0 0 18px 0 !important;
+    padding: 0 !important;
+    display: block !important;
+}
+
 .indo-side-banner {
     display: none !important;
 }
 
-/* Slider utama dibuat lebih tipis */
 .indo-main-slider {
     width: 100% !important;
+    max-width: 1295px !important;
     height: 300px !important;
     min-height: 300px !important;
+    max-height: 300px !important;
     border-radius: 14px !important;
     overflow: hidden !important;
     background: #ffffff !important;
     box-shadow: 0 2px 12px rgba(15, 23, 42, 0.12) !important;
 }
 
-/* Pastikan carousel ikut tinggi slider */
 .indo-main-slider .carousel,
 .indo-main-slider .carousel-inner,
 .indo-main-slider .carousel-item {
     width: 100% !important;
     height: 300px !important;
     min-height: 300px !important;
+    max-height: 300px !important;
 }
 
-/* Gambar banner rapi dan full */
-.indo-main-slider img {
+.indo-main-slider a {
+    display: block !important;
     width: 100% !important;
     height: 300px !important;
-    object-fit: cover !important;
-    object-position: center !important;
+}
+
+.indo-main-slider img {
+    display: block !important;
+    width: 100% !important;
+    height: 300px !important;
+    max-height: 300px !important;
+    object-fit: fill !important;
+    object-position: center center !important;
     border-radius: 14px !important;
 }
 
-/* Default banner kalau belum upload gambar */
 .default-main-banner {
     width: 100% !important;
     height: 300px !important;
     min-height: 300px !important;
+    max-height: 300px !important;
     border-radius: 14px !important;
     padding: 36px 46px !important;
 }
 
-/* Tombol slide dibuat lebih kecil dan elegan */
 .indo-main-slider .carousel-control-prev,
 .indo-main-slider .carousel-control-next {
     width: 46px !important;
@@ -4696,147 +4616,46 @@ transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
     background-color: rgba(15, 23, 42, 0.35) !important;
 }
 
-/* Agar jarak setelah navbar mirip marketplace */
-.indo-page {
-    padding-top: 16px !important;
-}
-
-/* Responsive tablet */
-@media (max-width: 992px) {
-    .indo-hero-layout {
-        max-width: calc(100% - 28px) !important;
-        margin-top: 18px !important;
-    }
-
-    .indo-main-slider,
-    .indo-main-slider .carousel,
-    .indo-main-slider .carousel-inner,
-    .indo-main-slider .carousel-item,
-    .indo-main-slider img,
-    .default-main-banner {
-        height: 240px !important;
-        min-height: 240px !important;
-    }
-}
-
-/* Responsive HP */
-@media (max-width: 576px) {
-    .indo-hero-layout {
-        max-width: calc(100% - 20px) !important;
-        margin-top: 14px !important;
-    }
-
-    .indo-main-slider,
-    .indo-main-slider .carousel,
-    .indo-main-slider .carousel-inner,
-    .indo-main-slider .carousel-item,
-    .indo-main-slider img,
-    .default-main-banner {
-        height: 180px !important;
-        min-height: 180px !important;
-        border-radius: 10px !important;
-    }
-
-    .default-main-banner {
-        padding: 22px !important;
-    }
-
-    .default-main-banner h1 {
-        font-size: 24px !important;
-    }
-
-    .default-main-banner p {
-        font-size: 13px !important;
-    }
-}
-
-/* =====================================================
-   SEJAJARKAN BANNER DENGAN KOTAK DI BAWAHNYA
-===================================================== */
-
-.indo-page {
-    max-width: 1295px !important;
-    margin: 0 auto !important;
-    padding: 16px 0 40px !important;
-}
-
-/* Banner atas dibuat sama lebar dengan section bawah */
-.indo-hero-layout {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 0 18px 0 !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 0 !important;
-}
-
-/* Kotak kategori juga dibuat sejajar */
 .popular-category-section,
 .home-product-section {
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: 1295px !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
 
-/* Banner utama */
-.indo-main-slider {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 300px !important;
-    min-height: 300px !important;
-    border-radius: 14px !important;
-    overflow: hidden !important;
-}
-
-/* Carousel ikut ukuran banner */
-.indo-main-slider .carousel,
-.indo-main-slider .carousel-inner,
-.indo-main-slider .carousel-item {
-    width: 100% !important;
-    height: 300px !important;
-    min-height: 300px !important;
-}
-
-/* Gambar banner */
-.indo-main-slider img {
-    width: 100% !important;
-    height: 300px !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    border-radius: 14px !important;
-}
-
-/* Banner kanan tetap dihilangkan */
-.indo-side-banner {
-    display: none !important;
-}
-
-/* Responsive */
 @media (max-width: 992px) {
     .indo-page {
         padding-left: 14px !important;
         padding-right: 14px !important;
     }
 
+    .indo-hero-layout,
     .indo-main-slider,
     .indo-main-slider .carousel,
     .indo-main-slider .carousel-inner,
     .indo-main-slider .carousel-item,
-    .indo-main-slider img {
+    .indo-main-slider a,
+    .indo-main-slider img,
+    .default-main-banner {
         height: 240px !important;
         min-height: 240px !important;
+        max-height: 240px !important;
     }
 }
 
 @media (max-width: 576px) {
+    .indo-hero-layout,
     .indo-main-slider,
     .indo-main-slider .carousel,
     .indo-main-slider .carousel-inner,
     .indo-main-slider .carousel-item,
-    .indo-main-slider img {
+    .indo-main-slider a,
+    .indo-main-slider img,
+    .default-main-banner {
         height: 180px !important;
         min-height: 180px !important;
+        max-height: 180px !important;
+        border-radius: 10px !important;
     }
 }
