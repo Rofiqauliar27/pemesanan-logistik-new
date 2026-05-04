@@ -150,6 +150,14 @@ Route::get('/customer/profile', [CustomerProfileController::class, 'index'])
     ->middleware(['auth', 'role:customer'])
     ->name('customer.profile');
 
+Route::get('/customer/profile/edit', [CustomerProfileController::class, 'edit'])
+    ->middleware(['auth', 'role:customer'])
+    ->name('customer.profile.edit');
+
+Route::put('/customer/profile/update', [CustomerProfileController::class, 'update'])
+    ->middleware(['auth', 'role:customer'])
+    ->name('customer.profile.update');
+    
 Route::get('/admin/profil-perusahaan', [AdminProfilPerusahaanController::class, 'edit'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.profil.edit');

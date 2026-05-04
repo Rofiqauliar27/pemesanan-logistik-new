@@ -1,78 +1,386 @@
 @extends('layouts.customer')
 
-@section('title', 'Dashboard Customer')
+@section('title', 'Profil Customer')
 
 @section('content')
-    <div class="customer-hero">
-        <h2>Dashboard Customer</h2>
-        <p class="text-muted mb-0">
-            Selamat datang, <strong>{{ auth()->user()->name }}</strong>. Pantau pesanan dan pembayaran Anda di sini.
+<div class="customer-account-hero">
+    <div>
+        <h1>Akun Saya</h1>
+        <p>
+            Kelola informasi akun, riwayat pesanan, dan status pembayaran Anda dengan mudah.
         </p>
     </div>
+</div>
 
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="customer-stat">
-                <h6>Total Pesanan Saya</h6>
-                <h3>{{ $totalPesananSaya ?? 0 }}</h3>
+<div class="customer-stats-grid">
+    <div class="customer-stat-card">
+        <span>Total Pesanan</span>
+        <strong>{{ $pesanans->count() }}</strong>
+    </div>
+
+    <div class="customer-stat-card">
+        <span>Perlu Dibayar</span>
+        <strong>{{ $pesananBelumBayar->count() }}</strong>
+    </div>
+
+    <div class="customer-stat-card">
+        <span>Pesanan Selesai</span>
+        <strong>{{ $pesanans->where('status', 'selesai')->count() }}</strong>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="profile-sidebar">
+            <div class="profile-user-box">
+                <div class="customer-avatar">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+
+                <h5>{{ $user->name }}</h5>
+                <p>{{ $user->email }}</p>
             </div>
-        </div>
 
-        <div class="col-md-4 mb-3">
-            <div class="customer-stat">
-                <h6>Belum / Menunggu Bayar</h6>
-                <h3>{{ $belumBayar ?? 0 }}</h3>
-            </div>
-        </div>
+            <div class="nav flex-column profile-side-menu">
+                <a href="{{ route('customer.profile', ['tab' => 'profil']) }}"
+                   class="nav-link {{ $tab == 'profil' ? 'active' : '' }}">
+                    Data Pribadi
+                </a>
 
-        <div class="col-md-4 mb-3">
-            <div class="customer-stat">
-                <h6>Pesanan Selesai</h6>
-                <h3>{{ $selesai ?? 0 }}</h3>
+                <a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}"
+                   class="nav-link {{ $tab == 'pesanan' ? 'active' : '' }}">
+                    Pesanan Saya
+                </a>
+
+                <a href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}"
+                   class="nav-link {{ $tab == 'pembayaran' ? 'active' : '' }}">
+                    Pembayaran Saya
+                </a>
+
+                <a href="{{ route('customer.profile', ['tab' => 'keamanan']) }}"
+                   class="nav-link {{ $tab == 'keamanan' ? 'active' : '' }}">
+                    Keamanan
+                </a>
+
+                <form action="{{ route('logout') }}" method="POST" class="mt-2">
+                    @csrf
+                    <button type="submit" class="btn btn-danger w-100">
+                        Logout
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="customer-box">
-        <h5 class="mb-3">Akses Cepat</h5>
+    <div class="col-md-9">
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <a href="{{ route('public.produk') }}" class="btn btn-primary w-100">
-                    Lihat Produk
-                </a>
-            </div>
+        {{-- DATA PRIBADI --}}
+        @if($tab == 'profil')
+            <div class="profile-content-box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="mb-1">Data Pribadi</h4>
+                        <p class="text-muted mb-0">
+                            Informasi akun dan alamat tujuan customer.
+                        </p>
+                    </div>
 
-            <div class="col-md-4 mb-3">
-                <a href="{{ route('customer.pesanan.index') }}" class="btn btn-success w-100">
-                    Riwayat Pesanan
-                </a>
-            </div>
+                    <a href="{{ route('customer.profile.edit') }}" class="customer-btn-primary">
+                        Edit Data Customer
+                    </a>
+                </div>
 
-            <div class="col-md-4 mb-3">
-                <a href="{{ route('customer.pesanan.index') }}" class="btn btn-warning w-100">
-                    Pembayaran
-                </a>
-            </div>
-        </div>
-    </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Nama Lengkap</strong>
+                            <p>{{ $user->name }}</p>
+                        </div>
+                    </div>
 
-    <div class="customer-box">
-        <h5 class="mb-3">Informasi Customer</h5>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <strong>Nama</strong>
-                    <p class="mb-0 text-muted">{{ auth()->user()->name }}</p>
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Email</strong>
+                            <p>{{ $user->email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Nomor Telepon / WhatsApp</strong>
+                            <p>{{ $user->telepon ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Role</strong>
+                            <p>{{ $user->role }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Alamat Lengkap</strong>
+                            <p>{{ $user->alamat_lengkap ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Provinsi</strong>
+                            <p>{{ $user->provinsi ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Kabupaten / Kota</strong>
+                            <p>{{ $user->kabupaten ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Kecamatan</strong>
+                            <p>{{ $user->kecamatan ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Kelurahan / Desa</strong>
+                            <p>{{ $user->kelurahan ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Kode Pos</strong>
+                            <p>{{ $user->kode_pos ?? '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Tanggal Daftar</strong>
+                            <p>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Google Maps</strong>
+
+                            @if($user->google_maps_link)
+                                <p class="mb-2">Lokasi tujuan sudah ditambahkan.</p>
+
+                                <a href="{{ $user->google_maps_link }}" target="_blank" class="customer-map-btn">
+                                    Buka Lokasi di Google Maps
+                                </a>
+                            @else
+                                <p>Belum ada link Google Maps.</p>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
+        @endif
 
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <strong>Email</strong>
-                    <p class="mb-0 text-muted">{{ auth()->user()->email }}</p>
+        {{-- PESANAN SAYA --}}
+        @if($tab == 'pesanan')
+            <div class="profile-content-box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="mb-1">Pesanan Saya</h4>
+                        <p class="text-muted mb-0">
+                            Daftar pesanan yang pernah Anda buat.
+                        </p>
+                    </div>
+
+                    <span class="profile-tab-badge blue">
+                        {{ $pesanans->count() }} Pesanan
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle profile-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Order ID</th>
+                                <th>Barang</th>
+                                <th>Jumlah</th>
+                                <th>Total</th>
+                                <th>Status Pesanan</th>
+                                <th>Status Bayar</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($pesanans as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+
+                                    <td>
+                                        {{ $item->order_id ?? $item->group_order_id ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->barang->nama_barang ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->jumlah ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-{{ $item->status }}">
+                                            {{ $item->status ?? '-' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-{{ $item->payment_status }}">
+                                            {{ $item->payment_status ?? '-' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @if(($item->payment_status ?? '') != 'settlement' && ($item->payment_status ?? '') != 'paid')
+                                            <a href="{{ route('customer.pesanan.showBayar', $item->id) }}" class="btn btn-sm btn-primary">
+                                                Lihat / Bayar
+                                            </a>
+                                        @else
+                                            <span class="text-success fw-bold">Sudah Bayar</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">
+                                        Belum ada pesanan.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        @endif
+
+        {{-- PEMBAYARAN SAYA --}}
+        @if($tab == 'pembayaran')
+            <div class="profile-content-box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="mb-1">Pembayaran Saya</h4>
+                        <p class="text-muted mb-0">
+                            Pesanan yang belum dibayar atau masih menunggu pembayaran.
+                        </p>
+                    </div>
+
+                    <span class="profile-tab-badge yellow">
+                        {{ $pesananBelumBayar->count() }} Data
+                    </span>
+                </div>
+
+                <div class="alert alert-info">
+                    Bagian ini menampilkan pesanan yang belum dibayar, sedang menunggu pembayaran, gagal, atau perlu ditinjau kembali.
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle profile-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Order ID</th>
+                                <th>Barang</th>
+                                <th>Total</th>
+                                <th>Metode</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($pesananBelumBayar as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+
+                                    <td>
+                                        {{ $item->order_id ?? $item->group_order_id ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->barang->nama_barang ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->payment_type ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-{{ $item->payment_status }}">
+                                            {{ $item->payment_status ?? '-' }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ route('customer.pesanan.showBayar', $item->id) }}" class="btn btn-sm btn-primary">
+                                            Lihat / Bayar
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                        Tidak ada pembayaran aktif.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+
+        {{-- KEAMANAN --}}
+        @if($tab == 'keamanan')
+            <div class="profile-content-box">
+                <h4>Keamanan Akun</h4>
+
+                <div class="alert alert-info">
+                    Saat ini fitur keamanan masih dasar. Nanti bisa ditambah ubah password, foto profil, dan pengamanan tambahan.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Nama Akun</strong>
+                            <p>{{ $user->name }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="profile-mini-card">
+                            <strong>Email Akun</strong>
+                            <p>{{ $user->email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
+</div>
 @endsection

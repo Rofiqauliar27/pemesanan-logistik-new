@@ -72,89 +72,119 @@
         </div>
 
         <div class="col-md-9">
-            @if($tab == 'profil')
-                <div class="profile-content-box">
-                    <h4>Data Pribadi</h4>
+           @if($tab == 'profil')
+    <div class="profile-content-box">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="mb-1">Data Pribadi</h4>
+                <p class="text-muted mb-0">
+                    Informasi akun dan alamat tujuan customer.
+                </p>
+            </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="profile-mini-card">
-                                <strong>Nama Lengkap</strong>
-                                <p>{{ $user->name }}</p>
-                            </div>
-                        </div>
+            <a href="{{ route('customer.profile.edit') }}" class="customer-btn-primary">
+                Edit Data Customer
+            </a>
+        </div>
 
-                        <div class="col-md-6 mb-3">
-                            <div class="profile-mini-card">
-                                <strong>Email</strong>
-                                <p>{{ $user->email }}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="profile-mini-card">
-                                <strong>Role</strong>
-                                <p>{{ $user->role }}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="profile-mini-card">
-                                <strong>Tanggal Daftar</strong>
-                                <p>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</p>
-                            </div>
-                        </div>
-                    </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Nama Lengkap</strong>
+                    <p>{{ $user->name }}</p>
                 </div>
-            @endif
+            </div>
 
-            @if($tab == 'pesanan')
-                <div class="profile-content-box">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0">Pesanan Saya</h4>
-                        <span class="profile-tab-badge blue">{{ $pesanans->count() }} Pesanan</span>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered align-middle profile-table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Order ID</th>
-                                    <th>Barang</th>
-                                    <th>Total</th>
-                                    <th>Status Pesanan</th>
-                                    <th>Status Bayar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($pesanans as $item)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->order_id ?? '-' }}</td>
-                                        <td>{{ $item->barang->nama_barang ?? '-' }}</td>
-                                        <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
-                                        <td>
-                                            <span class="status-badge status-{{ $item->status }}">
-                                                {{ $item->status }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge status-{{ $item->payment_status }}">
-                                                {{ $item->payment_status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">Belum ada pesanan</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Email</strong>
+                    <p>{{ $user->email }}</p>
                 </div>
-            @endif
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Nomor Telepon / WhatsApp</strong>
+                    <p>{{ $user->telepon ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Role</strong>
+                    <p>{{ $user->role }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Alamat Lengkap</strong>
+                    <p>{{ $user->alamat_lengkap ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Provinsi</strong>
+                    <p>{{ $user->provinsi ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Kabupaten / Kota</strong>
+                    <p>{{ $user->kabupaten ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Kecamatan</strong>
+                    <p>{{ $user->kecamatan ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Kelurahan / Desa</strong>
+                    <p>{{ $user->kelurahan ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Kode Pos</strong>
+                    <p>{{ $user->kode_pos ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Tanggal Daftar</strong>
+                    <p>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <div class="profile-mini-card">
+                    <strong>Google Maps</strong>
+
+                    @if($user->google_maps_link)
+                        <p class="mb-2">
+                            Lokasi tujuan sudah ditambahkan.
+                        </p>
+
+                        <a href="{{ $user->google_maps_link }}" target="_blank" class="customer-map-btn">
+                            Buka Lokasi di Google Maps
+                        </a>
+                    @else
+                        <p>Belum ada link Google Maps.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 
             @if($tab == 'pembayaran')
                 <div class="profile-content-box">
