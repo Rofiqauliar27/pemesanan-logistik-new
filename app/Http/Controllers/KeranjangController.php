@@ -94,9 +94,10 @@ class KeranjangController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'keranjang_ids' => 'required|array',
-            'keranjang_ids.*' => 'exists:keranjangs,id',
-        ]);
+    'keranjang_ids' => 'required|array',
+    'keranjang_ids.*' => 'exists:keranjangs,id',
+    'catatan' => 'nullable|string|max:1000',
+]);
 
         $keranjangs = Keranjang::with('barang')
             ->where('user_id', Auth::id())
@@ -136,7 +137,7 @@ class KeranjangController extends Controller
                     'total_harga' => $subtotal,
                     'status' => 'pending',
                     'stok_dikurangi' => false,
-                    'catatan' => 'Checkout dari keranjang',
+                    'catatan' => $request->catatan ?: 'Checkout dari keranjang',
                     'order_id' => $orderId,
                     'group_order_id' => $groupOrderId,
                     'payment_status' => 'belum_bayar',

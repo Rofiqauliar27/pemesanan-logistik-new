@@ -111,8 +111,41 @@
             </div>
         </div>
 
+        {{-- FORM CHECKOUT UTAMA --}}
         <form action="{{ route('customer.keranjang.checkout') }}" method="POST" id="checkoutForm">
             @csrf
+
+            <div class="cart-note-input-card mt-3" id="catatanPesananBox" style="display: none;">
+    <div class="cart-note-input-header">
+        <div>
+            <span class="cart-note-label">Opsional</span>
+            <h4>Catatan Pesanan</h4>
+            <p>
+                Tambahkan instruksi khusus untuk admin sebelum checkout.
+            </p>
+        </div>
+    </div>
+
+    <div class="cart-note-textarea-wrap">
+        <textarea
+            name="catatan"
+            id="catatan"
+            class="cart-note-textarea"
+            rows="4"
+            maxlength="1000"
+            placeholder="Contoh: Mohon dikirim sore hari, hubungi sebelum pengiriman, atau packing dibuat aman.">{{ old('catatan') }}</textarea>
+
+        <small class="cart-note-helper">
+            Catatan ini akan tampil di detail pesanan customer, admin, dan invoice.
+        </small>
+    </div>
+
+    @error('catatan')
+        <div class="text-danger mt-2">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
         </form>
 
         <div class="cart-bottom">
@@ -166,6 +199,8 @@
         const itemCheckboxes = document.querySelectorAll('.item-checkbox');
         const totalDipilih = document.getElementById('totalDipilih');
         const checkoutBtn = document.getElementById('checkoutSelectedBtn');
+        const catatanPesananBox = document.getElementById('catatanPesananBox');
+        const catatanTextarea = document.getElementById('catatan');
 
         function formatRupiah(number) {
             return new Intl.NumberFormat('id-ID').format(number);
@@ -188,6 +223,14 @@
 
             if (checkoutBtn) {
                 checkoutBtn.disabled = selectedCount === 0;
+            }
+
+            if (catatanPesananBox) {
+                catatanPesananBox.style.display = selectedCount > 0 ? 'block' : 'none';
+            }
+
+            if (selectedCount === 0 && catatanTextarea) {
+                catatanTextarea.value = '';
             }
 
             if (checkAll) {

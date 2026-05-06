@@ -34,6 +34,7 @@
         : '-';
 
     $statusBayar = $pesanan->payment_status ?? '-';
+    $statusPesanan = $pesanan->status ?? '-';
 
     $labelStatusBayar = [
         'belum_bayar' => 'Belum Bayar',
@@ -48,207 +49,294 @@
         'expire' => 'Expired',
     ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
-    $statusPesanan = $pesanan->status ?? '-';
     $labelStatusPesanan = ucfirst(str_replace('_', ' ', $statusPesanan));
+
+    $statusPesananClass = match($statusPesanan) {
+        'pending' => 'bg-secondary',
+        'diproses' => 'bg-warning text-dark',
+        'dikirim' => 'bg-primary',
+        'selesai' => 'bg-success',
+        'dibatalkan' => 'bg-danger',
+        default => 'bg-dark',
+    };
+
+    $statusBayarClass = in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture'])
+        ? 'bg-success'
+        : (in_array($statusBayar, ['pending', 'challenge'])
+            ? 'bg-warning text-dark'
+            : (in_array($statusBayar, ['failed', 'gagal', 'expire'])
+                ? 'bg-danger'
+                : 'bg-secondary'));
 @endphp
 
-<div class="bg-white p-4 rounded shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+<style>
+    .detail-page-title {
+        font-size: 30px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    .detail-page-subtitle {
+        color: #6b7280;
+        margin-bottom: 0;
+    }
+
+    .detail-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+
+    .detail-section-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 16px;
+    }
+
+    .detail-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .detail-info-item {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 14px 16px;
+    }
+
+    .detail-info-item span {
+        display: block;
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 5px;
+    }
+
+    .detail-info-item strong {
+        font-size: 15px;
+        color: #111827;
+    }
+
+    .detail-address-card {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px;
+    }
+
+    .detail-address-card h5 {
+        font-size: 17px;
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .detail-address-card p {
+        margin-bottom: 8px;
+        color: #4b5563;
+    }
+
+    .detail-action-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .detail-total-row {
+        background: #f8fafc;
+        font-weight: 800;
+    }
+
+    @media (max-width: 992px) {
+        .detail-info-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 576px) {
+        .detail-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-page">
+
+    <div class="admin-page-header">
         <div>
-            <h2 class="mb-1">Detail Pesanan</h2>
-            <p class="text-muted mb-0">
-                Informasi lengkap pesanan customer berdasarkan grup checkout.
-            </p>
+            <h2>Detail Pesanan</h2>
+            <p>Informasi lengkap pesanan customer berdasarkan grup checkout.</p>
         </div>
 
-        <div>
-            <a href="{{ route('admin.pesanan.index') }}" class="btn btn-secondary">
+        <div class="admin-page-actions">
+            <a href="{{ route('admin.pesanan.index') }}" class="btn-admin-secondary">
                 Kembali
             </a>
         </div>
     </div>
 
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered">
-            <tr>
-                <th width="30%">Order ID</th>
-                <td>{{ $groupOrderId }}</td>
-            </tr>
+    <div class="detail-card">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+            <div>
+                <h3 class="detail-page-title">Detail Pesanan</h3>
+                <p class="detail-page-subtitle">
+                    Order ID: <strong>{{ $groupOrderId }}</strong>
+                </p>
+            </div>
 
-            <tr>
-                <th>Nama Customer</th>
-                <td>{{ $customer->name ?? '-' }}</td>
-            </tr>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge {{ $statusPesananClass }} px-3 py-2">
+                    {{ $labelStatusPesanan }}
+                </span>
 
-            <tr>
-                <th>Email Customer</th>
-                <td>{{ $customer->email ?? '-' }}</td>
-            </tr>
+                <span class="badge {{ $statusBayarClass }} px-3 py-2">
+                    {{ $labelStatusBayar }}
+                </span>
+            </div>
+        </div>
 
-            <tr>
-                <th>Total Jenis Barang</th>
-                <td>{{ $pesananItems->count() }} Barang</td>
-            </tr>
+        <div class="detail-info-grid">
+            <div class="detail-info-item">
+                <span>Customer</span>
+                <strong>{{ $customer->name ?? '-' }}</strong>
+            </div>
 
-            <tr>
-                <th>Total Jumlah Item</th>
-                <td>{{ $totalJumlah }} Item</td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Email</span>
+                <strong>{{ $customer->email ?? '-' }}</strong>
+            </div>
 
-            <tr>
-                <th>Total Pembayaran</th>
-                <td>
-                    <strong>
-                        Rp {{ number_format($totalGrup, 0, ',', '.') }}
-                    </strong>
-                </td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Total Pembayaran</span>
+                <strong>Rp {{ number_format($totalGrup, 0, ',', '.') }}</strong>
+            </div>
 
-            <tr>
-                <th>Status Pesanan</th>
-                <td>
-                    @if($statusPesanan == 'pending')
-                        <span class="badge bg-secondary">Pending</span>
-                    @elseif($statusPesanan == 'diproses')
-                        <span class="badge bg-warning text-dark">Diproses</span>
-                    @elseif($statusPesanan == 'dikirim')
-                        <span class="badge bg-primary">Dikirim</span>
-                    @elseif($statusPesanan == 'selesai')
-                        <span class="badge bg-success">Selesai</span>
-                    @elseif($statusPesanan == 'dibatalkan')
-                        <span class="badge bg-danger">Dibatalkan</span>
-                    @else
-                        <span class="badge bg-dark">{{ $labelStatusPesanan }}</span>
-                    @endif
-                </td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Total Barang</span>
+                <strong>{{ $pesananItems->count() }} Jenis / {{ $totalJumlah }} Item</strong>
+            </div>
 
-            <tr>
-                <th>Status Pembayaran</th>
-                <td>
-                    @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
-                        <span class="badge bg-success">{{ $labelStatusBayar }}</span>
-                    @elseif(in_array($statusBayar, ['pending', 'challenge']))
-                        <span class="badge bg-warning text-dark">{{ $labelStatusBayar }}</span>
-                    @elseif(in_array($statusBayar, ['failed', 'gagal', 'expire']))
-                        <span class="badge bg-danger">{{ $labelStatusBayar }}</span>
-                    @else
-                        <span class="badge bg-secondary">{{ $labelStatusBayar }}</span>
-                    @endif
-                </td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Tanggal Pesanan</span>
+                <strong>{{ $tanggalPesanan }}</strong>
+            </div>
 
-            <tr>
-                <th>Metode Pembayaran</th>
-                <td>{{ $pesanan->payment_type ?? '-' }}</td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Batas Pembayaran</span>
+                <strong>{{ $batasBayar }}</strong>
+            </div>
 
-            <tr>
-                <th>Transaction Status</th>
-                <td>{{ $pesanan->transaction_status ?? '-' }}</td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Tanggal Pembayaran</span>
+                <strong>{{ $tanggalBayar }}</strong>
+            </div>
 
-            <tr>
-                <th>Tanggal Pesanan</th>
-                <td>{{ $tanggalPesanan }}</td>
-            </tr>
+            <div class="detail-info-item">
+                <span>Metode Pembayaran</span>
+                <strong>{{ $pesanan->payment_type ?? '-' }}</strong>
+            </div>
 
-            <tr>
-                <th>Batas Pembayaran</th>
-                <td>{{ $batasBayar }}</td>
-            </tr>
-
-            <tr>
-                <th>Tanggal Pembayaran</th>
-                <td>{{ $tanggalBayar }}</td>
-            </tr>
-
-            <tr>
-                <th>Catatan</th>
-                <td>{{ $pesanan->catatan ?? '-' }}</td>
-            </tr>
-        </table>
+            <div class="detail-info-item">
+                <span>Transaction Status</span>
+                <strong>{{ $pesanan->transaction_status ?? '-' }}</strong>
+            </div>
+        </div>
     </div>
 
-    <h4 class="mb-3">Alamat Pengiriman</h4>
+    <div class="detail-card">
+        <h4 class="detail-section-title">Alamat Pengiriman</h4>
 
-    <div class="border rounded p-3 mb-4 bg-light">
-        <h6 class="mb-1 fw-bold">
-            {{ $customer->name ?? '-' }}
-        </h6>
+        <div class="detail-address-card">
+            <h5>{{ $customer->name ?? '-' }}</h5>
 
-        <p class="mb-2 text-muted">
-            {{ $customer->email ?? '-' }}
+            <p>
+                {{ $customer->email ?? '-' }}
 
-            @if(!empty($customer->telepon))
-                | {{ $customer->telepon }}
+                @if(!empty($customer->telepon))
+                    | {{ $customer->telepon }}
+                @endif
+            </p>
+
+            <p>
+                {{ $alamatLengkap ?: 'Alamat belum dilengkapi.' }}
+            </p>
+
+            @if(!empty($customer->google_maps_link))
+                <a href="{{ $customer->google_maps_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    Buka Lokasi Google Maps
+                </a>
             @endif
-        </p>
-
-        <p class="mb-2">
-            {{ $alamatLengkap ?: 'Alamat belum dilengkapi.' }}
-        </p>
-
-        @if(!empty($customer->google_maps_link))
-            <a href="{{ $customer->google_maps_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                Buka Lokasi Google Maps
-            </a>
-        @endif
+        </div>
     </div>
 
-    <h4 class="mb-3">Daftar Barang Pesanan</h4>
+    <div class="detail-card">
+        <h4 class="detail-section-title">Daftar Barang Pesanan</h4>
 
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle">
-            <thead>
-                <tr>
-                    <th width="60">No</th>
-                    <th>Nama Barang</th>
-                    <th width="120">Jumlah</th>
-                    <th width="180">Subtotal</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach($pesananItems as $item)
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $item->barang->nama_barang ?? '-' }}</td>
-
-                        <td>{{ $item->jumlah }} Item</td>
-
-                        <td>
-                            Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
-                        </td>
+                        <th width="60">No</th>
+                        <th>Nama Barang</th>
+                        <th width="120">Jumlah</th>
+                        <th width="180">Subtotal</th>
                     </tr>
-                @endforeach
+                </thead>
 
-                <tr>
-                    <th colspan="2" class="text-end">Total</th>
-                    <th>{{ $totalJumlah }} Item</th>
-                    <th>
-                        Rp {{ number_format($totalGrup, 0, ',', '.') }}
-                    </th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                <tbody>
+                    @foreach($pesananItems as $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
 
-    <div class="mt-3">
-        @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
-            <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn btn-warning">
-                Ubah Status
-            </a>
+                            <td>{{ $item->barang->nama_barang ?? '-' }}</td>
+
+                            <td>{{ $item->jumlah }} Item</td>
+
+                            <td>
+                                Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    <tr class="detail-total-row">
+                        <td colspan="2" class="text-end">Total</td>
+                        <td>{{ $totalJumlah }} Item</td>
+                        <td>Rp {{ number_format($totalGrup, 0, ',', '.') }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        @if(!empty($pesanan->catatan))
+            <div class="alert alert-info mt-3 mb-0">
+                <strong>Catatan:</strong> {{ $pesanan->catatan }}
+            </div>
         @endif
-
-        <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn btn-success">
-            Cetak Invoice
-        </a>
-
-        <a href="{{ route('admin.pesanan.index') }}" class="btn btn-secondary">
-            Kembali ke Data Pesanan
-        </a>
     </div>
+
+    <div class="detail-card">
+        <div class="detail-action-bar">
+            @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
+                <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn btn-warning">
+                    Ubah Status
+                </a>
+            @endif
+
+            <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn btn-success">
+                Cetak Invoice
+            </a>
+
+            <a href="{{ route('admin.pesanan.index') }}" class="btn btn-secondary">
+                Kembali ke Data Pesanan
+            </a>
+        </div>
+    </div>
+
 </div>
 @endsection

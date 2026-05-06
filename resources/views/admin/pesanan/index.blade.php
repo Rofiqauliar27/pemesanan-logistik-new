@@ -73,187 +73,178 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table admin-table align-middle">
-                <thead>
-                    <tr>
-                        <th width="60">No</th>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Tanggal Pesanan</th>
-                        <th>Barang</th>
-                        <th>Total Item</th>
-                        <th>Total Bayar</th>
-                        <th>Status Pesanan</th>
-                        <th>Status Bayar</th>
-                        <th>Tanggal Bayar</th>
-                        <th width="170">Aksi</th>
-                    </tr>
-                </thead>
+    <table class="table admin-table align-middle">
+        <thead>
+            <tr>
+                <th width="60">No</th>
+                <th>Order ID</th>
+                <th>Tanggal Pesanan</th>
+                <th>Customer</th>
+                <th>Barang</th>
+                <th>Total Bayar</th>
+                <th>Status</th>
+                <th width="170">Aksi</th>
+            </tr>
+        </thead>
 
-                <tbody>
-                    @forelse($pesanans as $item)
-                        @php
-                            $items = $item->items ?? collect([$item]);
+        <tbody>
+            @forelse($pesanans as $item)
+                @php
+                    $items = $item->items ?? collect([$item]);
 
-                            $jumlahJenisBarang = $item->total_barang ?? $items->count();
-                            $totalJumlah = $item->total_jumlah ?? $items->sum('jumlah');
-                            $totalGrup = $item->total_grup ?? $items->sum('total_harga');
+                    $jumlahJenisBarang = $item->total_barang ?? $items->count();
+                    $totalJumlah = $item->total_jumlah ?? $items->sum('jumlah');
+                    $totalGrup = $item->total_grup ?? $items->sum('total_harga');
 
-                            $statusPesanan = $item->status ?? '-';
-                            $statusBayar = $item->payment_status ?? '-';
+                    $statusPesanan = $item->status ?? '-';
+                    $statusBayar = $item->payment_status ?? '-';
 
-                            $tanggalPesanan = $item->created_at
-                                ? $item->created_at->format('d-m-Y H:i')
-                                : '-';
+                    $tanggalPesanan = $item->created_at
+                        ? $item->created_at->format('d-m-Y H:i')
+                        : '-';
 
-                            $tanggalBayar = $item->paid_at
-                                ? $item->paid_at->format('d-m-Y H:i')
-                                : '-';
+                    $sudahLunas = in_array($statusBayar, [
+                        'sudah_bayar',
+                        'settlement',
+                        'paid',
+                        'capture',
+                    ]);
 
-                            $labelStatusBayar = [
-                                'belum_bayar' => 'Belum Bayar',
-                                'pending' => 'Menunggu Pembayaran',
-                                'challenge' => 'Menunggu Konfirmasi',
-                                'sudah_bayar' => 'Sudah Bayar',
-                                'settlement' => 'Sudah Bayar',
-                                'paid' => 'Sudah Bayar',
-                                'capture' => 'Sudah Bayar',
-                                'failed' => 'Gagal',
-                                'gagal' => 'Gagal',
-                                'expire' => 'Expired',
-                            ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
+                    $belumLunas = in_array($statusBayar, [
+                        'belum_bayar',
+                        'pending',
+                        'challenge',
+                        'failed',
+                        'gagal',
+                        'expire',
+                    ]);
 
-                            $sudahLunas = in_array($statusBayar, [
-                                'sudah_bayar',
-                                'settlement',
-                                'paid',
-                                'capture',
-                            ]);
-                        @endphp
+                    if ($belumLunas) {
+                        $statusTampil = [
+                            'belum_bayar' => 'Belum Bayar',
+                            'pending' => 'Menunggu Pembayaran',
+                            'challenge' => 'Menunggu Konfirmasi',
+                            'failed' => 'Gagal',
+                            'gagal' => 'Gagal',
+                            'expire' => 'Expired',
+                        ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
+                        $statusClass = $statusBayar;
+                    } else {
+                        $statusTampil = ucfirst(str_replace('_', ' ', $statusPesanan));
+                        $statusClass = $statusPesanan;
+                    }
+                @endphp
 
-                            <td>
-                                <div class="admin-product-name">
-                                    {{ $item->group_order_id ?? $item->order_id ?? '-' }}
-                                </div>
-                            </td>
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
 
-                            <td>
-                                <div class="admin-product-name">
-                                    {{ $item->user->name ?? '-' }}
-                                </div>
-                                <small class="text-muted">
-                                    {{ $item->user->email ?? '-' }}
-                                </small>
-                            </td>
+                    <td>
+                        <div class="admin-product-name">
+                            {{ $item->group_order_id ?? $item->order_id ?? '-' }}
+                        </div>
+                    </td>
 
-                            <td>
-                                {{ $tanggalPesanan }}
-                            </td>
+                    <td>
+                        {{ $tanggalPesanan }}
+                    </td>
 
-                            <td>
-                                <div class="admin-desc-text">
-                                    {{ $jumlahJenisBarang }} Barang
-                                </div>
-                            </td>
+                    <td>
+                        <div class="admin-product-name">
+                            {{ $item->user->name ?? '-' }}
+                        </div>
 
-                            <td>
-                                <span class="admin-stock-badge">
-                                    {{ $totalJumlah }} Item
-                                </span>
-                            </td>
+                        <small class="text-muted">
+                            {{ $item->user->email ?? '-' }}
+                        </small>
+                    </td>
 
-                            <td>
-                                <strong>
-                                    Rp {{ number_format($totalGrup, 0, ',', '.') }}
-                                </strong>
-                            </td>
+                    <td>
+                        <div class="admin-desc-text">
+                            {{ $jumlahJenisBarang }} Jenis Barang / {{ $totalJumlah }} Item
+                        </div>
+                    </td>
 
-                            <td>
-                                @if($statusPesanan == 'pending')
-                                    <span class="admin-status-badge status-pending">Pending</span>
-                                @elseif($statusPesanan == 'diproses')
-                                    <span class="admin-status-badge status-process">Diproses</span>
-                                @elseif($statusPesanan == 'dikirim')
-                                    <span class="admin-status-badge status-shipping">Dikirim</span>
-                                @elseif($statusPesanan == 'selesai')
-                                    <span class="admin-status-badge status-success">Selesai</span>
-                                @elseif($statusPesanan == 'dibatalkan')
-                                    <span class="admin-status-badge status-pending">Dibatalkan</span>
-                                @else
-                                    <span class="admin-status-badge status-pending">
-                                        {{ ucfirst(str_replace('_', ' ', $statusPesanan)) }}
-                                    </span>
-                                @endif
-                            </td>
+                    <td>
+                        <strong>
+                            Rp {{ number_format($totalGrup, 0, ',', '.') }}
+                        </strong>
+                    </td>
 
-                            <td>
-                                @if($sudahLunas)
-                                    <span class="admin-status-badge status-success">
-                                        {{ $labelStatusBayar }}
-                                    </span>
-                                @elseif(in_array($statusBayar, ['pending', 'challenge']))
-                                    <span class="admin-status-badge status-process">
-                                        {{ $labelStatusBayar }}
-                                    </span>
-                                @elseif(in_array($statusBayar, ['failed', 'gagal', 'expire']))
-                                    <span class="admin-status-badge status-pending">
-                                        {{ $labelStatusBayar }}
-                                    </span>
-                                @else
-                                    <span class="admin-status-badge status-pending">
-                                        {{ $labelStatusBayar }}
-                                    </span>
-                                @endif
-                            </td>
+                    <td>
+                        @if($sudahLunas && $statusPesanan == 'pending')
+                            <span class="admin-status-badge payment-paid">
+                                Sudah Bayar
+                            </span>
+                        @elseif($sudahLunas && $statusPesanan == 'diproses')
+                            <span class="admin-status-badge status-process">
+                                Diproses
+                            </span>
+                        @elseif($sudahLunas && $statusPesanan == 'dikirim')
+                            <span class="admin-status-badge status-shipping">
+                                Dikirim
+                            </span>
+                        @elseif($sudahLunas && $statusPesanan == 'selesai')
+                            <span class="admin-status-badge status-success">
+                                Selesai
+                            </span>
+                        @elseif($statusPesanan == 'dibatalkan')
+                            <span class="admin-status-badge payment-failed">
+                                Dibatalkan
+                            </span>
+                        @elseif(in_array($statusBayar, ['pending', 'challenge']))
+                            <span class="admin-status-badge payment-waiting">
+                                {{ $statusTampil }}
+                            </span>
+                        @elseif(in_array($statusBayar, ['failed', 'gagal', 'expire']))
+                            <span class="admin-status-badge payment-failed">
+                                {{ $statusTampil }}
+                            </span>
+                        @else
+                            <span class="admin-status-badge payment-unpaid">
+                                {{ $statusTampil }}
+                            </span>
+                        @endif
+                    </td>
 
-                            <td>
-                                {{ $tanggalBayar }}
-                            </td>
+                    <td>
+                        <div class="admin-action-group admin-action-column">
+                            <a href="{{ route('admin.pesanan.show', $item->id) }}" class="btn-table-edit">
+                                Detail
+                            </a>
 
-                            <td>
-                                <div class="admin-action-group admin-action-column">
-                                    <a href="{{ route('admin.pesanan.show', $item->id) }}" class="btn-table-edit">
-                                        Detail
-                                    </a>
-
-                                    @if($sudahLunas)
-                                        <a href="{{ route('admin.pesanan.editStatus', $item->id) }}" class="btn-table-edit">
-                                            Ubah Status
-                                        </a>
-                                    @elseif(in_array($statusBayar, ['pending', 'challenge']))
-                                        <button class="btn-admin-disabled" disabled>
-                                            Menunggu Bayar
-                                        </button>
-                                    @elseif(in_array($statusBayar, ['failed', 'gagal', 'expire']))
-                                        <button class="btn-admin-disabled danger" disabled>
-                                            Bayar Gagal
-                                        </button>
-                                    @else
-                                        <button class="btn-admin-disabled" disabled>
-                                            Belum Bayar
-                                        </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-
-                        
-                    @empty
-                        <tr>
-                            <td colspan="11">
-                                <div class="admin-empty-state">
-                                    Belum ada pesanan.
-                                </div>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
+                            @if($sudahLunas)
+                                <a href="{{ route('admin.pesanan.editStatus', $item->id) }}" class="btn-table-edit">
+                                    Ubah Status
+                                </a>
+                            @elseif(in_array($statusBayar, ['pending', 'challenge']))
+                                <button class="btn-admin-disabled" disabled>
+                                    Menunggu Bayar
+                                </button>
+                            @elseif(in_array($statusBayar, ['failed', 'gagal', 'expire']))
+                                <button class="btn-admin-disabled danger" disabled>
+                                    Bayar Gagal
+                                </button>
+                            @else
+                                <button class="btn-admin-disabled" disabled>
+                                    Belum Bayar
+                                </button>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="8">
+                        <div class="admin-empty-state">
+                            Belum ada pesanan.
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 
 </div>
 @endsection

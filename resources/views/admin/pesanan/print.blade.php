@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Laporan Pesanan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -75,16 +74,13 @@
     <table class="table table-bordered">
         <thead class="table-light">
             <tr>
-                <th>No</th>
+                <th width="40">No</th>
                 <th>Order ID</th>
-                <th>Customer</th>
                 <th>Tanggal Pesanan</th>
+                <th>Customer</th>
                 <th>Barang</th>
-                <th>Total Item</th>
-                <th>Total Pembayaran</th>
-                <th>Status Pesanan</th>
-                <th>Status Bayar</th>
-                <th>Tanggal Bayar</th>
+                <th>Total Bayar</th>
+                <th>Status</th>
             </tr>
         </thead>
 
@@ -97,66 +93,75 @@
                     $totalJumlah = $item->total_jumlah ?? $items->sum('jumlah');
                     $totalGrup = $item->total_grup ?? $items->sum('total_harga');
 
-                    $statusPesanan = ucfirst(str_replace('_', ' ', $item->status ?? '-'));
-                    $statusBayarMentah = $item->payment_status ?? '-';
-
-                    $labelStatusBayar = [
-                        'belum_bayar' => 'Belum Bayar',
-                        'pending' => 'Menunggu Pembayaran',
-                        'challenge' => 'Menunggu Konfirmasi',
-                        'sudah_bayar' => 'Sudah Bayar',
-                        'settlement' => 'Sudah Bayar',
-                        'paid' => 'Sudah Bayar',
-                        'capture' => 'Sudah Bayar',
-                        'failed' => 'Gagal',
-                        'gagal' => 'Gagal',
-                        'expire' => 'Expired',
-                    ][$statusBayarMentah] ?? ucfirst(str_replace('_', ' ', $statusBayarMentah));
+                    $statusPesanan = $item->status ?? '-';
+                    $statusBayar = $item->payment_status ?? '-';
 
                     $tanggalPesanan = $item->created_at
                         ? $item->created_at->format('d-m-Y H:i')
                         : '-';
 
-                    $tanggalBayar = $item->paid_at
-                        ? $item->paid_at->format('d-m-Y H:i')
-                        : '-';
+                    $sudahLunas = in_array($statusBayar, [
+                        'sudah_bayar',
+                        'settlement',
+                        'paid',
+                        'capture',
+                    ]);
+
+                    $belumLunas = in_array($statusBayar, [
+                        'belum_bayar',
+                        'pending',
+                        'challenge',
+                        'failed',
+                        'gagal',
+                        'expire',
+                    ]);
+
+                    if ($belumLunas) {
+                        $statusTampil = [
+                            'belum_bayar' => 'Belum Bayar',
+                            'pending' => 'Menunggu Pembayaran',
+                            'challenge' => 'Menunggu Konfirmasi',
+                            'failed' => 'Gagal',
+                            'gagal' => 'Gagal',
+                            'expire' => 'Expired',
+                        ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
+                    } elseif ($sudahLunas && $statusPesanan == 'pending') {
+                        $statusTampil = 'Sudah Bayar';
+                    } else {
+                        $statusTampil = ucfirst(str_replace('_', ' ', $statusPesanan));
+                    }
                 @endphp
 
                 <tr>
                     <td>{{ $loop->iteration }}</td>
 
-                    <td>{{ $item->group_order_id ?? $item->order_id ?? '-' }}</td>
-
-                    <td>{{ $item->user->name ?? '-' }}</td>
-
-                    <td>{{ $tanggalPesanan }}</td>
-
                     <td>
-                        <strong>{{ $jumlahJenisBarang }} Barang</strong>
-                        <br>
-
-                        @foreach($items as $detail)
-                            {{ $detail->barang->nama_barang ?? '-' }}
-                            ({{ $detail->jumlah }} item)
-                            {{ !$loop->last ? ',' : '' }}
-                        @endforeach
+                        {{ $item->group_order_id ?? $item->order_id ?? '-' }}
                     </td>
 
-                    <td>{{ $totalJumlah }} Item</td>
+                    <td>
+                        {{ $tanggalPesanan }}
+                    </td>
+
+                    <td>
+                        {{ $item->user->name ?? '-' }}
+                    </td>
+
+                    <td>
+                        {{ $jumlahJenisBarang }} Jenis Barang / {{ $totalJumlah }} Item
+                    </td>
 
                     <td>
                         Rp {{ number_format($totalGrup, 0, ',', '.') }}
                     </td>
 
-                    <td>{{ $statusPesanan }}</td>
-
-                    <td>{{ $labelStatusBayar }}</td>
-
-                    <td>{{ $tanggalBayar }}</td>
+                    <td>
+                        {{ $statusTampil }}
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="10" class="text-center">
+                    <td colspan="7" class="text-center">
                         Tidak ada data pesanan.
                     </td>
                 </tr>
