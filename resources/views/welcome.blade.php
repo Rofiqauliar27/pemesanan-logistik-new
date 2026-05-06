@@ -155,49 +155,75 @@
             <a href="{{ route('public.produk') }}">Lihat Semua Produk</a>
         </div>
 
-        <div class="home-product-grid">
-            @forelse($barangs as $barang)
-                <div class="home-product-card">
-                    <a href="{{ route('public.produk.show', $barang->id) }}" class="product-image-area">
-                        @if($barang->gambar)
-                            <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}">
-                        @else
-                            <div class="no-product-image">
-                                Produk
-                            </div>
-                        @endif
+       <div class="home-product-grid">
+    @forelse($barangs as $barang)
+        <div class="home-product-card">
+            <a href="{{ route('public.produk.show', $barang->id) }}" class="product-image-area">
+                @if($barang->gambar)
+                    <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}">
+                @else
+                    <div class="no-product-image">
+                        Produk
+                    </div>
+                @endif
+            </a>
+
+            <div class="product-card-body">
+                <a href="{{ route('public.produk.show', $barang->id) }}" class="product-title">
+                    {{ $barang->nama_barang }}
+                </a>
+
+                <div class="product-price">
+                    Rp {{ number_format($barang->harga, 0, ',', '.') }}
+                </div>
+
+                <div class="home-product-actions">
+                    <a href="{{ route('public.produk.show', $barang->id) }}" class="home-btn-detail">
+                        Detail
                     </a>
 
-                    <div class="product-card-body">
-                        <a href="{{ route('public.produk.show', $barang->id) }}" class="product-title">
-                            {{ $barang->nama_barang }}
+                    @auth
+                        <form action="{{ route('customer.keranjang.store', ['barangId' => $barang->id]) }}" method="POST" class="home-cart-form">
+                            @csrf
+
+                            <button type="submit" class="home-btn-cart" title="Tambah ke Keranjang" aria-label="Tambah ke Keranjang">
+                                <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M6.2 6.5H20L18.6 13.2C18.45 13.95 17.78 14.5 17 14.5H9.1C8.32 14.5 7.65 13.95 7.5 13.2L5.8 4.8C5.7 4.35 5.3 4 4.83 4H3.5"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                    <path d="M9.5 19.2C10.05 19.2 10.5 18.75 10.5 18.2C10.5 17.65 10.05 17.2 9.5 17.2C8.95 17.2 8.5 17.65 8.5 18.2C8.5 18.75 8.95 19.2 9.5 19.2Z"
+                                          fill="currentColor"/>
+                                    <path d="M17 19.2C17.55 19.2 18 18.75 18 18.2C18 17.65 17.55 17.2 17 17.2C16.45 17.2 16 17.65 16 18.2C16 18.75 16.45 19.2 17 19.2Z"
+                                          fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="home-btn-cart" title="Login untuk menambahkan ke keranjang" aria-label="Login untuk menambahkan ke keranjang">
+                            <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M6.2 6.5H20L18.6 13.2C18.45 13.95 17.78 14.5 17 14.5H9.1C8.32 14.5 7.65 13.95 7.5 13.2L5.8 4.8C5.7 4.35 5.3 4 4.83 4H3.5"
+                                      stroke="currentColor"
+                                      stroke-width="2"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                                <path d="M9.5 19.2C10.05 19.2 10.5 18.75 10.5 18.2C10.5 17.65 10.05 17.2 9.5 17.2C8.95 17.2 8.5 17.65 8.5 18.2C8.5 18.75 8.95 19.2 9.5 19.2Z"
+                                      fill="currentColor"/>
+                                <path d="M17 19.2C17.55 19.2 18 18.75 18 18.2C18 17.65 17.55 17.2 17 17.2C16.45 17.2 16 17.65 16 18.2C16 18.75 16.45 19.2 17 19.2Z"
+                                      fill="currentColor"/>
+                            </svg>
                         </a>
-
-                        <div class="product-price">
-                            Rp {{ number_format($barang->harga, 0, ',', '.') }}
-                        </div>
-
-                        <div class="home-product-actions">
-                            <a href="{{ route('public.produk.show', $barang->id) }}" class="home-btn-detail">
-                                Detail
-                            </a>
-
-                            <form action="{{ route('customer.keranjang.store', ['barangId' => $barang->id]) }}" method="POST" class="home-cart-form">
-                                @csrf
-
-                                <button type="submit" class="home-btn-cart">
-                                    + Keranjang
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                    @endauth
                 </div>
-            @empty
-                <div class="empty-product-home">
-                    Belum ada produk.
-                </div>
-            @endforelse
+            </div>
         </div>
+    @empty
+        <div class="empty-product-home">
+            Belum ada produk.
+        </div>
+    @endforelse
+</div>
     </section>
 
 </div>

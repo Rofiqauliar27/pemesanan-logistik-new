@@ -3,6 +3,26 @@
 @section('title', 'Profil Customer')
 
 @section('content')
+@php
+    $pesananGroupsUntukStatistik = $semuaPesanan->groupBy(function ($item) {
+        return $item->group_order_id ?? $item->order_id ?? $item->id;
+    });
+
+    $pesananGroups = $pesanans->groupBy(function ($item) {
+        return $item->group_order_id ?? $item->order_id ?? $item->id;
+    });
+
+    $pesananBelumBayarGroups = $pesananBelumBayar->groupBy(function ($item) {
+        return $item->group_order_id ?? $item->order_id ?? $item->id;
+    });
+
+    $pesananSelesaiGroups = $semuaPesanan
+        ->where('status', 'selesai')
+        ->groupBy(function ($item) {
+            return $item->group_order_id ?? $item->order_id ?? $item->id;
+        });
+@endphp
+
 <div class="customer-account-hero">
     <div>
         <h1>Akun Saya</h1>
@@ -15,17 +35,17 @@
 <div class="customer-stats-grid">
     <div class="customer-stat-card">
         <span>Total Pesanan</span>
-        <strong>{{ $pesanans->count() }}</strong>
+        <strong>{{ $pesananGroupsUntukStatistik->count() }}</strong>
     </div>
 
     <div class="customer-stat-card">
         <span>Perlu Dibayar</span>
-        <strong>{{ $pesananBelumBayar->count() }}</strong>
+        <strong>{{ $pesananBelumBayarGroups->count() }}</strong>
     </div>
 
     <div class="customer-stat-card">
         <span>Pesanan Selesai</span>
-        <strong>{{ $pesanans->where('status', 'selesai')->count() }}</strong>
+        <strong>{{ $pesananSelesaiGroups->count() }}</strong>
     </div>
 </div>
 
@@ -50,11 +70,6 @@
                 <a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}"
                    class="nav-link {{ $tab == 'pesanan' ? 'active' : '' }}">
                     Pesanan Saya
-                </a>
-
-                <a href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}"
-                   class="nav-link {{ $tab == 'pembayaran' ? 'active' : '' }}">
-                    Pembayaran Saya
                 </a>
 
                 <a href="{{ route('customer.profile', ['tab' => 'keamanan']) }}"
@@ -194,14 +209,54 @@
                     <div>
                         <h4 class="mb-1">Pesanan Saya</h4>
                         <p class="text-muted mb-0">
-                            Daftar pesanan yang pernah Anda buat.
+                            Daftar semua pesanan dan status pembayaran Anda.
                         </p>
                     </div>
 
                     <span class="profile-tab-badge blue">
-                        {{ $pesanans->count() }} Pesanan
+                        {{ $pesananGroups->count() }} Pesanan
                     </span>
                 </div>
+
+                {{-- FILTER PESANAN DROPDOWN --}}
+                <form action="{{ route('customer.profile') }}" method="GET" class="mb-3">
+                    <input type="hidden" name="tab" value="pesanan">
+
+                    <div class="row align-items-end">
+                        <div class="col-md-5 col-lg-4">
+                            <label for="filter" class="form-label fw-semibold">Filter Pesanan</label>
+                            <select name="filter" id="filter" class="form-select" onchange="this.form.submit()">
+                                <option value="semua" {{ ($filter ?? 'semua') == 'semua' ? 'selected' : '' }}>
+                                    Semua
+                                </option>
+
+                                <option value="belum_bayar" {{ ($filter ?? 'semua') == 'belum_bayar' ? 'selected' : '' }}>
+                                    Belum Dibayar
+                                </option>
+
+                                <option value="menunggu" {{ ($filter ?? 'semua') == 'menunggu' ? 'selected' : '' }}>
+                                    Menunggu Konfirmasi
+                                </option>
+
+                                <option value="diproses" {{ ($filter ?? 'semua') == 'diproses' ? 'selected' : '' }}>
+                                    Diproses
+                                </option>
+
+                                <option value="selesai" {{ ($filter ?? 'semua') == 'selesai' ? 'selected' : '' }}>
+                                    Selesai
+                                </option>
+
+                                <option value="gagal" {{ ($filter ?? 'semua') == 'gagal' ? 'selected' : '' }}>
+                                    Gagal / Expire
+                                </option>
+
+                                <option value="dibatalkan" {{ ($filter ?? 'semua') == 'dibatalkan' ? 'selected' : '' }}>
+                                    Dibatalkan
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle profile-table">
@@ -209,142 +264,118 @@
                             <tr>
                                 <th>No</th>
                                 <th>Order ID</th>
+                                <th>Tanggal Pesanan</th>
                                 <th>Barang</th>
-                                <th>Jumlah</th>
-                                <th>Total</th>
+                                <th>Total Item</th>
+                                <th>Total Bayar</th>
                                 <th>Status Pesanan</th>
                                 <th>Status Bayar</th>
+                                <th>Tanggal Bayar</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            @forelse($pesanans as $item)
+                            @forelse($pesananGroups as $groupOrderId => $items)
+                                @php
+                                    $itemUtama = $items->first();
+                                    $jumlahJenisBarang = $items->count();
+                                    $totalJumlahBarang = $items->sum('jumlah');
+                                    $totalBayar = $items->sum('total_harga');
+
+                                    $statusPesanan = $itemUtama->status ?? '-';
+                                    $statusBayar = $itemUtama->payment_status ?? '-';
+
+                                    $statusBelumLunas = in_array($statusBayar, [
+                                        'belum_bayar',
+                                        'pending',
+                                        'failed',
+                                        'expire',
+                                        'challenge',
+                                    ]);
+
+                                    $tanggalPesanan = $itemUtama->created_at
+                                        ? $itemUtama->created_at->format('d-m-Y H:i')
+                                        : '-';
+
+                                    $tanggalBayar = $itemUtama->paid_at
+                                        ? $itemUtama->paid_at->format('d-m-Y H:i')
+                                        : '-';
+
+                                    $labelStatusBayar = [
+                                        'belum_bayar' => 'Belum Dibayar',
+                                        'pending' => 'Menunggu Pembayaran',
+                                        'challenge' => 'Menunggu Konfirmasi',
+                                        'sudah_bayar' => 'Sudah Bayar',
+                                        'settlement' => 'Sudah Bayar',
+                                        'paid' => 'Sudah Bayar',
+                                        'capture' => 'Sudah Bayar',
+                                        'failed' => 'Gagal',
+                                        'expire' => 'Expired',
+                                    ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
+
+                                    $labelStatusPesanan = ucfirst(str_replace('_', ' ', $statusPesanan));
+                                @endphp
+
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
 
                                     <td>
-                                        {{ $item->order_id ?? $item->group_order_id ?? '-' }}
+                                        {{ $itemUtama->group_order_id ?? $itemUtama->order_id ?? '-' }}
                                     </td>
 
                                     <td>
-                                        {{ $item->barang->nama_barang ?? '-' }}
+                                        {{ $tanggalPesanan }}
                                     </td>
 
                                     <td>
-                                        {{ $item->jumlah ?? '-' }}
+                                        {{ $jumlahJenisBarang }} Barang
                                     </td>
 
                                     <td>
-                                        Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
+                                        {{ $totalJumlahBarang }} Item
                                     </td>
 
                                     <td>
-                                        <span class="status-badge status-{{ $item->status }}">
-                                            {{ $item->status ?? '-' }}
+                                        Rp {{ number_format($totalBayar, 0, ',', '.') }}
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge status-{{ $statusPesanan }}">
+                                            {{ $labelStatusPesanan }}
                                         </span>
                                     </td>
 
                                     <td>
-                                        <span class="status-badge status-{{ $item->payment_status }}">
-                                            {{ $item->payment_status ?? '-' }}
+                                        <span class="status-badge status-{{ $statusBayar }}">
+                                            {{ $labelStatusBayar }}
                                         </span>
                                     </td>
 
                                     <td>
-                                        @if(($item->payment_status ?? '') != 'settlement' && ($item->payment_status ?? '') != 'paid')
-                                            <a href="{{ route('customer.pesanan.showBayar', $item->id) }}" class="btn btn-sm btn-primary">
+                                        {{ $tanggalBayar }}
+                                    </td>
+
+                                    <td>
+                                        @if($statusBelumLunas)
+                                            <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
+                                               class="btn btn-sm btn-primary">
                                                 Lihat / Bayar
                                             </a>
                                         @else
-                                            <span class="text-success fw-bold">Sudah Bayar</span>
+                                            <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
+                                               class="btn btn-sm btn-info">
+                                                Lihat Detail
+                                            </a>
                                         @endif
                                     </td>
                                 </tr>
+
+                    
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted">
-                                        Belum ada pesanan.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        @endif
-
-        {{-- PEMBAYARAN SAYA --}}
-        @if($tab == 'pembayaran')
-            <div class="profile-content-box">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h4 class="mb-1">Pembayaran Saya</h4>
-                        <p class="text-muted mb-0">
-                            Pesanan yang belum dibayar atau masih menunggu pembayaran.
-                        </p>
-                    </div>
-
-                    <span class="profile-tab-badge yellow">
-                        {{ $pesananBelumBayar->count() }} Data
-                    </span>
-                </div>
-
-                <div class="alert alert-info">
-                    Bagian ini menampilkan pesanan yang belum dibayar, sedang menunggu pembayaran, gagal, atau perlu ditinjau kembali.
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle profile-table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Order ID</th>
-                                <th>Barang</th>
-                                <th>Total</th>
-                                <th>Metode</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @forelse($pesananBelumBayar as $item)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-
-                                    <td>
-                                        {{ $item->order_id ?? $item->group_order_id ?? '-' }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->barang->nama_barang ?? '-' }}
-                                    </td>
-
-                                    <td>
-                                        Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->payment_type ?? '-' }}
-                                    </td>
-
-                                    <td>
-                                        <span class="status-badge status-{{ $item->payment_status }}">
-                                            {{ $item->payment_status ?? '-' }}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        <a href="{{ route('customer.pesanan.showBayar', $item->id) }}" class="btn btn-sm btn-primary">
-                                            Lihat / Bayar
-                                        </a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center text-muted">
-                                        Tidak ada pembayaran aktif.
+                                    <td colspan="10" class="text-center text-muted">
+                                        Tidak ada pesanan pada filter ini.
                                     </td>
                                 </tr>
                             @endforelse

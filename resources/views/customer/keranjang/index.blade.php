@@ -19,7 +19,7 @@
                     <thead>
                         <tr>
                             <th width="50">
-                                <input type="checkbox" id="checkAll" class="cart-check">
+                                <input type="checkbox" id="checkAll">
                             </th>
                             <th width="60">No</th>
                             <th>Barang</th>
@@ -32,6 +32,12 @@
 
                     <tbody>
                         @foreach($keranjangs as $item)
+                            @php
+                                $harga = (int) ($item->barang->harga ?? 0);
+                                $jumlah = (int) $item->jumlah;
+                                $subtotal = $harga * $jumlah;
+                            @endphp
+
                             <tr>
                                 <td>
                                     <input
@@ -39,7 +45,7 @@
                                         name="keranjang_ids[]"
                                         value="{{ $item->id }}"
                                         class="item-checkbox cart-check"
-                                        data-subtotal="{{ $item->barang->harga * $item->jumlah }}"
+                                        data-subtotal="{{ $subtotal }}"
                                         form="checkoutForm"
                                     >
                                 </td>
@@ -52,14 +58,14 @@
 
                                 <td>
                                     <div class="cart-product-info">
-                                        <strong>{{ $item->barang->nama_barang }}</strong>
+                                        <strong>{{ $item->barang->nama_barang ?? '-' }}</strong>
                                         <small>{{ $item->barang->kategori ?? 'Produk' }}</small>
                                     </div>
                                 </td>
 
                                 <td>
                                     <span class="cart-price">
-                                        Rp {{ number_format($item->barang->harga, 0, ',', '.') }}
+                                        Rp {{ number_format($harga, 0, ',', '.') }}
                                     </span>
                                 </td>
 
@@ -73,7 +79,7 @@
                                             name="jumlah"
                                             class="cart-qty-input"
                                             min="1"
-                                            value="{{ $item->jumlah }}"
+                                            value="{{ $jumlah }}"
                                         >
 
                                         <button type="submit" class="cart-update-btn">
@@ -84,7 +90,7 @@
 
                                 <td>
                                     <span class="cart-subtotal">
-                                        Rp {{ number_format($item->barang->harga * $item->jumlah, 0, ',', '.') }}
+                                        Rp {{ number_format($subtotal, 0, ',', '.') }}
                                     </span>
                                 </td>
 
@@ -120,9 +126,12 @@
             <div class="cart-summary-card">
                 <h4>Ringkasan Belanja</h4>
 
-                <div class="cart-total-box">
+                <div class="cart-summary-total">
                     <span>Total Dipilih</span>
-                    <strong>Rp <span id="selectedTotal">0</span></strong>
+
+                    <div class="cart-total-price">
+                        Rp <span id="totalDipilih">0</span>
+                    </div>
                 </div>
 
                 <div class="cart-action-row">
@@ -150,14 +159,12 @@
     @endif
 
 </div>
-@endsection
 
-@section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const checkAll = document.getElementById('checkAll');
         const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-        const selectedTotal = document.getElementById('selectedTotal');
+        const totalDipilih = document.getElementById('totalDipilih');
         const checkoutBtn = document.getElementById('checkoutSelectedBtn');
 
         function formatRupiah(number) {
@@ -170,17 +177,23 @@
 
             itemCheckboxes.forEach(function (checkbox) {
                 if (checkbox.checked) {
-                    total += parseInt(checkbox.dataset.subtotal);
+                    total += parseInt(checkbox.dataset.subtotal || 0);
                     selectedCount++;
                 }
             });
 
-            if (selectedTotal) {
-                selectedTotal.textContent = formatRupiah(total);
+            if (totalDipilih) {
+                totalDipilih.textContent = formatRupiah(total);
             }
 
             if (checkoutBtn) {
                 checkoutBtn.disabled = selectedCount === 0;
+            }
+
+            if (checkAll) {
+                checkAll.checked = itemCheckboxes.length > 0 && Array.from(itemCheckboxes).every(function (checkbox) {
+                    return checkbox.checked;
+                });
             }
         }
 
@@ -195,21 +208,7 @@
         }
 
         itemCheckboxes.forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (!checkbox.checked && checkAll) {
-                    checkAll.checked = false;
-                }
-
-                const allChecked = Array.from(itemCheckboxes).every(function (item) {
-                    return item.checked;
-                });
-
-                if (checkAll) {
-                    checkAll.checked = allChecked;
-                }
-
-                updateSelectedTotal();
-            });
+            checkbox.addEventListener('change', updateSelectedTotal);
         });
 
         updateSelectedTotal();

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama_barang');
             $table->string('kategori')->nullable();
             $table->string('satuan')->nullable();
-            $table->decimal('harga', 15, 2)->default(0);
+            $table->unsignedBigInteger('harga')->default(0);
             $table->integer('stok')->default(0);
             $table->text('deskripsi')->nullable();
             $table->timestamps();

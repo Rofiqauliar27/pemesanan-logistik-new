@@ -9,11 +9,10 @@
         <div>
             <span>Laporan</span>
             <h2>Laporan Pesanan</h2>
-            <p>Filter, pantau, dan cetak laporan pesanan berdasarkan tanggal, status pesanan, dan pembayaran.</p>
+            <p>Filter, pantau, dan cetak laporan pesanan berdasarkan grup checkout.</p>
         </div>
 
-        <div class="admin-page-actions">
-        </div>
+        <div class="admin-page-actions"></div>
     </div>
 
     <div class="admin-card">
@@ -44,6 +43,7 @@
                     <option value="diproses" {{ request('status') == 'diproses' ? 'selected' : '' }}>Diproses</option>
                     <option value="dikirim" {{ request('status') == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
                     <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
                 </select>
             </div>
 
@@ -52,10 +52,11 @@
                 <select name="payment_status">
                     <option value="">Semua Pembayaran</option>
                     <option value="belum_bayar" {{ request('payment_status') == 'belum_bayar' ? 'selected' : '' }}>Belum Bayar</option>
-                    <option value="menunggu_pembayaran" {{ request('payment_status') == 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                    <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                    <option value="challenge" {{ request('payment_status') == 'challenge' ? 'selected' : '' }}>Menunggu Konfirmasi</option>
                     <option value="sudah_bayar" {{ request('payment_status') == 'sudah_bayar' ? 'selected' : '' }}>Sudah Bayar</option>
-                    <option value="gagal" {{ request('payment_status') == 'gagal' ? 'selected' : '' }}>Gagal</option>
-                    <option value="challenge" {{ request('payment_status') == 'challenge' ? 'selected' : '' }}>Challenge</option>
+                    <option value="failed" {{ request('payment_status') == 'failed' ? 'selected' : '' }}>Gagal</option>
+                    <option value="expire" {{ request('payment_status') == 'expire' ? 'selected' : '' }}>Expired</option>
                 </select>
             </div>
 
@@ -96,7 +97,7 @@
         <div class="admin-table-header">
             <div>
                 <h4>Daftar Laporan Pesanan</h4>
-                <p>Total data: {{ $pesanans->count() }} pesanan</p>
+                <p>Total data: {{ $pesanans->count() }} grup pesanan</p>
             </div>
         </div>
 
@@ -105,20 +106,60 @@
                 <thead>
                     <tr>
                         <th width="60">No</th>
+                        <th>Order ID</th>
                         <th>Customer</th>
+                        <th>Tanggal Pesanan</th>
                         <th>Barang</th>
-                        <th width="90">Jumlah</th>
-                        <th>Total Harga</th>
+                        <th>Total Item</th>
+                        <th>Total Pembayaran</th>
                         <th>Status Pesanan</th>
                         <th>Status Bayar</th>
-                        <th>Tanggal</th>
+                        <th>Tanggal Bayar</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @forelse($pesanans as $item)
+                        @php
+                            $items = $item->items ?? collect([$item]);
+
+                            $jumlahJenisBarang = $item->total_barang ?? $items->count();
+                            $totalJumlah = $item->total_jumlah ?? $items->sum('jumlah');
+                            $totalGrup = $item->total_grup ?? $items->sum('total_harga');
+
+                            $statusPesanan = $item->status ?? '-';
+                            $statusBayar = $item->payment_status ?? '-';
+
+                            $tanggalPesanan = $item->created_at
+                                ? $item->created_at->format('d-m-Y H:i')
+                                : '-';
+
+                            $tanggalBayar = $item->paid_at
+                                ? $item->paid_at->format('d-m-Y H:i')
+                                : '-';
+
+                            $labelStatusBayar = [
+                                'belum_bayar' => 'Belum Bayar',
+                                'pending' => 'Menunggu Pembayaran',
+                                'challenge' => 'Menunggu Konfirmasi',
+                                'sudah_bayar' => 'Sudah Bayar',
+                                'settlement' => 'Sudah Bayar',
+                                'paid' => 'Sudah Bayar',
+                                'capture' => 'Sudah Bayar',
+                                'failed' => 'Gagal',
+                                'gagal' => 'Gagal',
+                                'expire' => 'Expired',
+                            ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
+                        @endphp
+
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+
+                            <td>
+                                <div class="admin-product-name">
+                                    {{ $item->group_order_id ?? $item->order_id ?? '-' }}
+                                </div>
+                            </td>
 
                             <td>
                                 <div class="admin-product-name">
@@ -126,61 +167,67 @@
                                 </div>
                             </td>
 
+                            <td>{{ $tanggalPesanan }}</td>
+
                             <td>
                                 <div class="admin-desc-text">
-                                    {{ $item->barang->nama_barang ?? '-' }}
+                                    {{ $jumlahJenisBarang }} Barang
                                 </div>
+
+                                <small class="text-muted">
+                                    @foreach($items as $detail)
+                                        {{ $detail->barang->nama_barang ?? '-' }}{{ !$loop->last ? ', ' : '' }}
+                                    @endforeach
+                                </small>
                             </td>
 
                             <td>
                                 <span class="admin-stock-badge">
-                                    {{ $item->jumlah }}
+                                    {{ $totalJumlah }} Item
                                 </span>
                             </td>
 
                             <td>
                                 <strong>
-                                    Rp {{ number_format($item->total_harga, 0, ',', '.') }}
+                                    Rp {{ number_format($totalGrup, 0, ',', '.') }}
                                 </strong>
                             </td>
 
                             <td>
-                                @if($item->status == 'pending')
+                                @if($statusPesanan == 'pending')
                                     <span class="admin-status-badge status-pending">Pending</span>
-                                @elseif($item->status == 'diproses')
+                                @elseif($statusPesanan == 'diproses')
                                     <span class="admin-status-badge status-process">Diproses</span>
-                                @elseif($item->status == 'dikirim')
+                                @elseif($statusPesanan == 'dikirim')
                                     <span class="admin-status-badge status-shipping">Dikirim</span>
-                                @elseif($item->status == 'selesai')
+                                @elseif($statusPesanan == 'selesai')
                                     <span class="admin-status-badge status-success">Selesai</span>
+                                @elseif($statusPesanan == 'dibatalkan')
+                                    <span class="admin-status-badge status-pending">Dibatalkan</span>
                                 @else
-                                    <span class="admin-status-badge status-pending">{{ $item->status }}</span>
+                                    <span class="admin-status-badge status-pending">
+                                        {{ ucfirst(str_replace('_', ' ', $statusPesanan)) }}
+                                    </span>
                                 @endif
                             </td>
 
                             <td>
-                                @if($item->payment_status == 'belum_bayar')
-                                    <span class="admin-status-badge payment-unpaid">Belum Bayar</span>
-                                @elseif($item->payment_status == 'menunggu_pembayaran')
-                                    <span class="admin-status-badge payment-waiting">Menunggu Pembayaran</span>
-                                @elseif($item->payment_status == 'sudah_bayar')
-                                    <span class="admin-status-badge payment-paid">Sudah Bayar</span>
-                                @elseif($item->payment_status == 'gagal')
-                                    <span class="admin-status-badge payment-failed">Gagal</span>
-                                @elseif($item->payment_status == 'challenge')
-                                    <span class="admin-status-badge payment-challenge">Challenge</span>
+                                @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
+                                    <span class="admin-status-badge payment-paid">{{ $labelStatusBayar }}</span>
+                                @elseif(in_array($statusBayar, ['pending', 'challenge']))
+                                    <span class="admin-status-badge payment-waiting">{{ $labelStatusBayar }}</span>
+                                @elseif(in_array($statusBayar, ['failed', 'gagal', 'expire']))
+                                    <span class="admin-status-badge payment-failed">{{ $labelStatusBayar }}</span>
                                 @else
-                                    <span class="admin-status-badge status-pending">{{ $item->payment_status }}</span>
+                                    <span class="admin-status-badge payment-unpaid">{{ $labelStatusBayar }}</span>
                                 @endif
                             </td>
 
-                            <td>
-                                {{ $item->created_at ? $item->created_at->format('d-m-Y H:i') : '-' }}
-                            </td>
+                            <td>{{ $tanggalBayar }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8">
+                            <td colspan="10">
                                 <div class="admin-empty-state">
                                     Belum ada data pesanan.
                                 </div>

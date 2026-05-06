@@ -53,11 +53,6 @@
                         Pesanan Saya
                     </a>
 
-                    <a href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}"
-                       class="nav-link {{ $tab == 'pembayaran' ? 'active' : '' }}">
-                        Pembayaran Saya
-                    </a>
-
                     <a href="{{ route('customer.profile', ['tab' => 'keamanan']) }}"
                        class="nav-link {{ $tab == 'keamanan' ? 'active' : '' }}">
                         Keamanan

@@ -9,34 +9,91 @@ use Illuminate\Validation\Rule;
 
 class CustomerProfileController extends Controller
 {
-   public function index(Request $request)
-{
-    $user = Auth::user();
+    public function index(Request $request)
+    {
+        $user = Auth::user();
 
-    $tab = $request->get('tab', 'profil');
+        $tab = $request->get('tab', 'profil');
 
-    $pesanans = Pesanan::where('user_id', $user->id)
-        ->latest()
-        ->get();
+        if ($tab === 'pembayaran') {
+            return redirect()->route('customer.profile', [
+                'tab' => 'pesanan',
+            ]);
+        }
 
-    $pesananBelumBayar = Pesanan::where('user_id', $user->id)
-        ->whereIn('payment_status', [
-            'belum_bayar',
-            'pending',
-            'failed',
-            'expire',
-            'challenge',
-        ])
-        ->latest()
-        ->get();
+        $filter = $request->get('filter', 'semua');
 
-    return view('customer.dashboard', compact(
-        'user',
-        'tab',
-        'pesanans',
-        'pesananBelumBayar'
-    ));
-}
+        Pesanan::where('user_id', $user->id)
+            ->whereNotIn('payment_status', [
+                'sudah_bayar',
+                'settlement',
+                'paid',
+                'capture',
+            ])
+            ->whereNotNull('expired_at')
+            ->where('expired_at', '<', now())
+            ->where('status', '!=', 'dibatalkan')
+            ->update([
+                'status' => 'dibatalkan',
+                'payment_status' => 'expire',
+                'transaction_status' => 'expire',
+            ]);
+
+        $pesananQuery = Pesanan::with('barang')
+            ->where('user_id', $user->id);
+
+        if ($filter === 'belum_bayar') {
+            $pesananQuery->where('payment_status', 'belum_bayar');
+        } elseif ($filter === 'menunggu') {
+            $pesananQuery->whereIn('payment_status', [
+                'pending',
+                'challenge',
+            ]);
+        } elseif ($filter === 'gagal') {
+            $pesananQuery->whereIn('payment_status', [
+                'failed',
+                'gagal',
+                'expire',
+            ]);
+        } elseif ($filter === 'diproses') {
+            $pesananQuery->where('status', 'diproses');
+        } elseif ($filter === 'selesai') {
+            $pesananQuery->where('status', 'selesai');
+        } elseif ($filter === 'dibatalkan') {
+            $pesananQuery->where('status', 'dibatalkan');
+        }
+
+        $pesanans = $pesananQuery
+            ->latest()
+            ->get();
+
+        $semuaPesanan = Pesanan::with('barang')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        $pesananBelumBayar = Pesanan::with('barang')
+            ->where('user_id', $user->id)
+            ->whereIn('payment_status', [
+                'belum_bayar',
+                'pending',
+                'failed',
+                'gagal',
+                'expire',
+                'challenge',
+            ])
+            ->latest()
+            ->get();
+
+        return view('customer.dashboard', compact(
+            'user',
+            'tab',
+            'filter',
+            'pesanans',
+            'semuaPesanan',
+            'pesananBelumBayar'
+        ));
+    }
 
     public function edit()
     {

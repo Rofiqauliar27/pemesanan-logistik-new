@@ -1,31 +1,24 @@
-@extends('layouts.public')
+@extends('layouts.customer')
 
-@section('title', 'Katalog Produk')
+@section('title', 'Produk')
 
 @section('content')
-
 <div class="catalog-page">
 
     <div class="catalog-hero">
         <div>
-            <h1>Temukan Kebutuhan Logistik Perkapalan Anda</h1>
+            <h1>Temukan Kebutuhan Logistik Perkapalan</h1>
             <p>
-                Pilih produk berdasarkan kategori, cari barang yang dibutuhkan,
-                lalu lanjutkan ke detail produk atau tambahkan ke keranjang.
+                Pilih produk logistik, perlengkapan kapal, alat kebersihan, safety equipment,
+                dan kebutuhan operasional lainnya dengan mudah.
             </p>
         </div>
 
         <form action="{{ route('public.produk') }}" method="GET" class="catalog-search-box">
-            <input 
-                type="text" 
-                name="search" 
-                placeholder="Cari nama produk, kategori, atau kebutuhan..." 
-                value="{{ request('search') }}"
-            >
-
-            @if(request('kategori'))
-                <input type="hidden" name="kategori" value="{{ request('kategori') }}">
-            @endif
+            <input type="text"
+                   name="search"
+                   value="{{ request('search') }}"
+                   placeholder="Cari produk yang Anda butuhkan...">
 
             <button type="submit">
                 Cari
@@ -41,52 +34,45 @@
             </div>
 
             <a href="{{ route('public.produk') }}"
-               class="catalog-category-link {{ !request('kategori') ? 'active' : '' }}">
+               class="catalog-category-link {{ request('kategori') ? '' : 'active' }}">
                 Semua Produk
             </a>
 
-            @foreach($kategoriList as $kategori)
-                <a href="{{ route('public.produk', ['kategori' => $kategori, 'search' => request('search')]) }}"
-                   class="catalog-category-link {{ request('kategori') == $kategori ? 'active' : '' }}">
-                    {{ $kategori }}
-                </a>
-            @endforeach
+            @foreach(($kategoris ?? $kategoriList ?? $kategoriProduk ?? []) as $kategori)
+    <a href="{{ route('public.produk', ['kategori' => $kategori]) }}"
+       class="catalog-category-link {{ request('kategori') == $kategori ? 'active' : '' }}">
+        {{ $kategori }}
+    </a>
+@endforeach
         </aside>
 
         <main class="catalog-content">
+
             <div class="catalog-toolbar">
                 <div>
-                    <h2>
-                        @if(request('kategori'))
-                            {{ request('kategori') }}
-                        @else
-                            Semua Produk
-                        @endif
-                    </h2>
-
-                    <p>
-                        Menampilkan {{ $barangs->total() }} produk
-                        @if(request('search'))
-                            untuk pencarian "{{ request('search') }}"
-                        @endif
-                    </p>
+                    <h2>Semua Produk</h2>
+                    <p>Menampilkan {{ $barangs->count() }} produk</p>
                 </div>
 
-                <a href="{{ route('public.produk') }}" class="catalog-reset-btn">
-                    Reset Filter
-                </a>
+                @if(request('kategori') || request('search'))
+                    <a href="{{ route('public.produk') }}" class="catalog-reset-btn">
+                        Reset Filter
+                    </a>
+                @endif
             </div>
 
             @if($barangs->count() > 0)
                 <div class="catalog-grid">
                     @foreach($barangs as $barang)
                         <div class="catalog-card">
+
                             <a href="{{ route('public.produk.show', $barang->id) }}" class="catalog-image">
                                 @if($barang->gambar)
-                                    <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}">
+                                    <img src="{{ asset('storage/' . $barang->gambar) }}"
+                                         alt="{{ $barang->nama_barang }}">
                                 @else
                                     <div class="catalog-no-image">
-                                        Produk
+                                        Tidak ada gambar
                                     </div>
                                 @endif
                             </a>
@@ -101,7 +87,7 @@
                                 </a>
 
                                 <p class="catalog-desc">
-                                    {{ \Illuminate\Support\Str::limit($barang->deskripsi ?? 'Produk logistik perkapalan.', 65) }}
+                                    {{ $barang->deskripsi ?? '-' }}
                                 </p>
 
                                 <div class="catalog-price">
@@ -114,45 +100,142 @@
                                     </a>
 
                                     @auth
-                                        @if(auth()->user()->role === 'customer')
-                                            <form action="{{ route('customer.keranjang.store', $barang->id) }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="jumlah" value="1">
-
-                                                <button type="submit" class="btn-catalog-cart">
-                                                    + Keranjang
-                                                </button>
-                                            </form>
-                                        @else
-                                            <a href="{{ route('public.produk.show', $barang->id) }}" class="btn-catalog-cart">
-                                                Lihat
-                                            </a>
-                                        @endif
+                                        <button type="button"
+        class="btn-catalog-cart"
+        title="Tambah ke Keranjang"
+        aria-label="Tambah ke Keranjang"
+        data-bs-toggle="modal"
+        data-bs-target="#cartModal{{ $barang->id }}">
+    <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6.2 6.5H20L18.6 13.2C18.45 13.95 17.78 14.5 17 14.5H9.1C8.32 14.5 7.65 13.95 7.5 13.2L5.8 4.8C5.7 4.35 5.3 4 4.83 4H3.5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+        <path d="M9.5 19.2C10.05 19.2 10.5 18.75 10.5 18.2C10.5 17.65 10.05 17.2 9.5 17.2C8.95 17.2 8.5 17.65 8.5 18.2C8.5 18.75 8.95 19.2 9.5 19.2Z"
+              fill="currentColor"/>
+        <path d="M17 19.2C17.55 19.2 18 18.75 18 18.2C18 17.65 17.55 17.2 17 17.2C16.45 17.2 16 17.65 16 18.2C16 18.75 16.45 19.2 17 19.2Z"
+              fill="currentColor"/>
+    </svg>
+</button>
                                     @else
-                                        <a href="{{ route('login') }}" class="btn-catalog-cart">
-                                            Login
+                                        <a href="{{ route('login') }}"
+                                           class="btn-catalog-cart"
+                                           title="Login untuk menambahkan ke keranjang"
+                                           aria-label="Login untuk menambahkan ke keranjang">
+                                            <svg class="cart-icon-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                                <path d="M6.2 6.5H20L18.6 13.2C18.45 13.95 17.78 14.5 17 14.5H9.1C8.32 14.5 7.65 13.95 7.5 13.2L5.8 4.8C5.7 4.35 5.3 4 4.83 4H3.5"
+                                                      stroke="currentColor"
+                                                      stroke-width="2"
+                                                      stroke-linecap="round"
+                                                      stroke-linejoin="round"/>
+                                                <path d="M9.5 19.2C10.05 19.2 10.5 18.75 10.5 18.2C10.5 17.65 10.05 17.2 9.5 17.2C8.95 17.2 8.5 17.65 8.5 18.2C8.5 18.75 8.95 19.2 9.5 19.2Z"
+                                                      fill="currentColor"/>
+                                                <path d="M17 19.2C17.55 19.2 18 18.75 18 18.2C18 17.65 17.55 17.2 17 17.2C16.45 17.2 16 17.65 16 18.2C16 18.75 16.45 19.2 17 19.2Z"
+                                                      fill="currentColor"/>
+                                            </svg>
                                         </a>
                                     @endauth
                                 </div>
                             </div>
                         </div>
+                <div class="modal fade" id="cartModal{{ $barang->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content cart-product-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah ke Keranjang</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+
+            <form action="{{ route('customer.keranjang.store', ['barangId' => $barang->id]) }}" method="POST">
+                @csrf
+
+                <div class="modal-body">
+                    <div class="cart-modal-product">
+                        <div class="cart-modal-image">
+                            @if($barang->gambar)
+                                <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}">
+                            @else
+                                <span>Produk</span>
+                            @endif
+                        </div>
+
+                        <div>
+                            <h6>{{ $barang->nama_barang }}</h6>
+                            <p>{{ $barang->kategori ?? 'Tanpa Kategori' }}</p>
+                            <strong>Rp {{ number_format($barang->harga, 0, ',', '.') }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="cart-modal-qty">
+                        <label>Jumlah</label>
+
+                        <div class="qty-control-modal">
+                            <button type="button" class="qty-minus" onclick="decreaseQty('qty{{ $barang->id }}')">−</button>
+
+                            <input type="number"
+                                   id="qty{{ $barang->id }}"
+                                   name="jumlah"
+                                   value="1"
+                                   min="1"
+                                   max="{{ $barang->stok ?? 999 }}"
+                                   required>
+
+                            <button type="button" class="qty-plus" onclick="increaseQty('qty{{ $barang->id }}', {{ $barang->stok ?? 999 }})">+</button>
+                        </div>
+
+                        <small>Stok tersedia: {{ $barang->stok ?? '-' }}</small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cart-cancel" data-bs-dismiss="modal">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="btn-cart-submit">
+                        Tambah ke Keranjang
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                     @endforeach
                 </div>
 
                 <div class="catalog-pagination">
-                    {{ $barangs->links('pagination::bootstrap-5') }}
+{{ $barangs->links('pagination::bootstrap-5') }}
                 </div>
             @else
                 <div class="catalog-empty">
                     <h4>Produk tidak ditemukan</h4>
-                    <p>Coba gunakan kata kunci lain atau pilih kategori berbeda.</p>
-                    <a href="{{ route('public.produk') }}">Lihat semua produk</a>
+                    <p>Tidak ada produk yang sesuai dengan pencarian atau kategori ini.</p>
+                    <a href="{{ route('public.produk') }}">Lihat Semua Produk</a>
                 </div>
             @endif
+
         </main>
-
     </div>
-
 </div>
 
+<script>
+    function increaseQty(inputId, maxStock) {
+        const input = document.getElementById(inputId);
+        let value = parseInt(input.value || 1);
+
+        if (value < maxStock) {
+            input.value = value + 1;
+        }
+    }
+
+    function decreaseQty(inputId) {
+        const input = document.getElementById(inputId);
+        let value = parseInt(input.value || 1);
+
+        if (value > 1) {
+            input.value = value - 1;
+        }
+    }
+</script>
 @endsection

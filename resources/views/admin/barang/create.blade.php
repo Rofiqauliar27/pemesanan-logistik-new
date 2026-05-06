@@ -77,15 +77,20 @@
                     >
                 </div>
 
-                <div class="admin-form-group">
-                    <label>Harga</label>
-                    <input 
-                        type="number" 
-                        name="harga" 
-                        value="{{ old('harga') }}" 
-                        placeholder="Contoh: 150000"
-                    >
-                </div>
+               <div class="admin-form-group">
+    <label>Harga</label>
+    <input
+        type="text"
+        name="harga"
+        class="harga-input"
+        value="{{ old('harga') }}"
+        placeholder="Contoh: 120000"
+        inputmode="numeric"
+        autocomplete="off"
+        required
+    >
+    <small>Masukkan angka biasa tanpa titik. Contoh: 120000</small>
+</div>
 
                 <div class="admin-form-group">
                     <label>Stok</label>
@@ -133,4 +138,12 @@
     </form>
 
 </div>
+
+<script>
+    document.querySelectorAll('.harga-input').forEach(function (input) {
+        input.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    });
+</script>
 @endsection

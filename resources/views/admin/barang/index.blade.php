@@ -106,12 +106,11 @@
                                 </strong>
                             </td>
 
-                            <td>
-                                <span class="admin-stock-badge {{ $item->stok <= 5 ? 'low' : '' }}">
-                                    {{ $item->stok }}
-                                </span>
-                            </td>
-
+                           <td>
+    <span class="admin-stock-badge {{ $item->stok <= 5 ? 'low' : '' }}">
+        {{ number_format($item->stok, 0, ',', '.') }}
+    </span>
+</td>
                             <td>
                                 <div class="admin-desc-text">
                                     {{ \Illuminate\Support\Str::limit($item->deskripsi ?? '-', 60) }}
