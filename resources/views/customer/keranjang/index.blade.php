@@ -160,12 +160,13 @@
                 <h4>Ringkasan Belanja</h4>
 
                 <div class="cart-summary-total">
-                    <span>Total Dipilih</span>
+    <span>Total Dipilih</span>
 
-                    <div class="cart-total-price">
-                        Rp <span id="totalDipilih">0</span>
-                    </div>
-                </div>
+    <div class="cart-total-price">
+        <span class="cart-total-currency">Rp</span>
+        <span id="totalDipilih" class="cart-total-amount">0</span>
+    </div>
+</div>
 
                 <div class="cart-action-row">
                     <a href="{{ route('public.produk') }}" class="cart-continue-btn">

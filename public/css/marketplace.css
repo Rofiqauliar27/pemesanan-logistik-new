@@ -5436,3 +5436,78 @@ transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
     font-weight: 900;
     line-height: 1;
 }
+
+/* =========================
+   JARAK NAVBAR KE HERO
+========================= */
+
+/* sebelumnya terlalu jauh, sekarang cukup sedikit */
+.market-page > .container > section:first-child,
+.market-page > .container > div:first-child {
+    margin-top: 14px;
+}
+
+/* kalau hero kamu pakai salah satu class ini */
+.about-hero,
+.tentang-hero,
+.company-hero,
+.profile-company-hero {
+    margin-top: 14px;
+    border-radius: 22px;
+    overflow: hidden;
+}
+
+/* =========================
+   POSISI KOTAK KECIL
+========================= */
+
+.hero-company-card,
+.about-company-card,
+.company-profile-card {
+    z-index: 3;
+}
+
+.hero-floating-card,
+.about-floating-card,
+.company-floating-card {
+    z-index: 2;
+}
+
+/* kotak PRODUK: jangan terlalu jauh */
+.hero-floating-card.product-card,
+.about-floating-card.product-card,
+.company-floating-card.product-card {
+    right: 235px;
+    top: 295px;
+}
+
+/* kotak LOGISTIK: cukup dekat saja, jangan terlalu menutupi */
+.hero-floating-card.logistic-card,
+.about-floating-card.logistic-card,
+.company-floating-card.logistic-card {
+    right: 28px;
+    top: 335px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px) {
+    .market-page > .container > section:first-child,
+    .market-page > .container > div:first-child,
+    .about-hero,
+    .tentang-hero,
+    .company-hero,
+    .profile-company-hero {
+        margin-top: 10px;
+    }
+
+    .hero-floating-card,
+    .about-floating-card,
+    .company-floating-card {
+        position: static !important;
+        margin-top: 12px;
+        max-width: 100%;
+    }
+}

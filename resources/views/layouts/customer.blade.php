@@ -2,6 +2,7 @@
     $profilPerusahaan = \App\Models\ProfilPerusahaan::first();
 
     $cartCount = 0;
+
     if (auth()->check() && auth()->user()->role === 'customer') {
         $cartCount = \App\Models\Keranjang::where('user_id', auth()->id())->sum('jumlah');
     }
@@ -40,34 +41,57 @@
                 </div>
 
                 <div class="bst-brand-text">
-    <strong>{{ $profilPerusahaan->nama_perusahaan ?? 'CV. Bintang Saida Teknik' }}</strong>
-</div>
+                    <strong>{{ $profilPerusahaan->nama_perusahaan ?? 'CV. Bintang Saida Teknik' }}</strong>
+                </div>
             </a>
 
-            <form action="{{ route('public.produk') }}" method="GET" class="bst-search">
+            <form action="{{ route('public.produk') }}" method="GET" class="bst-search customer-search-form">
                 <input
                     type="text"
                     name="search"
-                    placeholder="Ketik Yang Anda Cari"
+                    class="customer-search-input"
+                    placeholder="Ketik yang Anda cari"
                     value="{{ request('search') }}"
                 >
 
-                <select name="tipe">
-                    <option value="produk">Produk</option>
-                    <option value="kategori">Kategori</option>
+                <select name="tipe" class="customer-search-select">
+                    <option value="produk" {{ request('tipe', 'produk') == 'produk' ? 'selected' : '' }}>
+                        Produk
+                    </option>
+                    <option value="kategori" {{ request('tipe') == 'kategori' ? 'selected' : '' }}>
+                        Kategori
+                    </option>
                 </select>
 
-                <button type="submit">
-                    🔍
+                <button type="submit" class="customer-search-button" aria-label="Cari produk">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+                    </svg>
                 </button>
             </form>
 
             <div class="bst-auth-area">
                 @auth
                     @if(auth()->user()->role === 'customer')
-                        <a href="{{ route('customer.keranjang.index') }}" class="bst-cart-btn">
-                            Keranjang
-                            <span id="cart-badge" class="bst-cart-badge">{{ $cartCount }}</span>
+                        <a href="{{ route('customer.keranjang.index') }}" class="header-cart-btn">
+                            <span class="header-cart-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L22 6H6"></path>
+                                </svg>
+                            </span>
+
+                            <span class="header-cart-text">Keranjang</span>
+
+                            <span class="header-cart-badge">
+                                {{ $cartCount }}
+                            </span>
                         </a>
 
                         <div class="dropdown">
@@ -76,38 +100,31 @@
                             </button>
 
                             <ul class="dropdown-menu dropdown-menu-end">
-    <li>
-        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
-           href="{{ route('customer.profile') }}">
-            Profil Saya
-        </a>
-    </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
+                                       href="{{ route('customer.profile') }}">
+                                        Profil Saya
+                                    </a>
+                                </li>
 
-    <li>
-        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
-           href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
-            Pesanan Saya
-        </a>
-    </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
+                                       href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
+                                        Pesanan Saya
+                                    </a>
+                                </li>
 
-    <li>
-        <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
-           href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
-            Pembayaran
-        </a>
-    </li>
+                                <li><hr class="dropdown-divider"></li>
 
-    <li><hr class="dropdown-divider"></li>
-
-    <li>
-        <form action="{{ route('logout') }}" method="POST" class="px-3">
-            @csrf
-            <button type="submit" class="btn btn-danger btn-sm w-100">
-                Logout
-            </button>
-        </form>
-    </li>
-</ul>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="px-3">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     @elseif(auth()->user()->role === 'admin')
                         <a href="{{ url('/admin/dashboard') }}" class="bst-login-btn">
