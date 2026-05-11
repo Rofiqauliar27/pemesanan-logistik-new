@@ -221,78 +221,96 @@ class PesananController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,diproses,dikirim,selesai,dibatalkan',
-        ]);
+{
+    $request->validate([
+        'status' => 'required|in:pending,diproses,dikirim,selesai,dibatalkan',
+    ]);
 
-        $pesanan = Pesanan::with('barang')->findOrFail($id);
+    $pesanan = Pesanan::with('barang')->findOrFail($id);
 
-        $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id;
+    $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id;
 
-        $pesananItems = Pesanan::with('barang')
-            ->where(function ($query) use ($groupOrderId, $pesanan) {
-                $query->where('group_order_id', $groupOrderId)
-                    ->orWhere('order_id', $pesanan->order_id);
-            })
-            ->get();
+    $pesananItems = Pesanan::with('barang')
+        ->where(function ($query) use ($groupOrderId, $pesanan) {
+            $query->where('group_order_id', $groupOrderId)
+                ->orWhere('order_id', $pesanan->order_id);
+        })
+        ->get();
 
-        $paymentStatusLunas = ['sudah_bayar', 'settlement', 'paid', 'capture'];
+    $paymentStatusLunas = [
+        'sudah_bayar',
+        'settlement',
+        'paid',
+        'capture',
+    ];
 
-        if (
-            !in_array($pesanan->payment_status, $paymentStatusLunas) &&
-            in_array($request->status, ['diproses', 'dikirim', 'selesai'])
-        ) {
-            return redirect()->back()->with(
-                'error',
-                'Pesanan belum dibayar. Admin hanya bisa memproses pesanan yang sudah lunas.'
-            );
-        }
+    if (
+        !in_array($pesanan->payment_status, $paymentStatusLunas) &&
+        in_array($request->status, ['diproses', 'dikirim', 'selesai'])
+    ) {
+        return redirect()->back()->with(
+            'error',
+            'Pesanan belum dibayar. Admin hanya bisa memproses pesanan yang sudah lunas.'
+        );
+    }
 
-        DB::beginTransaction();
+    DB::beginTransaction();
 
-        try {
-            if ($request->status === 'diproses') {
-                foreach ($pesananItems as $item) {
-                    if (!$item->stok_dikurangi) {
-                        if ($item->barang->stok < $item->jumlah) {
-                            DB::rollBack();
+    try {
+        /**
+         * Stok dikurangi saat pesanan mulai diproses, dikirim, atau selesai.
+         * Ini penting supaya kalau admin langsung pilih "selesai",
+         * stok tetap ikut berkurang.
+         */
+        if (in_array($request->status, ['diproses', 'dikirim', 'selesai'])) {
+            foreach ($pesananItems as $item) {
+                if (!$item->stok_dikurangi) {
+                    if (!$item->barang) {
+                        DB::rollBack();
 
-                            return redirect()->back()->with(
-                                'error',
-                                'Stok barang ' . $item->barang->nama_barang . ' tidak cukup.'
-                            );
-                        }
-
-                        $item->barang->update([
-                            'stok' => $item->barang->stok - $item->jumlah,
-                        ]);
-
-                        $item->stok_dikurangi = true;
-                        $item->save();
+                        return redirect()->back()->with(
+                            'error',
+                            'Data barang pada pesanan tidak ditemukan.'
+                        );
                     }
+
+                    if ($item->barang->stok < $item->jumlah) {
+                        DB::rollBack();
+
+                        return redirect()->back()->with(
+                            'error',
+                            'Stok barang ' . $item->barang->nama_barang . ' tidak cukup.'
+                        );
+                    }
+
+                    $item->barang->decrement('stok', $item->jumlah);
+
+                    $item->update([
+                        'stok_dikurangi' => true,
+                    ]);
                 }
             }
-
-            Pesanan::whereIn('id', $pesananItems->pluck('id'))->update([
-                'status' => $request->status,
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('admin.pesanan.index')->with(
-                'success',
-                'Status pesanan grup berhasil diupdate.'
-            );
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with(
-                'error',
-                'Status pesanan gagal diupdate: ' . $e->getMessage()
-            );
         }
+
+        Pesanan::whereIn('id', $pesananItems->pluck('id'))->update([
+            'status' => $request->status,
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('admin.pesanan.index')->with(
+            'success',
+            'Status pesanan berhasil diupdate dan stok barang sudah disesuaikan.'
+        );
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return redirect()->back()->with(
+            'error',
+            'Status pesanan gagal diupdate: ' . $e->getMessage()
+        );
     }
+}
 
     public function laporan(Request $request)
     {
