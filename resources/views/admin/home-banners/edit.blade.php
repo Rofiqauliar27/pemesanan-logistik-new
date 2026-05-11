@@ -50,9 +50,7 @@
                         Banner Utama Tengah
                     </option>
 
-                    <option value="side" {{ $homeBanner->position === 'side' ? 'selected' : '' }}>
-                        Banner Samping Kanan
-                    </option>
+                    
                 </select>
             </div>
 

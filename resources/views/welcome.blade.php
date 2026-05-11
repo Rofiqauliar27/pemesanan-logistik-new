@@ -104,14 +104,13 @@
                 </div>
 
                 <div class="popular-category-illustration">
-                    📦
+                    
                 </div>
             </div>
 
             <div class="popular-category-info">
                 <div class="popular-info-header">
                     <h3>Belanja Lebih Mudah</h3>
-                    <a href="{{ route('public.produk') }}">Lihat Semua</a>
                 </div>
 
                 <div class="popular-info-grid">

@@ -141,16 +141,57 @@
         color: #4b5563;
     }
 
-    .detail-action-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
     .detail-total-row {
         background: #f8fafc;
         font-weight: 800;
+    }
+
+    .detail-action-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+    }
+
+    .btn-detail-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 190px;
+        height: 44px;
+        padding: 0 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        line-height: 1;
+        font-family: inherit;
+        transition: 0.2s ease-in-out;
+        white-space: nowrap;
+    }
+
+    .btn-detail-action:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .btn-status-action {
+        background-color: #ffc107;
+        color: #111827;
+    }
+
+    .btn-invoice-action {
+        background-color: #198754;
+        color: #ffffff;
+    }
+
+    .btn-back-action {
+        background-color: #6c757d;
+        color: #ffffff;
     }
 
     @media (max-width: 992px) {
@@ -162,6 +203,15 @@
     @media (max-width: 576px) {
         .detail-info-grid {
             grid-template-columns: 1fr;
+        }
+
+        .detail-action-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-detail-action {
+            width: 100%;
         }
     }
 </style>
@@ -321,21 +371,20 @@
     </div>
 
     <div class="detail-card">
-        <div class="detail-action-bar">
-            @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
-                <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn btn-warning">
-                    Ubah Status
-                </a>
-            @endif
-
-            <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn btn-success">
-                Cetak Invoice
+    <div class="detail-action-bar">
+        @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
+            <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn-detail-action btn-status-action">
+                Ubah Status
             </a>
+        @endif
 
-            <a href="{{ route('admin.pesanan.index') }}" class="btn btn-secondary">
-                Kembali ke Data Pesanan
-            </a>
-        </div>
+        <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn-detail-action btn-invoice-action">
+            Cetak Invoice
+        </a>
+
+        <a href="{{ route('admin.pesanan.index') }}" class="btn-detail-action btn-back-action">
+            Kembali ke Data Pesanan
+        </a>
     </div>
 
 </div>

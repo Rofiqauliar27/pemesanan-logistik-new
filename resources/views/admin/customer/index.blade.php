@@ -57,6 +57,7 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Tanggal Daftar</th>
+                        <th width="120">Aksi</th>
                     </tr>
                 </thead>
 
@@ -86,10 +87,16 @@
                             <td>
                                 {{ $item->created_at ? $item->created_at->format('d-m-Y H:i') : '-' }}
                             </td>
+
+                            <td>
+                                <a href="{{ route('admin.customer.show', $item->id) }}" class="btn-table-edit">
+                                    Detail
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <div class="admin-empty-state">
                                     Belum ada data customer.
                                 </div>

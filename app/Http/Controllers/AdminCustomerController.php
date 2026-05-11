@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Pesanan;
 use Illuminate\Http\Request;
 
 class AdminCustomerController extends Controller
@@ -23,5 +24,16 @@ class AdminCustomerController extends Controller
         $customers = $query->latest()->get();
 
         return view('admin.customer.index', compact('customers'));
+    }
+
+    public function show($id)
+    {
+        $customer = User::where('role', 'customer')->findOrFail($id);
+
+        $pesanans = Pesanan::where('user_id', $customer->id)
+            ->latest()
+            ->get();
+
+        return view('admin.customer.show', compact('customer', 'pesanans'));
     }
 }

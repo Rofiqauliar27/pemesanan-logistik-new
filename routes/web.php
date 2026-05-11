@@ -133,6 +133,10 @@ Route::post('/midtrans/notification', [PesananController::class, 'notificationHa
 Route::get('/admin/customer', [AdminCustomerController::class, 'index'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.customer.index');
+
+Route::get('/admin/customer/{id}', [AdminCustomerController::class, 'show'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.customer.show');
     
 Route::get('/admin/pesanan/{id}/invoice', [PesananController::class, 'invoice'])
     ->middleware(['auth', 'role:admin'])
