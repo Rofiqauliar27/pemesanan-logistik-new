@@ -7,6 +7,7 @@
     <div>
 
     <h1>Akun Saya</h1>
+    <h2 style="color:red;">INI FILE YANG SAYA EDIT</h2>
         <p>
             Kelola informasi akun, riwayat pesanan, dan status pembayaran Anda dengan mudah.
         </p>
@@ -51,11 +52,6 @@
                     <a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}"
                        class="nav-link {{ $tab == 'pesanan' ? 'active' : '' }}">
                         Pesanan Saya
-                    </a>
-
-                    <a href="{{ route('customer.profile', ['tab' => 'keamanan']) }}"
-                       class="nav-link {{ $tab == 'keamanan' ? 'active' : '' }}">
-                        Keamanan
                     </a>
 
                     <form action="{{ route('logout') }}" method="POST" class="mt-2">
@@ -197,7 +193,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Order ID</th>
+                                    <th>Kode Pesanan</th>
                                     <th>Barang</th>
                                     <th>Total</th>
                                     <th>Metode</th>
@@ -209,7 +205,7 @@
                                 @forelse($pesananBelumBayar as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->order_id ?? '-' }}</td>
+                                        <td>{{ $item->group_order_id ?? $item->order_id ?? '-' }}</td>
                                         <td>{{ $item->barang->nama_barang ?? '-' }}</td>
                                         <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
                                         <td>{{ $item->payment_type ?? '-' }}</td>
@@ -231,32 +227,6 @@
                                 @endforelse
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            @endif
-
-            @if($tab == 'keamanan')
-                <div class="profile-content-box">
-                    <h4>Keamanan Akun</h4>
-
-                    <div class="alert alert-info">
-                        Saat ini fitur keamanan masih dasar. Nanti bisa ditambah ubah password, foto profil, dan pengamanan tambahan.
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="profile-mini-card">
-                                <strong>Nama Akun</strong>
-                                <p>{{ $user->name }}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <div class="profile-mini-card">
-                                <strong>Email Akun</strong>
-                                <p>{{ $user->email }}</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             @endif

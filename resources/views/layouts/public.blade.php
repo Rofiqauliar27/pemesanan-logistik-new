@@ -114,13 +114,6 @@
                                     </a>
                                 </li>
 
-                                <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pembayaran' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile', ['tab' => 'pembayaran']) }}">
-                                        Pembayaran
-                                    </a>
-                                </li>
-
                                 <li><hr class="dropdown-divider"></li>
 
                                 <li>

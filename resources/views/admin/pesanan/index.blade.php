@@ -22,7 +22,7 @@
                 <input
                     type="text"
                     name="search"
-                    placeholder="Cari customer, barang, atau Order ID..."
+placeholder="Cari customer, barang, atau kode pesanan..."
                     value="{{ request('search') }}"
                 >
             </div>
@@ -77,7 +77,7 @@
         <thead>
             <tr>
                 <th width="60">No</th>
-                <th>Order ID</th>
+                <th>Kode Pesanan</th>
                 <th>Tanggal Pesanan</th>
                 <th>Customer</th>
                 <th>Barang</th>

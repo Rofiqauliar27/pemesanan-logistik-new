@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended('/admin/dashboard');
         }
 
-        return redirect()->intended(route('customer.profile'));
+        return redirect()->route('home');
     }
 
     /**

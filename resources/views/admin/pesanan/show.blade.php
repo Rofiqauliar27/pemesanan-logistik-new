@@ -8,7 +8,7 @@
     $totalGrup = $totalGrup ?? $pesananItems->sum('total_harga');
     $totalJumlah = $totalJumlah ?? $pesananItems->sum('jumlah');
 
-    $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id ?? '-';
+    $kodePesanan = $pesanan->group_order_id ?? $pesanan->order_id ?? '-';
 
     $customer = $pesanan->user;
 
@@ -179,19 +179,18 @@
         text-decoration: none;
     }
 
-    .btn-status-action {
-        background-color: #ffc107;
-        color: #111827;
-    }
-
-    .btn-invoice-action {
-        background-color: #198754;
-        color: #ffffff;
-    }
-
+    .btn-status-action,
+    .btn-invoice-action,
     .btn-back-action {
-        background-color: #6c757d;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
         color: #ffffff;
+    }
+
+    .btn-status-action:hover,
+    .btn-invoice-action:hover,
+    .btn-back-action:hover {
+        color: #ffffff;
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
     }
 
     @media (max-width: 992px) {
@@ -221,7 +220,7 @@
     <div class="admin-page-header">
         <div>
             <h2>Detail Pesanan</h2>
-            <p>Informasi lengkap pesanan customer berdasarkan grup checkout.</p>
+            <p>Informasi lengkap pesanan customer berdasarkan kode pesanan.</p>
         </div>
 
         <div class="admin-page-actions">
@@ -236,7 +235,7 @@
             <div>
                 <h3 class="detail-page-title">Detail Pesanan</h3>
                 <p class="detail-page-subtitle">
-                    Order ID: <strong>{{ $groupOrderId }}</strong>
+                    Kode Pesanan: <strong>{{ $kodePesanan }}</strong>
                 </p>
             </div>
 
@@ -343,14 +342,9 @@
                     @foreach($pesananItems as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-
                             <td>{{ $item->barang->nama_barang ?? '-' }}</td>
-
                             <td>{{ $item->jumlah }} Item</td>
-
-                            <td>
-                                Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
-                            </td>
+                            <td>Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
 
@@ -371,20 +365,21 @@
     </div>
 
     <div class="detail-card">
-    <div class="detail-action-bar">
-        @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
-            <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn-detail-action btn-status-action">
-                Ubah Status
+        <div class="detail-action-bar">
+            @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
+                <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn-detail-action btn-status-action">
+                    Ubah Status
+                </a>
+            @endif
+
+            <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn-detail-action btn-invoice-action">
+                Cetak Invoice
             </a>
-        @endif
 
-        <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn-detail-action btn-invoice-action">
-            Cetak Invoice
-        </a>
-
-        <a href="{{ route('admin.pesanan.index') }}" class="btn-detail-action btn-back-action">
-            Kembali ke Data Pesanan
-        </a>
+            <a href="{{ route('admin.pesanan.index') }}" class="btn-detail-action btn-back-action">
+                Kembali ke Data Pesanan
+            </a>
+        </div>
     </div>
 
 </div>

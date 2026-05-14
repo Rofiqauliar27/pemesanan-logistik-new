@@ -94,10 +94,10 @@ class KeranjangController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-    'keranjang_ids' => 'required|array',
-    'keranjang_ids.*' => 'exists:keranjangs,id',
-    'catatan' => 'nullable|string|max:1000',
-]);
+            'keranjang_ids' => 'required|array',
+            'keranjang_ids.*' => 'exists:keranjangs,id',
+            'catatan' => 'nullable|string|max:1000',
+        ]);
 
         $keranjangs = Keranjang::with('barang')
             ->where('user_id', Auth::id())
@@ -117,7 +117,7 @@ class KeranjangController extends Controller
         DB::beginTransaction();
 
         try {
-            $groupOrderId = 'GROUP-' . now()->format('YmdHis') . '-' . rand(100, 999);
+            $groupOrderId = $this->generateOrderCode();
             $expiredAt = now()->addHours(24);
 
             $grossAmount = 0;
@@ -128,7 +128,7 @@ class KeranjangController extends Controller
                 $subtotal = $item->barang->harga * $item->jumlah;
                 $grossAmount += $subtotal;
 
-                $orderId = 'ORDER-' . now()->format('YmdHis') . '-' . rand(1000, 9999);
+                $orderId = $this->generateItemOrderCode();
 
                 $pesanan = Pesanan::create([
                     'user_id' => Auth::id(),
@@ -210,7 +210,7 @@ class KeranjangController extends Controller
         if (
             $pesananUtama->expired_at &&
             now()->greaterThan($pesananUtama->expired_at) &&
-            !in_array($pesananUtama->payment_status, ['paid', 'settlement', 'capture'])
+            !in_array($pesananUtama->payment_status, ['paid', 'settlement', 'capture', 'sudah_bayar'])
         ) {
             Pesanan::where('group_order_id', $groupOrderId)
                 ->where('user_id', Auth::id())
@@ -236,5 +236,23 @@ class KeranjangController extends Controller
             'snapToken',
             'pesananUtama'
         ));
+    }
+
+    private function generateOrderCode()
+    {
+        do {
+            $code = 'ORD-' . mt_rand(10000, 99999);
+        } while (Pesanan::where('group_order_id', $code)->exists());
+
+        return $code;
+    }
+
+    private function generateItemOrderCode()
+    {
+        do {
+            $code = 'ITEM-' . mt_rand(10000, 99999);
+        } while (Pesanan::where('order_id', $code)->exists());
+
+        return $code;
     }
 }

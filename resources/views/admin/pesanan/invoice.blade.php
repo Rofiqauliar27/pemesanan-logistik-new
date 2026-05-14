@@ -25,14 +25,14 @@
         }
 
         .invoice-page {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            background: #fff;
-            padding: 25mm 22mm;
-            position: relative;
-            overflow: hidden;
-        }
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 12mm 16mm;
+    position: relative;
+    overflow: hidden;
+}
 
         .decor {
             position: absolute;
@@ -61,12 +61,12 @@
             z-index: 1;
         }
 
-        .top-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 45mm;
-        }
+       .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6mm;
+}
 
         .company-left {
             width: 45%;
@@ -78,23 +78,24 @@
         }
 
         .invoice-logo {
-            width: 75px;
-            height: 75px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    margin-bottom: 4px;
+}
 
-        .company-name {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+.company-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
 
-        .company-info {
-            font-size: 13px;
-            line-height: 1.5;
-            color: #555;
-        }
+.company-info {
+    font-size: 9px;
+    line-height: 1.3;
+    color: #555;
+}
 
         .invoice-title {
             font-size: 62px;
@@ -104,11 +105,11 @@
         }
 
         .invoice-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 28px;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
 
         .bill-to {
             width: 55%;
@@ -120,22 +121,22 @@
         }
 
         .meta-row {
-            display: flex;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
+    display: flex;
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
 
-        .meta-label {
-            width: 135px;
-            font-weight: 700;
-            font-size: 16px;
-        }
+       .meta-label {
+    width: 105px;
+    font-weight: 700;
+    font-size: 11px;
+}
 
-        .meta-value {
-            flex: 1;
-            color: #444;
-            font-size: 15px;
-        }
+.meta-value {
+    flex: 1;
+    color: #444;
+    font-size: 10px;
+}
 
         .date-label {
             font-weight: 700;
@@ -150,7 +151,7 @@
 
         .section-line {
             border-top: 1px dotted #333;
-            margin: 22px 0;
+            margin: 10px 0;
         }
 
         .items-table {
@@ -160,16 +161,16 @@
         }
 
         .items-table thead th {
-            font-size: 18px;
+            font-size: 11px;
             text-align: left;
-            padding: 12px 0;
+            padding: 6px 0;
             border-bottom: 1px dotted #333;
             font-weight: 700;
         }
 
         .items-table tbody td {
-            padding: 11px 0;
-            font-size: 16px;
+            padding: 6px 0;
+            font-size: 10px;
             color: #333;
             vertical-align: top;
         }
@@ -202,18 +203,18 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            margin-top: 22px;
-            margin-bottom: 42px;
+            margin-top: 8px;
+            margin-bottom: 14px;
         }
 
         .total-label {
-            font-size: 28px;
+            font-size: 18px;
             font-weight: 700;
-            margin-right: 75px;
+            margin-right: 40px;
         }
 
         .total-value {
-            font-size: 26px;
+            font-size: 18px;
             font-weight: 700;
         }
 
@@ -406,8 +407,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="invoice-title">INVOICE</div>
 
         <div class="invoice-meta">
             <div class="bill-to">

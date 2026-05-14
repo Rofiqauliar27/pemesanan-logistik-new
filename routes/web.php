@@ -59,7 +59,7 @@ Route::get('/dashboard', function () {
         return redirect('/admin/dashboard');
     }
 
-    return redirect()->route('customer.profile');
+    return redirect()->route('home');
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('/admin/dashboard', function () {
@@ -77,7 +77,7 @@ Route::get('/admin/dashboard', function () {
 })->middleware(['auth', 'role:admin']);
 
 Route::get('/customer/dashboard', function () {
-    return redirect()->route('customer.profile');
+    return redirect()->route('home');
 })->middleware(['auth', 'role:customer'])->name('customer.dashboard');
 
 Route::resource('/admin/barang', BarangController::class)

@@ -72,11 +72,6 @@
                     Pesanan Saya
                 </a>
 
-                <a href="{{ route('customer.profile', ['tab' => 'keamanan']) }}"
-                   class="nav-link {{ $tab == 'keamanan' ? 'active' : '' }}">
-                    Keamanan
-                </a>
-
                 <form action="{{ route('logout') }}" method="POST" class="mt-2">
                     @csrf
                     <button type="submit" class="btn btn-danger w-100">
@@ -218,7 +213,6 @@
                     </span>
                 </div>
 
-                {{-- FILTER PESANAN DROPDOWN --}}
                 <form action="{{ route('customer.profile') }}" method="GET" class="mb-3">
                     <input type="hidden" name="tab" value="pesanan">
 
@@ -259,132 +253,105 @@
                 </form>
 
                 <div class="table-responsive">
-    <table class="table table-bordered align-middle profile-table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Order ID</th>
-                <th>Tanggal Pesanan</th>
-                <th>Barang</th>
-                <th>Total Bayar</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
+                    <table class="table table-bordered align-middle profile-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Order ID</th>
+                                <th>Tanggal Pesanan</th>
+                                <th>Barang</th>
+                                <th>Total Bayar</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
 
-        <tbody>
-            @forelse($pesananGroups as $groupOrderId => $items)
-                @php
-                    $itemUtama = $items->first();
-                    $jumlahJenisBarang = $items->count();
-                    $totalJumlahBarang = $items->sum('jumlah');
-                    $totalBayar = $items->sum('total_harga');
+                        <tbody>
+                            @forelse($pesananGroups as $groupOrderId => $items)
+                                @php
+                                    $itemUtama = $items->first();
+                                    $totalJumlahBarang = $items->sum('jumlah');
+                                    $totalBayar = $items->sum('total_harga');
 
-                    $statusPesanan = $itemUtama->status ?? '-';
-                    $statusBayar = $itemUtama->payment_status ?? '-';
+                                    $statusPesanan = $itemUtama->status ?? '-';
+                                    $statusBayar = $itemUtama->payment_status ?? '-';
 
-                    $statusBelumLunas = in_array($statusBayar, [
-                        'belum_bayar',
-                        'pending',
-                        'failed',
-                        'expire',
-                        'challenge',
-                    ]);
+                                    $statusBelumLunas = in_array($statusBayar, [
+                                        'belum_bayar',
+                                        'pending',
+                                        'failed',
+                                        'expire',
+                                        'challenge',
+                                    ]);
 
-                    $tanggalPesanan = $itemUtama->created_at
-                        ? $itemUtama->created_at->format('d-m-Y H:i')
-                        : '-';
+                                    $tanggalPesanan = $itemUtama->created_at
+                                        ? $itemUtama->created_at->format('d-m-Y H:i')
+                                        : '-';
 
-                    if (in_array($statusBayar, ['belum_bayar', 'pending', 'challenge', 'failed', 'expire'])) {
-                        $statusTampil = [
-                            'belum_bayar' => 'Belum Dibayar',
-                            'pending' => 'Menunggu Pembayaran',
-                            'challenge' => 'Menunggu Konfirmasi',
-                            'failed' => 'Gagal',
-                            'expire' => 'Expired',
-                        ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
+                                    if (in_array($statusBayar, ['belum_bayar', 'pending', 'challenge', 'failed', 'expire'])) {
+                                        $statusTampil = [
+                                            'belum_bayar' => 'Belum Dibayar',
+                                            'pending' => 'Menunggu Pembayaran',
+                                            'challenge' => 'Menunggu Konfirmasi',
+                                            'failed' => 'Gagal',
+                                            'expire' => 'Expired',
+                                        ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
-                        $statusClass = $statusBayar;
-                    } else {
-                        $statusTampil = ucfirst(str_replace('_', ' ', $statusPesanan));
-                        $statusClass = $statusPesanan;
-                    }
-                @endphp
+                                        $statusClass = $statusBayar;
+                                    } else {
+                                        $statusTampil = ucfirst(str_replace('_', ' ', $statusPesanan));
+                                        $statusClass = $statusPesanan;
+                                    }
+                                @endphp
 
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
 
-                    <td>
-                        {{ $itemUtama->group_order_id ?? $itemUtama->order_id ?? '-' }}
-                    </td>
+                                    <td>
+                                        {{ $itemUtama->group_order_id ?? $itemUtama->order_id ?? '-' }}
+                                    </td>
 
-                    <td>
-                        {{ $tanggalPesanan }}
-                    </td>
+                                    <td>
+                                        {{ $tanggalPesanan }}
+                                    </td>
 
-                    <td>
-                        {{ $totalJumlahBarang }} Item
-                    </td>
+                                    <td>
+                                        {{ $totalJumlahBarang }} Item
+                                    </td>
 
-                    <td>
-                        Rp {{ number_format($totalBayar, 0, ',', '.') }}
-                    </td>
+                                    <td>
+                                        Rp {{ number_format($totalBayar, 0, ',', '.') }}
+                                    </td>
 
-                    <td>
-                        <span class="status-badge status-{{ $statusClass }}">
-                            {{ $statusTampil }}
-                        </span>
-                    </td>
+                                    <td>
+                                        <span class="status-badge status-{{ $statusClass }}">
+                                            {{ $statusTampil }}
+                                        </span>
+                                    </td>
 
-                    <td>
-                        @if($statusBelumLunas)
-                            <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
-                               class="btn btn-sm btn-primary">
-                                Lihat / Bayar
-                            </a>
-                        @else
-                            <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
-                               class="btn btn-sm btn-info">
-                                Lihat Detail
-                            </a>
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="text-center text-muted">
-                        Tidak ada pesanan pada filter ini.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-        @endif
-
-        {{-- KEAMANAN --}}
-        @if($tab == 'keamanan')
-            <div class="profile-content-box">
-                <h4>Keamanan Akun</h4>
-
-                <div class="alert alert-info">
-                    Saat ini fitur keamanan masih dasar. Nanti bisa ditambah ubah password, foto profil, dan pengamanan tambahan.
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <div class="profile-mini-card">
-                            <strong>Nama Akun</strong>
-                            <p>{{ $user->name }}</p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="profile-mini-card">
-                            <strong>Email Akun</strong>
-                            <p>{{ $user->email }}</p>
-                        </div>
-                    </div>
+                                    <td>
+                                        @if($statusBelumLunas)
+                                            <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
+                                               class="btn btn-sm btn-primary">
+                                                Lihat / Bayar
+                                            </a>
+                                        @else
+                                            <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
+                                               class="btn btn-sm btn-info">
+                                                Lihat Detail
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                        Tidak ada pesanan pada filter ini.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         @endif
