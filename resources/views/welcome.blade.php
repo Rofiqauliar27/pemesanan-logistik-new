@@ -80,7 +80,7 @@
     <div class="popular-category-card">
         <div class="popular-category-top">
             <div>
-                <h2>Kategori Populer</h2>
+                <h2>Kategori Pilihan</h2>
                 <p>Pilih kebutuhan produk berdasarkan kategori yang tersedia.</p>
             </div>
 

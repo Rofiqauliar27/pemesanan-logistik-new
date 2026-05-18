@@ -59,16 +59,8 @@
                     name="search"
                     placeholder="Ketik Yang Anda Cari"
                     value="{{ request('search') }}"
+                    onkeydown="if(event.key === 'Enter') this.form.submit();"
                 >
-
-                <select name="tipe">
-                    <option value="produk" {{ request('tipe') == 'produk' ? 'selected' : '' }}>Produk</option>
-                    <option value="kategori" {{ request('tipe') == 'kategori' ? 'selected' : '' }}>Kategori</option>
-                </select>
-
-                <button type="submit" aria-label="Cari">
-                    🔍
-                </button>
             </form>
 
             <div class="bst-auth-area">
