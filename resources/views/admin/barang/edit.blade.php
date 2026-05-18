@@ -163,5 +163,11 @@
             this.value = this.value.replace(/[^0-9]/g, '');
         });
     });
+    
+    document.querySelector('form').addEventListener('submit', function () {
+        alert('Stok yang dikirim: ' + document.querySelector('input[name="stok"]').value);
+    });
+
 </script>
+
 @endsection
