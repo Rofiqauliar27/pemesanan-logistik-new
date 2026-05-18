@@ -262,35 +262,7 @@ class PesananController extends Controller
          * Ini penting supaya kalau admin langsung pilih "selesai",
          * stok tetap ikut berkurang.
          */
-        if (in_array($request->status, ['diproses', 'dikirim', 'selesai'])) {
-            foreach ($pesananItems as $item) {
-                if (!$item->stok_dikurangi) {
-                    if (!$item->barang) {
-                        DB::rollBack();
-
-                        return redirect()->back()->with(
-                            'error',
-                            'Data barang pada pesanan tidak ditemukan.'
-                        );
-                    }
-
-                    if ($item->barang->stok < $item->jumlah) {
-                        DB::rollBack();
-
-                        return redirect()->back()->with(
-                            'error',
-                            'Stok barang ' . $item->barang->nama_barang . ' tidak cukup.'
-                        );
-                    }
-
-                    $item->barang->decrement('stok', $item->jumlah);
-
-                    $item->update([
-                        'stok_dikurangi' => true,
-                    ]);
-                }
-            }
-        }
+       
 
         Pesanan::whereIn('id', $pesananItems->pluck('id'))->update([
             'status' => $request->status,
@@ -547,6 +519,50 @@ class PesananController extends Controller
 
         Pesanan::whereIn('id', $pesanans->pluck('id'))->update($updateData);
 
+        if ($paymentStatus === 'sudah_bayar') {
+    DB::beginTransaction();
+
+    try {
+        $pesanansFresh = Pesanan::with('barang')
+            ->whereIn('id', $pesanans->pluck('id'))
+            ->lockForUpdate()
+            ->get();
+
+        foreach ($pesanansFresh as $item) {
+            if (!$item->stok_dikurangi) {
+                if (!$item->barang) {
+                    continue;
+                }
+
+                if ($item->barang->stok < $item->jumlah) {
+                    Log::warning('Stok tidak cukup saat pembayaran berhasil', [
+                        'pesanan_id' => $item->id,
+                        'barang_id' => $item->barang_id,
+                        'stok' => $item->barang->stok,
+                        'jumlah' => $item->jumlah,
+                    ]);
+
+                    continue;
+                }
+
+                $item->barang->decrement('stok', $item->jumlah);
+
+                $item->update([
+                    'stok_dikurangi' => true,
+                ]);
+            }
+        }
+
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        Log::error('Gagal mengurangi stok setelah pembayaran berhasil', [
+            'error' => $e->getMessage(),
+            'order_id' => $orderId,
+        ]);
+    }
+}
         Log::info('Pesanan grup berhasil diupdate dari webhook Midtrans', [
             'order_id_midtrans' => $orderId,
             'jumlah_pesanan_diupdate' => $pesanans->count(),
