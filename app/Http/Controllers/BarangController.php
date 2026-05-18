@@ -115,7 +115,7 @@ class BarangController extends Controller
             'kategori' => $request->kategori,
             'satuan' => $request->satuan,
             'harga' => $harga,
-            'stok' => (int) $request->stok,
+            'stok' =>  $request->stok,
             'deskripsi' => $request->deskripsi,
             'gambar' => $pathGambar,
         ]);
