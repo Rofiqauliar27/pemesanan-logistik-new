@@ -128,8 +128,13 @@ class CustomerProfileController extends Controller
 
         $user->update($validated);
 
-        return redirect()
-            ->route('customer.profile', ['tab' => 'profil'])
-            ->with('success', 'Data customer berhasil diperbarui.');
+if ($request->filled('redirect')) {
+    return redirect($request->redirect)
+        ->with('success', 'Data customer berhasil diperbarui. Silakan lanjutkan pembayaran.');
+}
+
+return redirect()
+    ->route('customer.profile', ['tab' => 'profil'])
+    ->with('success', 'Data customer berhasil diperbarui.');
     }
 }

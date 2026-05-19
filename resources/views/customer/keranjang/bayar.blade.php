@@ -5,6 +5,18 @@
 @section('content')
 @php
     $pesananUtama = $pesananUtama ?? $pesanans->first();
+    $user = auth()->user();
+
+    $alamatLengkapDiisi =
+        !empty($user->name) &&
+        !empty($user->email) &&
+        !empty($user->telepon) &&
+        !empty($user->alamat_lengkap) &&
+        !empty($user->kelurahan) &&
+        !empty($user->kecamatan) &&
+        !empty($user->kabupaten) &&
+        !empty($user->provinsi) &&
+        !empty($user->kode_pos);
 
     $statusBayar = $pesananUtama->payment_status ?? 'belum_bayar';
 
@@ -159,18 +171,31 @@
             </div>
 
             @if($sudahLunas)
-                <button class="btn-pay-now" disabled>
-                    Pesanan Sudah Lunas
-                </button>
-            @elseif($sudahExpired)
-                <button class="btn-pay-now" disabled>
-                    Pembayaran Tidak Tersedia
-                </button>
-            @else
-                <button id="pay-button" class="btn-pay-now">
-                    Bayar Sekarang
-                </button>
-            @endif
+    <button class="btn-pay-now" disabled>
+        Pesanan Sudah Lunas
+    </button>
+@elseif($sudahExpired)
+    <button class="btn-pay-now" disabled>
+        Pembayaran Tidak Tersedia
+    </button>
+@elseif(!$alamatLengkapDiisi)
+    <div class="alert alert-warning mb-3">
+        <strong>Alamat belum lengkap.</strong><br>
+        Silakan lengkapi alamat dan nomor telepon terlebih dahulu sebelum melakukan pembayaran.
+    </div>
+
+<a href="{{ route('customer.profile.edit', ['redirect' => url()->current()]) }}" class="btn-pay-now text-center text-decoration-none">
+        Lengkapi Profil
+    </a>
+
+    <button type="button" class="btn-pay-now mt-2" disabled>
+        Bayar Sekarang
+    </button>
+@else
+    <button id="pay-button" class="btn-pay-now">
+        Bayar Sekarang
+    </button>
+@endif
 
             <a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}" class="btn-payment-history">
                 Kembali ke Pesanan Saya
@@ -188,7 +213,7 @@
 @endsection
 
 @section('scripts')
-@if(!$sudahLunas && !$sudahExpired && $snapToken)
+@if(!$sudahLunas && !$sudahExpired && $alamatLengkapDiisi && $snapToken)
     <script
         src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}">

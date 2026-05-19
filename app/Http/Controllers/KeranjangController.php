@@ -99,6 +99,24 @@ class KeranjangController extends Controller
             'catatan' => 'nullable|string|max:1000',
         ]);
 
+        $user = Auth::user();
+
+        $alamatLengkapDiisi =
+            !empty($user->name) &&
+            !empty($user->email) &&
+            !empty($user->telepon) &&
+            !empty($user->alamat_lengkap) &&
+            !empty($user->kelurahan) &&
+            !empty($user->kecamatan) &&
+            !empty($user->kabupaten) &&
+            !empty($user->provinsi) &&
+            !empty($user->kode_pos);
+
+        if (!$alamatLengkapDiisi) {
+            return redirect()->route('customer.profile.edit')
+                ->with('error', 'Lengkapi nama, email, nomor telepon, dan alamat pengiriman terlebih dahulu sebelum checkout.');
+        }
+
         $keranjangs = Keranjang::with('barang')
             ->where('user_id', Auth::id())
             ->whereIn('id', $request->keranjang_ids)
@@ -165,9 +183,17 @@ class KeranjangController extends Controller
                 ],
                 'item_details' => $itemDetails,
                 'customer_details' => [
-                    'first_name' => Auth::user()->name,
-                    'email' => Auth::user()->email,
-                    'phone' => Auth::user()->telepon ?? '',
+                    'first_name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->telepon ?? '',
+                    'shipping_address' => [
+                        'first_name' => $user->name,
+                        'phone' => $user->telepon ?? '',
+                        'address' => $user->alamat_lengkap ?? '',
+                        'city' => $user->kabupaten ?? '',
+                        'postal_code' => $user->kode_pos ?? '',
+                        'country_code' => 'IDN',
+                    ],
                 ],
             ];
 

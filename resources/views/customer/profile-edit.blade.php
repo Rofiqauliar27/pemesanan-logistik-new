@@ -40,6 +40,8 @@
         @csrf
         @method('PUT')
 
+        <input type="hidden" name="redirect" value="{{ request('redirect') }}">
+        
         <div class="customer-edit-grid">
 
             <div class="customer-edit-left">
