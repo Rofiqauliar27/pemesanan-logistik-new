@@ -29,8 +29,7 @@
                 <label>Gambar</label>
                 <input type="file" name="image" class="form-control" required>
                 <small class="text-muted">
-                    Banner utama disarankan ukuran lebar. Contoh: 800 x 420 px.
-                    Banner samping disarankan: 300 x 420 px.
+                    Ukuran banner yang disarankan: 1920 x 480 px agar tampil penuh dan rapi di halaman beranda.
                 </small>
             </div>
 
@@ -39,13 +38,7 @@
                 <input type="text" name="link" class="form-control" value="{{ old('link') }}" placeholder="Contoh: /produk">
             </div>
 
-            <div class="mb-3">
-                <label>Posisi</label>
-                <select name="position" class="form-control" required>
-                    <option value="main">Banner Utama Tengah</option>
-                    <option value="side">Banner Samping Kanan</option>
-                </select>
-            </div>
+            <input type="hidden" name="position" value="main">
 
             <div class="mb-3">
                 <label>Urutan</label>

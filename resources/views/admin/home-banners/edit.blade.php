@@ -43,16 +43,7 @@
                 <input type="text" name="link" class="form-control" value="{{ old('link', $homeBanner->link) }}">
             </div>
 
-            <div class="mb-3">
-                <label>Posisi</label>
-                <select name="position" class="form-control" required>
-                    <option value="main" {{ $homeBanner->position === 'main' ? 'selected' : '' }}>
-                        Banner Utama Tengah
-                    </option>
-
-                    
-                </select>
-            </div>
+            <input type="hidden" name="position" value="main">
 
             <div class="mb-3">
                 <label>Urutan</label>

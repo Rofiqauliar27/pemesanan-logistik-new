@@ -2,6 +2,7 @@
     $profilPerusahaan = \App\Models\ProfilPerusahaan::first();
 @endphp
 
+<div class="admin-sidebar-overlay"></div>
 <div class="admin-sidebar">
     <div class="admin-brand">
         <div class="admin-brand-logo">

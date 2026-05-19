@@ -10,8 +10,8 @@ class AdminHomeBannerController extends Controller
 {
     public function index()
     {
-        $banners = HomeBanner::orderBy('position')
-            ->orderBy('sort_order')
+        $banners = HomeBanner::orderBy('sort_order')
+            ->latest()
             ->get();
 
         return view('admin.home-banners.index', compact('banners'));
@@ -26,9 +26,8 @@ class AdminHomeBannerController extends Controller
     {
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:4096',
             'link' => 'nullable|string|max:255',
-            'position' => 'required|in:main,side',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable',
         ]);
@@ -39,7 +38,7 @@ class AdminHomeBannerController extends Controller
             'title' => $request->title,
             'image' => $imagePath,
             'link' => $request->link,
-            'position' => $request->position,
+            'position' => 'main',
             'sort_order' => $request->sort_order ?? 0,
             'is_active' => $request->has('is_active'),
         ]);
@@ -58,9 +57,8 @@ class AdminHomeBannerController extends Controller
     {
         $request->validate([
             'title' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'link' => 'nullable|string|max:255',
-            'position' => 'required|in:main,side',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable',
         ]);
@@ -68,7 +66,7 @@ class AdminHomeBannerController extends Controller
         $data = [
             'title' => $request->title,
             'link' => $request->link,
-            'position' => $request->position,
+            'position' => 'main',
             'sort_order' => $request->sort_order ?? 0,
             'is_active' => $request->has('is_active'),
         ];

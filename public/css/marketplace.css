@@ -5511,3 +5511,214 @@ transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
         max-width: 100%;
     }
 }
+
+/* =========================
+   BANNER BERANDA STYLE MARKETPLACE
+   Mirip konsep marketplace modern
+========================= */
+
+.single-banner-section {
+    width: 100%;
+    margin: 22px 0 18px;
+}
+
+.single-banner-slider {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+}
+
+.single-banner-slider .carousel-inner,
+.single-banner-slider .carousel-item {
+    width: 100%;
+    aspect-ratio: 2048 / 520;
+}
+
+.single-banner-slider img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Tombol panah kiri kanan */
+.single-banner-slider .carousel-control-prev,
+.single-banner-slider .carousel-control-next {
+    width: 44px;
+    opacity: 1;
+}
+
+.single-banner-slider .carousel-control-prev-icon,
+.single-banner-slider .carousel-control-next-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-size: 50%;
+    background-color: rgba(15, 23, 42, 0.35);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+}
+
+.single-banner-slider .carousel-control-prev:hover .carousel-control-prev-icon,
+.single-banner-slider .carousel-control-next:hover .carousel-control-next-icon {
+    background-color: rgba(15, 23, 42, 0.55);
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .single-banner-slider .carousel-inner,
+    .single-banner-slider .carousel-item {
+        aspect-ratio: 16 / 6;
+    }
+}
+
+/* HP */
+@media (max-width: 576px) {
+    .single-banner-section {
+        margin: 14px 0;
+    }
+
+    .single-banner-slider {
+        border-radius: 12px;
+    }
+
+    .single-banner-slider .carousel-inner,
+    .single-banner-slider .carousel-item {
+        aspect-ratio: 16 / 7;
+    }
+
+    .single-banner-slider .carousel-control-prev,
+    .single-banner-slider .carousel-control-next {
+        width: 34px;
+    }
+
+    .single-banner-slider .carousel-control-prev-icon,
+    .single-banner-slider .carousel-control-next-icon {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* Tombol panah banner */
+.single-banner-slider .carousel-control-prev,
+.single-banner-slider .carousel-control-next {
+    width: 48px;
+}
+
+.single-banner-slider .carousel-control-prev-icon,
+.single-banner-slider .carousel-control-next-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-size: 55%;
+    background-color: rgba(15, 23, 42, 0.35);
+}
+
+/* Responsive tablet */
+@media (max-width: 992px) {
+    .single-banner-slider .carousel-inner,
+    .single-banner-slider .carousel-item {
+        height: 260px;
+    }
+}
+
+/* Responsive HP */
+@media (max-width: 576px) {
+    .single-banner-slider .carousel-inner,
+    .single-banner-slider .carousel-item {
+        height: 180px;
+    }
+
+    .single-banner-section {
+        margin: 12px 0;
+    }
+}
+
+/* =========================
+   FONT MARKETPLACE MODERN
+========================= */
+
+body {
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    color: #111827;
+    letter-spacing: -0.01em;
+}
+
+button,
+input,
+select,
+textarea,
+a {
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
+
+.bst-brand-text strong {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.bst-brand-text small {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.bst-menu-row a,
+.bst-auth-area a,
+.bst-login-btn,
+.bst-register-btn,
+.bst-cart-btn {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.bst-search input,
+.bst-search select {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.popular-category-top h2,
+.home-product-header h2,
+.product-title,
+.popular-info-header h3 {
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.popular-category-top p,
+.product-card-body,
+.popular-info-grid span {
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+.bst-mainbar,
+.bst-menu-row,
+.home-product-card,
+.popular-category-card,
+.single-banner-slider,
+.admin-card,
+.profile-content-box {
+        font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
+}
+
+.product-title {
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.popular-category-top h2 {
+    font-size: 28px;
+}
+
+.popular-category-top p {
+    font-size: 15px;
+    color: #64748b;
+}

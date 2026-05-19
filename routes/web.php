@@ -20,15 +20,9 @@ use App\Http\Controllers\AdminHomeBannerController;
 Route::get('/', function () {
     $barangs = Barang::latest()->take(12)->get();
 
-    $mainBanners = HomeBanner::where('is_active', true)
-        ->where('position', 'main')
-        ->orderBy('sort_order')
-        ->get();
-
-    $sideBanners = HomeBanner::where('is_active', true)
-        ->where('position', 'side')
-        ->orderBy('sort_order')
-        ->get();
+   $mainBanners = HomeBanner::where('is_active', true)
+    ->orderBy('sort_order')
+    ->get();
 
     $kategoriMenu = KategoriBeranda::where('is_active', true)
         ->orderBy('sort_order')
@@ -45,13 +39,12 @@ Route::get('/', function () {
         ->get();
 }
 
-    return view('welcome', compact(
-        'barangs',
-        'mainBanners',
-        'sideBanners',
-        'kategoriMenu',
-        'produkKategori'
-    ));
+   return view('welcome', compact(
+    'barangs',
+    'mainBanners',
+    'kategoriMenu',
+    'produkKategori'
+));
 })->name('home');
 
 Route::get('/dashboard', function () {

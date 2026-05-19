@@ -6,75 +6,43 @@
 
 <div class="indo-page">
 
-    <section class="indo-hero-layout">
-
-
-        <div class="indo-main-slider">
-            @if($mainBanners->count() > 0)
-                <div id="homeMainBanner" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        @foreach($mainBanners as $banner)
-                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                <a href="{{ $banner->link ?: '#' }}">
-                                    <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title }}">
-                                </a>
-                            </div>
-                        @endforeach
+<section class="single-banner-section">
+    @if($mainBanners->count() > 0)
+        <div id="homeMainBanner" class="carousel slide single-banner-slider" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @foreach($mainBanners as $banner)
+                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                        <a href="{{ $banner->link ?: '#' }}">
+                            <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title }}">
+                        </a>
                     </div>
+                @endforeach
+            </div>
 
-                    <button class="carousel-control-prev" type="button" data-bs-target="#homeMainBanner" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
+            @if($mainBanners->count() > 1)
+                <button class="carousel-control-prev" type="button" data-bs-target="#homeMainBanner" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
 
-                    <button class="carousel-control-next" type="button" data-bs-target="#homeMainBanner" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
-            @else
-                <div class="default-main-banner">
-                    <div>
-                        <span>CV Bintang Saida Teknik</span>
-                        <h1>Mau cari apa hari ini?</h1>
-                        <p>
-                            Cari produk logistik, kebutuhan kapal, bahan pokok,
-                            sparepart, dan perlengkapan operasional.
-                        </p>
-                        <a href="{{ route('public.produk') }}">Cari Sekarang</a>
-                    </div>
-                </div>
+                <button class="carousel-control-next" type="button" data-bs-target="#homeMainBanner" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
             @endif
         </div>
-
-        <aside class="indo-side-banner">
-            @if($sideBanners->count() > 0)
-                <div id="homeSideBanner" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        @foreach($sideBanners as $banner)
-                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                <a href="{{ $banner->link ?: '#' }}">
-                                    <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title }}">
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <button class="carousel-control-prev" type="button" data-bs-target="#homeSideBanner" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-
-                    <button class="carousel-control-next" type="button" data-bs-target="#homeSideBanner" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
-            @else
-                <div class="default-side-banner">
-                    <h3>Promo Layanan</h3>
-                    <p>Atur gambar iklan dari admin.</p>
-                    <a href="{{ route('public.produk') }}">Lihat Produk</a>
-                </div>
-            @endif
-        </aside>
-    </section>
+    @else
+        <div class="default-main-banner">
+            <div>
+                <span>CV Bintang Saida Teknik</span>
+                <h1>Solusi Produk & Logistik Dalam Satu Tempat</h1>
+                <p>
+                    Temukan kebutuhan kapal, pergudangan, pengiriman,
+                    dan perlengkapan operasional dengan lebih cepat dan rapi.
+                </p>
+                <a href="{{ route('public.produk') }}">Lihat Produk</a>
+            </div>
+        </div>
+    @endif
+</section>
 
 <section class="popular-category-section">
     <div class="popular-category-card">

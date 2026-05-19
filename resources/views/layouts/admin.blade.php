@@ -14,6 +14,10 @@
 
         <main class="admin-main">
             <header class="admin-topbar">
+                <button type="button" class="admin-mobile-toggle" id="adminMobileToggle">
+                    ☰
+                </button>
+
                 <div class="admin-topbar-user">
                     <div class="admin-user-info">
                         <span>Admin</span>
@@ -48,6 +52,27 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('adminMobileToggle');
+            const sidebar = document.querySelector('.admin-sidebar');
+            const overlay = document.querySelector('.admin-sidebar-overlay');
+
+            if (toggleButton && sidebar && overlay) {
+                toggleButton.addEventListener('click', function () {
+                    sidebar.classList.add('show-mobile');
+                    overlay.classList.add('show-mobile');
+                });
+
+                overlay.addEventListener('click', function () {
+                    sidebar.classList.remove('show-mobile');
+                    overlay.classList.remove('show-mobile');
+                });
+            }
+        });
+    </script>
+
     @yield('scripts')
 </body>
 </html>
