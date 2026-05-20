@@ -34,5 +34,24 @@ class DatabaseSeeder extends Seeder
                 'remember_token' => null,
             ]
         );
+        User::updateOrCreate(
+    ['email' => 'dummy@gmail.com'],
+    [
+        'name' => 'Dummy User',
+        'telepon' => '081234567891',
+        'alamat_lengkap' => 'Banjarmasin',
+        'provinsi' => 'Kalimantan Selatan',
+        'kabupaten' => 'Banjarmasin',
+        'kecamatan' => null,
+        'kelurahan' => null,
+        'kode_pos' => null,
+        'google_maps_link' => null,
+        'email_verified_at' => now(),
+        'password' => Hash::make('dummy123'),
+        'role' => 'user',
+        'remember_token' => null,
+    ]
+);
     }
+    
 }
