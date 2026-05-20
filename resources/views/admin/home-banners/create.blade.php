@@ -3,11 +3,23 @@
 @section('title', 'Tambah Banner')
 
 @section('content')
-<div class="container-fluid">
-    <h3>Tambah Banner Beranda</h3>
+<div class="admin-page">
+
+    <div class="admin-page-header">
+        <div>
+            <h2>Tambah Banner Beranda</h2>
+            <p>Tambahkan banner utama yang tampil pada halaman beranda marketplace.</p>
+        </div>
+
+        <div class="admin-page-actions">
+            <a href="{{ route('admin.home-banners.index') }}" class="btn-admin-header-light">
+                Kembali
+            </a>
+        </div>
+    </div>
 
     @if($errors->any())
-        <div class="alert alert-danger">
+        <div class="alert alert-danger admin-alert">
             <ul class="mb-0">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -16,48 +28,70 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.home-banners.store') }}" method="POST" enctype="multipart/form-data" class="card">
-        @csrf
+    <div class="admin-card">
 
-        <div class="card-body">
+        <form action="{{ route('admin.home-banners.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <input type="hidden" name="position" value="main">
+            <input type="hidden" name="sort_order" value="0">
+
             <div class="mb-3">
-                <label>Judul Banner</label>
-                <input type="text" name="title" class="form-control" value="{{ old('title') }}">
+                <label class="form-label">Judul Banner</label>
+                <input
+                    type="text"
+                    name="title"
+                    class="form-control"
+                    value="{{ old('title') }}"
+                    placeholder="Masukkan judul banner"
+                >
             </div>
 
             <div class="mb-3">
-                <label>Gambar</label>
+                <label class="form-label">Gambar Banner</label>
                 <input type="file" name="image" class="form-control" required>
+
                 <small class="text-muted">
-                    Ukuran banner yang disarankan: 1920 x 480 px agar tampil penuh dan rapi di halaman beranda.
+                    Ukuran banner disarankan 2048 x 520 px atau 1920 x 480 px agar tampil rapi.
                 </small>
             </div>
 
             <div class="mb-3">
-                <label>Link Tujuan</label>
-                <input type="text" name="link" class="form-control" value="{{ old('link') }}" placeholder="Contoh: /produk">
+                <label class="form-label">Link Tujuan</label>
+                <input
+                    type="text"
+                    name="link"
+                    class="form-control"
+                    value="{{ old('link') }}"
+                    placeholder="Contoh: /produk"
+                >
             </div>
 
-            <input type="hidden" name="position" value="main">
-
-            <div class="mb-3">
-                <label>Urutan</label>
-                <input type="number" name="sort_order" class="form-control" value="{{ old('sort_order', 0) }}">
+            <div class="form-check mb-4">
+                <input
+                    type="checkbox"
+                    name="is_active"
+                    class="form-check-input"
+                    value="1"
+                    id="is_active"
+                    checked
+                >
+                <label class="form-check-label" for="is_active">
+                    Aktif
+                </label>
             </div>
 
-            <div class="form-check mb-3">
-                <input type="checkbox" name="is_active" class="form-check-input" value="1" checked>
-                <label class="form-check-label">Aktif</label>
+            <div class="admin-action-group">
+                <button type="submit" class="btn-admin-primary">
+                    Simpan
+                </button>
+
+                <a href="{{ route('admin.home-banners.index') }}" class="btn-admin-secondary">
+                    Kembali
+                </a>
             </div>
+        </form>
+    </div>
 
-            <button class="btn btn-primary">
-                Simpan
-            </button>
-
-            <a href="{{ route('admin.home-banners.index') }}" class="btn btn-secondary">
-                Kembali
-            </a>
-        </div>
-    </form>
 </div>
 @endsection

@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Master Data</span>
             <h2>Tambah Barang</h2>
             <p>Tambahkan produk baru yang akan tampil di katalog dan beranda marketplace.</p>
         </div>

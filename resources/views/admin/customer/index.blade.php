@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Customer</span>
             <h2>Data Customer</h2>
             <p>Daftar seluruh customer yang terdaftar di sistem.</p>
         </div>

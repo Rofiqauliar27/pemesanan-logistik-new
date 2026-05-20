@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Master Data</span>
             <h2>Edit Barang</h2>
             <p>Perbarui data barang, kategori, harga, stok, deskripsi, dan gambar produk.</p>
         </div>

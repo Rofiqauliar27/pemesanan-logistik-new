@@ -9,7 +9,7 @@ class AdminKategoriBerandaController extends Controller
 {
     public function index()
     {
-        $kategoris = KategoriBeranda::orderBy('sort_order')->get();
+        $kategoris = KategoriBeranda::latest()->get();
 
         return view('admin.kategori-beranda.index', compact('kategoris'));
     }
@@ -24,7 +24,7 @@ class AdminKategoriBerandaController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'icon' => 'nullable|string|max:50',
-            'sort_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer',
             'is_active' => 'nullable',
         ]);
 

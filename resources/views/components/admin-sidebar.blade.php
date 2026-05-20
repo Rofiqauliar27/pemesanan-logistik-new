@@ -72,12 +72,4 @@
             <span>Banner Beranda</span>
         </a>
     </div>
-
-    <div class="help-box">
-        <span class="help-label">Informasi</span>
-        <h6>Panel Admin</h6>
-        <p>
-            Kelola barang, pesanan, customer, kategori, banner, dan laporan sistem dalam satu tempat.
-        </p>
-    </div>
 </div>

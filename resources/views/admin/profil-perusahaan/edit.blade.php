@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Pengaturan</span>
             <h2>Edit Profil Perusahaan</h2>
             <p>Ubah informasi perusahaan yang akan tampil di halaman publik.</p>
         </div>

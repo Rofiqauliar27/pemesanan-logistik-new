@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Transaksi</span>
             <h2>Data Pesanan Customer</h2>
             <p>Kelola pesanan customer berdasarkan grup checkout.</p>
         </div>

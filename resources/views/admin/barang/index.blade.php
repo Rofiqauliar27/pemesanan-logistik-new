@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Master Data</span>
             <h2>Data Barang</h2>
             <p>Kelola data barang, kategori, harga, stok, dan gambar produk.</p>
         </div>

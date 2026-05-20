@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Laporan</span>
             <h2>Laporan Pesanan</h2>
             <p>Filter, pantau, dan cetak laporan pesanan berdasarkan grup checkout.</p>
         </div>

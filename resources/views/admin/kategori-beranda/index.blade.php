@@ -7,9 +7,8 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Pengaturan</span>
             <h2>Kategori Beranda</h2>
-            <p>Kelola kategori yang tampil di sidebar beranda marketplace.</p>
+            <p>Kelola kategori yang tampil di halaman beranda marketplace.</p>
         </div>
 
         <div class="admin-page-actions">
@@ -34,7 +33,6 @@
                         <th width="60">No</th>
                         <th width="110">Icon</th>
                         <th>Nama</th>
-                        <th width="120">Urutan</th>
                         <th>Status</th>
                         <th width="170">Aksi</th>
                     </tr>
@@ -55,12 +53,6 @@
                                 <div class="admin-product-name">
                                     {{ $kategori->nama }}
                                 </div>
-                            </td>
-
-                            <td>
-                                <span class="admin-stock-badge">
-                                    {{ $kategori->sort_order }}
-                                </span>
                             </td>
 
                             <td>
@@ -98,7 +90,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="5">
                                 <div class="admin-empty-state">
                                     Belum ada kategori beranda.
                                 </div>

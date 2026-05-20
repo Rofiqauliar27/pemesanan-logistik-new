@@ -7,7 +7,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Pengaturan</span>
             <h2>Banner Beranda</h2>
             <p>Kelola banner yang tampil pada halaman beranda marketplace.</p>
         </div>
@@ -34,8 +33,6 @@
                         <th width="60">No</th>
                         <th width="160">Gambar</th>
                         <th>Judul</th>
-                        <th>Posisi</th>
-                        <th width="100">Urutan</th>
                         <th>Status</th>
                         <th width="170">Aksi</th>
                     </tr>
@@ -58,22 +55,6 @@
                                 <div class="admin-product-name">
                                     {{ $banner->title }}
                                 </div>
-                            </td>
-
-                            <td>
-                                <span class="admin-category-badge">
-                                    @if($banner->position === 'main')
-                                        Banner Utama Tengah
-                                    @else
-                                        Banner Samping Kanan
-                                    @endif
-                                </span>
-                            </td>
-
-                            <td>
-                                <span class="admin-stock-badge">
-                                    {{ $banner->sort_order }}
-                                </span>
                             </td>
 
                             <td>
@@ -111,7 +92,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7">
+                            <td colspan="6">
                                 <div class="admin-empty-state">
                                     Belum ada banner beranda.
                                 </div>
