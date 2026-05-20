@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
         'google_maps_link' => null,
         'email_verified_at' => now(),
         'password' => Hash::make('dummy123'),
-        'role' => 'user',
+        'role' => 'customer',
         'remember_token' => null,
     ]
 );
