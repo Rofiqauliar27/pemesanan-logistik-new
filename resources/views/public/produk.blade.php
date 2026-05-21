@@ -87,8 +87,8 @@
                                 </a>
 
                                 <p class="catalog-desc">
-                                    {{ $barang->deskripsi ?? '-' }}
-                                </p>
+    {{ \Illuminate\Support\Str::limit($barang->deskripsi ?: 'Belum ada deskripsi produk.', 70) }}
+</p>
 
                                 <div class="catalog-price">
                                     Rp {{ number_format($barang->harga, 0, ',', '.') }}

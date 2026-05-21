@@ -209,8 +209,7 @@ class KeranjangController extends Controller
 
             DB::commit();
 
-            return redirect()->route('customer.keranjang.bayar', $groupOrderId)
-                ->with('success', 'Checkout berhasil. Silakan lanjut ke pembayaran.');
+            return redirect()->route('customer.keranjang.bayar', $groupOrderId);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -265,13 +264,17 @@ class KeranjangController extends Controller
     }
 
     private function generateOrderCode()
-    {
-        do {
-            $code = 'ORD-' . mt_rand(10000, 99999);
-        } while (Pesanan::where('group_order_id', $code)->exists());
+{
+    do {
+        $code = 'ORDER-' . mt_rand(10000, 99999);
+    } while (
+        Pesanan::where('group_order_id', $code)
+            ->orWhere('order_id', $code)
+            ->exists()
+    );
 
-        return $code;
-    }
+    return $code;
+}
 
     private function generateItemOrderCode()
     {

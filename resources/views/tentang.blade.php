@@ -186,7 +186,6 @@
 
         <div class="about-values-grid">
             <div class="about-value-card scroll-reveal">
-                <div class="about-value-icon">01</div>
                 <h3>Mudah Digunakan</h3>
                 <p>
                     Tampilan dibuat sederhana agar pelanggan mudah mencari produk dan informasi.
@@ -194,7 +193,6 @@
             </div>
 
             <div class="about-value-card scroll-reveal delay-1">
-                <div class="about-value-icon">02</div>
                 <h3>Rapi dan Terstruktur</h3>
                 <p>
                     Produk, kategori, pesanan, dan informasi perusahaan tersusun dalam satu sistem.
@@ -202,7 +200,6 @@
             </div>
 
             <div class="about-value-card scroll-reveal delay-2">
-                <div class="about-value-icon">03</div>
                 <h3>Responsif</h3>
                 <p>
                     Sistem dapat diakses dengan nyaman dari berbagai perangkat.
@@ -210,7 +207,6 @@
             </div>
 
             <div class="about-value-card scroll-reveal delay-3">
-                <div class="about-value-icon">04</div>
                 <h3>Terpercaya</h3>
                 <p>
                     Informasi produk dan perusahaan ditampilkan secara jelas kepada pelanggan.
@@ -222,8 +218,7 @@
     {{-- CTA --}}
     <section class="about-cta scroll-reveal">
         <div>
-            <span>Mulai Jelajahi</span>
-            <h2>Temukan kebutuhan produk dan logistik Anda sekarang</h2>
+                <h2>Temukan kebutuhan produk dan logistik Anda sekarang</h2>
             <p>
                 Lihat daftar produk yang tersedia dan temukan kebutuhan operasional
                 yang sesuai dengan kebutuhan Anda.

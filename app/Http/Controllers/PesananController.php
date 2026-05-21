@@ -41,10 +41,31 @@ class PesananController extends Controller
             'catatan' => 'nullable',
         ]);
 
+        $user = Auth::user();
+
+        $alamatLengkapDiisi =
+            !empty($user->name) &&
+            !empty($user->email) &&
+            !empty($user->telepon) &&
+            !empty($user->alamat_lengkap) &&
+            !empty($user->kelurahan) &&
+            !empty($user->kecamatan) &&
+            !empty($user->kabupaten) &&
+            !empty($user->provinsi) &&
+            !empty($user->kode_pos);
+
+        if (!$alamatLengkapDiisi) {
+            return redirect()
+                ->route('customer.profile.edit', [
+                    'redirect' => url()->previous(),
+                ])
+                ->with('error', 'Lengkapi nama, email, nomor telepon, dan alamat pengiriman terlebih dahulu sebelum membuat pesanan.');
+        }
+
         $barang = Barang::findOrFail($request->barang_id);
         $totalHarga = $barang->harga * $request->jumlah;
 
-        $orderId = 'ORDER-' . now()->format('YmdHis') . '-' . rand(100, 999);
+        $orderId = $this->generateOrderCode();
         $groupOrderId = $orderId;
         $expiredAt = now()->addHours(24);
 
@@ -77,9 +98,17 @@ class PesananController extends Controller
                     'gross_amount' => (int) $totalHarga,
                 ],
                 'customer_details' => [
-                    'first_name' => Auth::user()->name,
-                    'email' => Auth::user()->email,
-                    'phone' => Auth::user()->telepon ?? '',
+                    'first_name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->telepon ?? '',
+                    'shipping_address' => [
+                        'first_name' => $user->name,
+                        'phone' => $user->telepon ?? '',
+                        'address' => $user->alamat_lengkap ?? '',
+                        'city' => $user->kabupaten ?? '',
+                        'postal_code' => $user->kode_pos ?? '',
+                        'country_code' => 'IDN',
+                    ],
                 ],
                 'item_details' => [[
                     'id' => (string) $barang->id,
@@ -97,8 +126,7 @@ class PesananController extends Controller
 
             DB::commit();
 
-            return redirect()->route('customer.pesanan.showBayar', $pesanan->id)
-                ->with('success', 'Pesanan berhasil dibuat. Silakan lanjut bayar.');
+            return redirect()->route('customer.pesanan.showBayar', $pesanan->id);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -221,68 +249,61 @@ class PesananController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-{
-    $request->validate([
-        'status' => 'required|in:pending,diproses,dikirim,selesai,dibatalkan',
-    ]);
-
-    $pesanan = Pesanan::with('barang')->findOrFail($id);
-
-    $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id;
-
-    $pesananItems = Pesanan::with('barang')
-        ->where(function ($query) use ($groupOrderId, $pesanan) {
-            $query->where('group_order_id', $groupOrderId)
-                ->orWhere('order_id', $pesanan->order_id);
-        })
-        ->get();
-
-    $paymentStatusLunas = [
-        'sudah_bayar',
-        'settlement',
-        'paid',
-        'capture',
-    ];
-
-    if (
-        !in_array($pesanan->payment_status, $paymentStatusLunas) &&
-        in_array($request->status, ['diproses', 'dikirim', 'selesai'])
-    ) {
-        return redirect()->back()->with(
-            'error',
-            'Pesanan belum dibayar. Admin hanya bisa memproses pesanan yang sudah lunas.'
-        );
-    }
-
-    DB::beginTransaction();
-
-    try {
-        /**
-         * Stok dikurangi saat pesanan mulai diproses, dikirim, atau selesai.
-         * Ini penting supaya kalau admin langsung pilih "selesai",
-         * stok tetap ikut berkurang.
-         */
-       
-
-        Pesanan::whereIn('id', $pesananItems->pluck('id'))->update([
-            'status' => $request->status,
+    {
+        $request->validate([
+            'status' => 'required|in:pending,diproses,dikirim,selesai,dibatalkan',
         ]);
 
-        DB::commit();
+        $pesanan = Pesanan::with('barang')->findOrFail($id);
 
-        return redirect()->route('admin.pesanan.index')->with(
-            'success',
-            'Status pesanan berhasil diupdate dan stok barang sudah disesuaikan.'
-        );
-    } catch (\Exception $e) {
-        DB::rollBack();
+        $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id;
 
-        return redirect()->back()->with(
-            'error',
-            'Status pesanan gagal diupdate: ' . $e->getMessage()
-        );
+        $pesananItems = Pesanan::with('barang')
+            ->where(function ($query) use ($groupOrderId, $pesanan) {
+                $query->where('group_order_id', $groupOrderId)
+                    ->orWhere('order_id', $pesanan->order_id);
+            })
+            ->get();
+
+        $paymentStatusLunas = [
+            'sudah_bayar',
+            'settlement',
+            'paid',
+            'capture',
+        ];
+
+        if (
+            !in_array($pesanan->payment_status, $paymentStatusLunas) &&
+            in_array($request->status, ['diproses', 'dikirim', 'selesai'])
+        ) {
+            return redirect()->back()->with(
+                'error',
+                'Pesanan belum dibayar. Admin hanya bisa memproses pesanan yang sudah lunas.'
+            );
+        }
+
+        DB::beginTransaction();
+
+        try {
+            Pesanan::whereIn('id', $pesananItems->pluck('id'))->update([
+                'status' => $request->status,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.pesanan.index')->with(
+                'success',
+                'Status pesanan berhasil diupdate.'
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with(
+                'error',
+                'Status pesanan gagal diupdate: ' . $e->getMessage()
+            );
+        }
     }
-}
 
     public function laporan(Request $request)
     {
@@ -520,49 +541,50 @@ class PesananController extends Controller
         Pesanan::whereIn('id', $pesanans->pluck('id'))->update($updateData);
 
         if ($paymentStatus === 'sudah_bayar') {
-    DB::beginTransaction();
+            DB::beginTransaction();
 
-    try {
-        $pesanansFresh = Pesanan::with('barang')
-            ->whereIn('id', $pesanans->pluck('id'))
-            ->lockForUpdate()
-            ->get();
+            try {
+                $pesanansFresh = Pesanan::with('barang')
+                    ->whereIn('id', $pesanans->pluck('id'))
+                    ->lockForUpdate()
+                    ->get();
 
-        foreach ($pesanansFresh as $item) {
-            if (!$item->stok_dikurangi) {
-                if (!$item->barang) {
-                    continue;
+                foreach ($pesanansFresh as $item) {
+                    if (!$item->stok_dikurangi) {
+                        if (!$item->barang) {
+                            continue;
+                        }
+
+                        if ($item->barang->stok < $item->jumlah) {
+                            Log::warning('Stok tidak cukup saat pembayaran berhasil', [
+                                'pesanan_id' => $item->id,
+                                'barang_id' => $item->barang_id,
+                                'stok' => $item->barang->stok,
+                                'jumlah' => $item->jumlah,
+                            ]);
+
+                            continue;
+                        }
+
+                        $item->barang->decrement('stok', $item->jumlah);
+
+                        $item->update([
+                            'stok_dikurangi' => true,
+                        ]);
+                    }
                 }
 
-                if ($item->barang->stok < $item->jumlah) {
-                    Log::warning('Stok tidak cukup saat pembayaran berhasil', [
-                        'pesanan_id' => $item->id,
-                        'barang_id' => $item->barang_id,
-                        'stok' => $item->barang->stok,
-                        'jumlah' => $item->jumlah,
-                    ]);
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
 
-                    continue;
-                }
-
-                $item->barang->decrement('stok', $item->jumlah);
-
-                $item->update([
-                    'stok_dikurangi' => true,
+                Log::error('Gagal mengurangi stok setelah pembayaran berhasil', [
+                    'error' => $e->getMessage(),
+                    'order_id' => $orderId,
                 ]);
             }
         }
 
-        DB::commit();
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        Log::error('Gagal mengurangi stok setelah pembayaran berhasil', [
-            'error' => $e->getMessage(),
-            'order_id' => $orderId,
-        ]);
-    }
-}
         Log::info('Pesanan grup berhasil diupdate dari webhook Midtrans', [
             'order_id_midtrans' => $orderId,
             'jumlah_pesanan_diupdate' => $pesanans->count(),
@@ -588,5 +610,18 @@ class PesananController extends Controller
                 'payment_status' => 'expire',
                 'transaction_status' => 'expire',
             ]);
+    }
+
+    private function generateOrderCode()
+    {
+        do {
+            $code = 'ORDER-' . mt_rand(10000, 99999);
+        } while (
+            Pesanan::where('order_id', $code)
+                ->orWhere('group_order_id', $code)
+                ->exists()
+        );
+
+        return $code;
     }
 }
