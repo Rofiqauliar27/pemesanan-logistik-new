@@ -1661,3 +1661,371 @@ body {
         border-radius: 16px;
     }
 }
+
+/* =====================================================
+   ADMIN MODERN OVERRIDE - CLEAN ICON SIDEBAR & DASHBOARD
+===================================================== */
+
+.admin-sidebar {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-right: 1px solid #e2e8f0 !important;
+    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+.admin-brand {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.admin-brand-info h5 {
+    color: #0f172a !important;
+}
+
+.admin-brand-info small {
+    color: #64748b !important;
+}
+
+.admin-menu-label {
+    color: #94a3b8 !important;
+}
+
+.admin-menu .nav-link {
+    color: #334155 !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+}
+
+.admin-menu .nav-link:hover {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+.admin-menu .nav-link.active {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22) !important;
+}
+
+.menu-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 12px !important;
+    background: #eef2ff !important;
+    color: #2563eb !important;
+    font-size: 18px !important;
+    font-weight: normal !important;
+    letter-spacing: 0 !important;
+}
+
+.menu-icon i {
+    line-height: 1 !important;
+}
+
+.admin-menu .nav-link.active .menu-icon {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+}
+
+.admin-topbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.admin-mobile-toggle {
+    font-size: 24px !important;
+}
+
+.admin-mobile-toggle i {
+    line-height: 1 !important;
+}
+
+/* Dashboard stat card lebih modern */
+.dashboard-stat-card {
+    position: relative;
+    overflow: hidden;
+    display: flex !important;
+    align-items: center;
+    gap: 16px;
+    min-height: 132px;
+    border: none !important;
+    color: #ffffff;
+}
+
+.dashboard-stat-card span,
+.dashboard-stat-card strong,
+.dashboard-stat-card small {
+    color: #ffffff !important;
+}
+
+.dashboard-stat-card span {
+    margin-bottom: 6px !important;
+    opacity: 0.95;
+}
+
+.dashboard-stat-card strong {
+    font-size: 34px !important;
+    margin-bottom: 6px;
+}
+
+.dashboard-stat-card small {
+    display: block;
+    font-size: 12px;
+    opacity: 0.85;
+    font-weight: 700;
+}
+
+.dashboard-stat-card .stat-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dashboard-stat-card .stat-icon i {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.dashboard-stat-card.stat-blue {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+}
+
+.dashboard-stat-card.stat-green {
+    background: linear-gradient(135deg, #16a34a, #15803d) !important;
+}
+
+.dashboard-stat-card.stat-orange {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.dashboard-stat-card.stat-red {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+/* Menu cepat icon */
+.dashboard-quick-card span {
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 14px !important;
+}
+
+.dashboard-quick-card span i {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* Mobile sidebar tetap putih */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        background: #ffffff !important;
+        border-right: 1px solid #e2e8f0 !important;
+    }
+}
+
+/* =====================================================
+   DASHBOARD PESANAN TERBARU & STATUS CONSISTENT
+===================================================== */
+
+.dashboard-mini-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.dashboard-mini-stat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-mini-stat-card span {
+    display: block;
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.dashboard-mini-stat-card strong {
+    display: block;
+    font-size: 30px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.dashboard-mini-stat-card.mini-pending {
+    border-left: 5px solid #64748b;
+}
+
+.dashboard-mini-stat-card.mini-pending span {
+    color: #64748b;
+}
+
+.dashboard-mini-stat-card.mini-paid {
+    border-left: 5px solid #16a34a;
+}
+
+.dashboard-mini-stat-card.mini-paid span {
+    color: #16a34a;
+}
+
+.dashboard-mini-stat-card.mini-process {
+    border-left: 5px solid #f59e0b;
+}
+
+.dashboard-mini-stat-card.mini-process span {
+    color: #d97706;
+}
+
+.dashboard-mini-stat-card.mini-success {
+    border-left: 5px solid #15803d;
+}
+
+.dashboard-mini-stat-card.mini-success span {
+    color: #15803d;
+}
+
+/* Badge status seragam */
+.admin-status-badge.status-pending,
+.admin-status-badge.payment-unpaid {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.admin-status-badge.payment-waiting {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.admin-status-badge.payment-paid {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.admin-status-badge.status-process {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.admin-status-badge.status-shipping {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.admin-status-badge.status-success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.admin-status-badge.payment-failed {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.dashboard-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-mini-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-mini-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-section-header {
+        flex-direction: column;
+    }
+}
+
+/* =====================================================
+   DASHBOARD COMPACT SIZE ONLY
+   Mengecilkan kotak total dan status pesanan
+===================================================== */
+
+/* Kotak statistik utama: Total Barang, Total Pesanan, dst */
+.dashboard-stat-card {
+    min-height: 96px !important;
+    padding: 16px 18px !important;
+    border-radius: 16px !important;
+    gap: 12px !important;
+}
+
+.dashboard-stat-card .stat-icon {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+}
+
+.dashboard-stat-card .stat-icon i {
+    font-size: 22px !important;
+}
+
+.dashboard-stat-card span {
+    font-size: 13px !important;
+    margin-bottom: 4px !important;
+}
+
+.dashboard-stat-card strong {
+    font-size: 28px !important;
+    margin-bottom: 3px !important;
+}
+
+.dashboard-stat-card small {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+}
+
+/* Kotak status kecil: Pending, Sudah Bayar, Diproses, Selesai */
+.dashboard-mini-stat-card {
+    min-height: 74px !important;
+    padding: 13px 18px !important;
+    border-radius: 14px !important;
+}
+
+.dashboard-mini-stat-card span {
+    font-size: 12px !important;
+    margin-bottom: 5px !important;
+}
+
+.dashboard-mini-stat-card strong {
+    font-size: 24px !important;
+}
+
+/* Jarak antar kotak lebih rapat */
+.dashboard-stat-grid,
+.dashboard-mini-stat-grid {
+    gap: 12px !important;
+}
+
+/* Jarak dashboard keseluruhan sedikit lebih rapat */
+.admin-dashboard-page {
+    gap: 16px !important;
+}
+
+.admin-page {
+    gap: 8px !important;
+}
+
+.detail-card {
+    margin-bottom: 8px !important;
+    padding: 18px !important;
+}

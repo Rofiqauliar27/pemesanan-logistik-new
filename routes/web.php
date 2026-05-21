@@ -57,15 +57,73 @@ Route::get('/dashboard', function () {
 
 Route::get('/admin/dashboard', function () {
     $totalBarang = Barang::count();
-    $totalPesanan = Pesanan::count();
+
+    $totalPesanan = Pesanan::selectRaw('COALESCE(group_order_id, order_id, id) as kode_grup')
+        ->groupBy('kode_grup')
+        ->get()
+        ->count();
+
     $totalCustomer = User::where('role', 'customer')->count();
-    $totalSelesai = Pesanan::where('status', 'selesai')->count();
+
+    $totalSelesai = Pesanan::where('status', 'selesai')
+        ->selectRaw('COALESCE(group_order_id, order_id, id) as kode_grup')
+        ->groupBy('kode_grup')
+        ->get()
+        ->count();
+
+    $totalPending = Pesanan::where('status', 'pending')
+        ->selectRaw('COALESCE(group_order_id, order_id, id) as kode_grup')
+        ->groupBy('kode_grup')
+        ->get()
+        ->count();
+
+    $totalSudahBayar = Pesanan::whereIn('payment_status', [
+            'sudah_bayar',
+            'settlement',
+            'paid',
+            'capture',
+        ])
+        ->selectRaw('COALESCE(group_order_id, order_id, id) as kode_grup')
+        ->groupBy('kode_grup')
+        ->get()
+        ->count();
+
+    $totalDiproses = Pesanan::where('status', 'diproses')
+        ->selectRaw('COALESCE(group_order_id, order_id, id) as kode_grup')
+        ->groupBy('kode_grup')
+        ->get()
+        ->count();
+
+    $pesananTerbaruItems = Pesanan::with(['user', 'barang'])
+        ->latest()
+        ->get();
+
+    $pesananTerbaru = $pesananTerbaruItems
+        ->groupBy(function ($item) {
+            return $item->group_order_id ?? $item->order_id ?? $item->id;
+        })
+        ->map(function ($items) {
+            $utama = $items->first();
+
+            $utama->items = $items;
+            $utama->total_barang = $items->count();
+            $utama->total_jumlah = $items->sum('jumlah');
+            $utama->total_grup = $items->sum('total_harga');
+
+            return $utama;
+        })
+        ->take(5)
+        ->values();
 
     return view('admin.dashboard', compact(
         'totalBarang',
         'totalPesanan',
         'totalCustomer',
-        'totalSelesai'
+        'totalSelesai',
+        'totalPending',
+        'totalSudahBayar',
+        'totalDiproses',
+        'pesananTerbaru'
     ));
 })->middleware(['auth', 'role:admin']);
 

@@ -2,6 +2,7 @@
     $profilPerusahaan = \App\Models\ProfilPerusahaan::first();
 
     $cartCount = 0;
+
     if (auth()->check() && auth()->user()->role === 'customer') {
         $cartCount = \App\Models\Keranjang::where('user_id', auth()->id())->sum('jumlah');
     }
@@ -16,23 +17,61 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="{{ asset('css/marketplace.css') }}">
 
     <style>
-        .bst-cart-btn {
+        .public-cart-button {
+            width: 174px;
+            height: 44px;
+            padding: 0 18px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 999px;
+            background: transparent;
+            color: #ffffff;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .bst-cart-icon {
-            width: 20px;
-            height: 20px;
+        .public-cart-button:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            text-decoration: none;
+        }
+
+        .public-cart-icon {
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .public-cart-count {
+            min-width: 22px;
+            height: 22px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1;
             flex-shrink: 0;
         }
     </style>
 </head>
+
 <body>
 
 <header class="bst-indo-header">
@@ -49,8 +88,13 @@
                 </div>
 
                 <div class="bst-brand-text">
-                    <strong>{{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }}</strong>
-                    <small>{{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}</small>
+                    <strong>
+                        {{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }}
+                    </strong>
+
+                    <small>
+                        {{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}
+                    </small>
                 </div>
             </a>
 
@@ -67,24 +111,10 @@
             <div class="bst-auth-area">
                 @auth
                     @if(auth()->user()->role === 'customer')
-                        <a href="{{ route('customer.keranjang.index') }}" class="bst-cart-btn">
-                            <svg class="bst-cart-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M6.2 6.5H20L18.6 13.2C18.45 13.95 17.78 14.5 17 14.5H9.1C8.32 14.5 7.65 13.95 7.5 13.2L5.8 4.8C5.7 4.35 5.3 4 4.83 4H3.5"
-                                      stroke="currentColor"
-                                      stroke-width="2"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"/>
-                                <path d="M9.5 19.2C10.05 19.2 10.5 18.75 10.5 18.2C10.5 17.65 10.05 17.2 9.5 17.2C8.95 17.2 8.5 17.65 8.5 18.2C8.5 18.75 8.95 19.2 9.5 19.2Z"
-                                      fill="currentColor"/>
-                                <path d="M17 19.2C17.55 19.2 18 18.75 18 18.2C18 17.65 17.55 17.2 17 17.2C16.45 17.2 16 17.65 16 18.2C16 18.75 16.45 19.2 17 19.2Z"
-                                      fill="currentColor"/>
-                            </svg>
-
+                        <a href="{{ route('customer.keranjang.index') }}" class="public-cart-button">
+                            <i class="bi bi-cart public-cart-icon"></i>
                             <span>Keranjang</span>
-
-                            <span id="cart-badge" class="bst-cart-badge">
-                                {{ $cartCount }}
-                            </span>
+                            <span class="public-cart-count">{{ $cartCount ?? 0 }}</span>
                         </a>
 
                         <div class="dropdown">
@@ -94,24 +124,31 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile') }}">
+                                    <a
+                                        class="dropdown-item {{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}"
+                                        href="{{ route('customer.profile') }}"
+                                    >
                                         Profil Saya
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
-                                       href="{{ route('customer.profile', ['tab' => 'pesanan']) }}">
+                                    <a
+                                        class="dropdown-item {{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}"
+                                        href="{{ route('customer.profile', ['tab' => 'pesanan']) }}"
+                                    >
                                         Pesanan Saya
                                     </a>
                                 </li>
 
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
 
                                 <li>
                                     <form action="{{ route('logout') }}" method="POST" class="px-3">
                                         @csrf
+
                                         <button type="submit" class="btn btn-danger btn-sm w-100">
                                             Logout
                                         </button>
@@ -146,8 +183,13 @@
                 </a>
 
                 <div class="dropdown">
-                    <a href="#" class="dropdown-toggle {{ request('kategori') ? 'active' : '' }}" data-bs-toggle="dropdown">
-                        ☰ Kategori
+                    <a
+                        href="#"
+                        class="dropdown-toggle {{ request('kategori') ? 'active' : '' }}"
+                        data-bs-toggle="dropdown"
+                    >
+                        <i class="bi bi-list"></i>
+                        Kategori
                     </a>
 
                     <ul class="dropdown-menu">
@@ -157,7 +199,9 @@
                             </a>
                         </li>
 
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
 
                         @php
                             $kategoriNavbar = \App\Models\Barang::select('kategori')
@@ -170,8 +214,10 @@
 
                         @foreach($kategoriNavbar as $kategori)
                             <li>
-                                <a class="dropdown-item {{ request('kategori') == $kategori ? 'active' : '' }}"
-                                   href="{{ route('public.produk', ['kategori' => $kategori]) }}">
+                                <a
+                                    class="dropdown-item {{ request('kategori') == $kategori ? 'active' : '' }}"
+                                    href="{{ route('public.produk', ['kategori' => $kategori]) }}"
+                                >
                                     {{ $kategori }}
                                 </a>
                             </li>
@@ -179,11 +225,17 @@
                     </ul>
                 </div>
 
-                <a class="{{ request()->is('produk') || request()->is('produk/*') ? 'active' : '' }}" href="{{ route('public.produk') }}">
+                <a
+                    class="{{ request()->is('produk') || request()->is('produk/*') ? 'active' : '' }}"
+                    href="{{ route('public.produk') }}"
+                >
                     Produk
                 </a>
 
-                <a class="{{ request()->is('tentang-sistem') ? 'active' : '' }}" href="{{ route('tentang.sistem') }}">
+                <a
+                    class="{{ request()->is('tentang-sistem') ? 'active' : '' }}"
+                    href="{{ route('tentang.sistem') }}"
+                >
                     Profil Perusahaan
                 </a>
             </div>
@@ -196,9 +248,7 @@
                         </a>
                     @endif
                 @else
-                    <a href="{{ route('register') }}">
-                        Jadi Customer
-                    </a>
+                   
                 @endauth
             </div>
         </div>
@@ -222,5 +272,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 @yield('scripts')
+
 </body>
 </html>

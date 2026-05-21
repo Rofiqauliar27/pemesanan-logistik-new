@@ -6,6 +6,10 @@
     <title>@yield('title', 'Admin Panel')</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    {{-- Bootstrap Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
 </head>
 <body>
@@ -14,8 +18,8 @@
 
         <main class="admin-main">
             <header class="admin-topbar">
-                <button type="button" class="admin-mobile-toggle" id="adminMobileToggle">
-                    ☰
+                <button type="button" class="admin-mobile-toggle" id="adminMobileToggle" aria-label="Buka menu admin">
+                    <i class="bi bi-list"></i>
                 </button>
 
                 <div class="admin-topbar-user">
@@ -27,6 +31,7 @@
                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf
                         <button type="submit" class="btn-admin-logout">
+                            <i class="bi bi-box-arrow-right me-1"></i>
                             Logout
                         </button>
                     </form>

@@ -9,7 +9,6 @@
     $totalJumlah = $totalJumlah ?? $pesananItems->sum('jumlah');
 
     $kodePesanan = $pesanan->group_order_id ?? $pesanan->order_id ?? '-';
-
     $customer = $pesanan->user;
 
     $alamatLengkap = collect([
@@ -67,9 +66,20 @@
             : (in_array($statusBayar, ['failed', 'gagal', 'expire'])
                 ? 'bg-danger'
                 : 'bg-secondary'));
+
+    $sudahLunas = in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']);
 @endphp
 
 <style>
+    .detail-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+
     .detail-page-title {
         font-size: 30px;
         font-weight: 800;
@@ -80,15 +90,6 @@
     .detail-page-subtitle {
         color: #6b7280;
         margin-bottom: 0;
-    }
-
-    .detail-card {
-        background: #ffffff;
-        border-radius: 14px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        padding: 24px;
-        margin-bottom: 20px;
     }
 
     .detail-section-title {
@@ -158,7 +159,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 190px;
+        min-width: 180px;
         height: 44px;
         padding: 0 20px;
         border-radius: 8px;
@@ -191,6 +192,16 @@
     .btn-back-action:hover {
         color: #ffffff;
         background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+
+    .status-warning-box {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        color: #9a3412;
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-weight: 600;
+        margin-bottom: 16px;
     }
 
     @media (max-width: 992px) {
@@ -365,21 +376,62 @@
     </div>
 
     <div class="detail-card">
-        <div class="detail-action-bar">
-            @if(in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture']))
-                <a href="{{ route('admin.pesanan.editStatus', $pesanan->id) }}" class="btn-detail-action btn-status-action">
-                    Ubah Status
-                </a>
-            @endif
+        <h4 class="detail-section-title">Kelola Pesanan</h4>
 
-            <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn-detail-action btn-invoice-action">
-                Cetak Invoice
-            </a>
+        @if(!$sudahLunas)
+            <div class="status-warning-box">
+                Pesanan belum lunas. Admin hanya dapat mengubah status ke Pending atau Dibatalkan.
+            </div>
+        @endif
 
-            <a href="{{ route('admin.pesanan.index') }}" class="btn-detail-action btn-back-action">
-                Kembali ke Data Pesanan
-            </a>
-        </div>
+        <form action="{{ route('admin.pesanan.updateStatus', $pesanan->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="row align-items-end">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Pilih Status Baru</label>
+
+                    <select name="status" class="form-control" required>
+                        <option value="pending" {{ $pesanan->status == 'pending' ? 'selected' : '' }}>
+                            Pending
+                        </option>
+
+                        @if($sudahLunas)
+                            <option value="diproses" {{ $pesanan->status == 'diproses' ? 'selected' : '' }}>
+                                Diproses
+                            </option>
+
+                            <option value="dikirim" {{ $pesanan->status == 'dikirim' ? 'selected' : '' }}>
+                                Dikirim
+                            </option>
+
+                            <option value="selesai" {{ $pesanan->status == 'selesai' ? 'selected' : '' }}>
+                                Selesai
+                            </option>
+                        @endif
+
+                        <option value="dibatalkan" {{ $pesanan->status == 'dibatalkan' ? 'selected' : '' }}>
+                            Dibatalkan
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <div class="detail-action-bar">
+                        <button type="submit" class="btn-detail-action btn-status-action">
+                            Update Status
+                        </button>
+
+                        <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn-detail-action btn-invoice-action">
+                            Cetak Invoice
+                        </a>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
 </div>

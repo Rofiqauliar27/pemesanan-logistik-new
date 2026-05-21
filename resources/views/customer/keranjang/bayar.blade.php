@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.public')
 
 @section('title', 'Pembayaran Checkout Keranjang')
 
@@ -66,7 +66,6 @@
 
     <div class="checkout-payment-header">
         <div>
-            <span>Checkout Keranjang</span>
             <h2>Pembayaran Pesanan</h2>
             <p>
                 Periksa kembali item yang Anda checkout sebelum melanjutkan pembayaran.

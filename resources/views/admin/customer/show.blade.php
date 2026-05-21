@@ -115,7 +115,6 @@
 
     <div class="admin-page-header">
         <div>
-            <span>Customer</span>
             <h2>Detail Customer</h2>
             <p>Informasi lengkap customer dan riwayat pesanannya.</p>
         </div>
