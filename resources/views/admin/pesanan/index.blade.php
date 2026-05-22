@@ -50,39 +50,25 @@
 
             <div class="admin-search-field">
                 <label>Status Bayar</label>
-                <select name="payment_status">
-                    <option value="">Semua Status Bayar</option>
-                    <option value="belum_bayar" {{ request('payment_status') == 'belum_bayar' ? 'selected' : '' }}>
-                        Belum Bayar
-                    </option>
-                    <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>
-                        Menunggu Pembayaran
-                    </option>
-                    <option value="challenge" {{ request('payment_status') == 'challenge' ? 'selected' : '' }}>
-                        Menunggu Konfirmasi
-                    </option>
-                    <option value="sudah_bayar" {{ request('payment_status') == 'sudah_bayar' ? 'selected' : '' }}>
-                        Sudah Bayar
-                    </option>
-                    <option value="settlement" {{ request('payment_status') == 'settlement' ? 'selected' : '' }}>
-                        Settlement
-                    </option>
-                    <option value="paid" {{ request('payment_status') == 'paid' ? 'selected' : '' }}>
-                        Paid
-                    </option>
-                    <option value="capture" {{ request('payment_status') == 'capture' ? 'selected' : '' }}>
-                        Capture
-                    </option>
-                    <option value="failed" {{ request('payment_status') == 'failed' ? 'selected' : '' }}>
-                        Gagal
-                    </option>
-                    <option value="gagal" {{ request('payment_status') == 'gagal' ? 'selected' : '' }}>
-                        Gagal
-                    </option>
-                    <option value="expire" {{ request('payment_status') == 'expire' ? 'selected' : '' }}>
-                        Expired
-                    </option>
-                </select>
+                <select name="payment_status" class="form-control">
+    <option value="">Semua Status Bayar</option>
+
+    <option value="belum_bayar" {{ request('payment_status') == 'belum_bayar' ? 'selected' : '' }}>
+        Belum Bayar
+    </option>
+
+    <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>
+        Menunggu Pembayaran
+    </option>
+
+    <option value="lunas" {{ request('payment_status') == 'lunas' ? 'selected' : '' }}>
+        Sudah Bayar
+    </option>
+
+    <option value="gagal" {{ request('payment_status') == 'gagal' ? 'selected' : '' }}>
+        Gagal / Expired
+    </option>
+</select>
             </div>
 
             <div class="admin-filter-actions">

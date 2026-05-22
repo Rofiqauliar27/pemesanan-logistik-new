@@ -516,11 +516,7 @@
             <p><strong>Admin CV Bintang Saida Teknik</strong></p>
         </div>
 
-        <div class="section-line"></div>
-
-        <div class="footer-note">
-            Jika terdapat pertanyaan terkait invoice ini, silakan hubungi admin CV Bintang Saida Teknik.
-        </div>
+        
     </div>
 </div>
 

@@ -161,9 +161,23 @@ class PesananController extends Controller
         }
 
         if ($request->filled('payment_status')) {
-            $query->where('payment_status', $request->payment_status);
-        }
-
+    if ($request->payment_status === 'lunas') {
+        $query->whereIn('payment_status', [
+            'sudah_bayar',
+            'settlement',
+            'paid',
+            'capture',
+        ]);
+    } elseif ($request->payment_status === 'gagal') {
+        $query->whereIn('payment_status', [
+            'failed',
+            'gagal',
+            'expire',
+        ]);
+    } else {
+        $query->where('payment_status', $request->payment_status);
+    }
+}
         $pesananItems = $query->latest()->get();
 
         $pesananGroups = $pesananItems->groupBy(function ($item) {
