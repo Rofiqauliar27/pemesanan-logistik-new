@@ -83,10 +83,10 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn-cart-mini">
-                                    <span class="cart-icon">🛒</span>
-                                    <span>Keranjang</span>
-                                </button>
+<button type="submit" class="btn btn-warning btn-detail-cart js-fly-to-cart">
+    <i class="bi bi-cart"></i>
+    <span>Keranjang</span>
+</button>
                             </form>
 
                             <a href="{{ route('customer.pesanan.create', $barang->id) }}" class="btn-buy-now-mini">

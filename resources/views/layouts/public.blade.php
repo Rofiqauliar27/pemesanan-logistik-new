@@ -261,14 +261,6 @@
 </main>    </div>
 </div>
 
-<div class="market-footer">
-    <div class="container text-center">
-        © {{ date('Y') }}
-        {{ $profilPerusahaan->nama_perusahaan ?? 'CV Bintang Saida Teknik' }}
-        —
-        {{ $profilPerusahaan->bidang_usaha ?? 'Sistem Pemesanan Logistik Perkapalan' }}
-    </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 

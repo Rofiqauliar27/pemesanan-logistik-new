@@ -26,7 +26,7 @@ class PublicBarangController extends Controller
     }
 
     $barangs = $query->latest()
-        ->paginate(12)
+        ->paginate(20)
         ->withQueryString();
 
     $kategoriList = Barang::select('kategori')

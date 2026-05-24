@@ -7459,3 +7459,36 @@ a {
 .fly-cart-icon i {
     line-height: 1;
 }
+
+/* =====================================================
+   TOMBOL KERANJANG DETAIL PRODUK
+   Icon disamakan dengan navbar
+===================================================== */
+
+.btn-detail-cart {
+    height: 48px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 10px;
+    background: #ff6600;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-detail-cart i {
+    font-size: 19px;
+    line-height: 1;
+}
+
+.btn-detail-cart:hover {
+    background: #ea580c;
+    color: #ffffff;
+}
