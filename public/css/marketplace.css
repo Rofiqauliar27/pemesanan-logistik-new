@@ -7326,3 +7326,136 @@ a {
     }
 }
 
+/* =========================================
+   GLOBAL PUBLIC PAGE SPACING
+========================================= */
+
+.public-page-content {
+    padding-top: 18px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 40px;
+}
+
+/* Biar semua box pertama sejajar */
+.public-page-content > div,
+.public-page-content > section {
+    margin-top: 0 !important;
+}
+
+/* =====================================================
+   FINAL FIX JARAK KONTEN PUBLIC DARI NAVBAR
+   Samakan Beranda, Produk, Profil Perusahaan, Keranjang, Checkout
+===================================================== */
+
+.indo-page,
+.catalog-page,
+.company-about-page,
+.cart-page,
+.checkout-payment-page,
+.product-detail-page,
+.order-create-page,
+.customer-edit-wrapper {
+    padding-top: 18px !important;
+}
+
+/* Khusus halaman profil perusahaan: samakan jarak hero dari navbar */
+.company-about-page {
+    gap: 72px;
+}
+
+/* Hilangkan margin atas berbeda dari elemen pertama */
+.indo-page > section:first-child,
+.catalog-page > div:first-child,
+.company-about-page > section:first-child,
+.cart-page > div:first-child,
+.checkout-payment-page > div:first-child,
+.product-detail-page > div:first-child,
+.order-create-page > div:first-child {
+    margin-top: 0 !important;
+}
+
+/* Samakan jarak banner/hero pertama */
+.single-banner-section,
+.catalog-hero,
+.about-hero,
+.cart-hero,
+.checkout-payment-header,
+.product-detail-card,
+.order-hero {
+    margin-top: 0 !important;
+}
+
+/* =====================================================
+   FLOATING WHATSAPP BUTTON
+===================================================== */
+
+.floating-whatsapp {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #ffffff !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    font-size: 28px;
+    box-shadow: 0 12px 28px rgba(37, 211, 102, 0.35);
+    z-index: 9999;
+    transition: all 0.2s ease;
+}
+
+.floating-whatsapp:hover {
+    background: #1ebe5d;
+    color: #ffffff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(37, 211, 102, 0.42);
+}
+
+.floating-whatsapp i {
+    line-height: 1;
+}
+
+@media (max-width: 576px) {
+    .floating-whatsapp {
+        right: 16px;
+        bottom: 16px;
+        width: 54px;
+        height: 54px;
+        font-size: 26px;
+    }
+}
+
+/* =====================================================
+   ANIMASI ICON TERBANG KE KERANJANG
+   Navbar keranjang tidak membesar / tidak goyang
+===================================================== */
+
+.fly-cart-icon {
+    position: fixed;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff7a00, #ff5f00);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    z-index: 99999;
+    pointer-events: none;
+    box-shadow: 0 12px 28px rgba(255, 105, 0, 0.35);
+    transition:
+        left 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        top 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.65s ease;
+}
+
+.fly-cart-icon i {
+    line-height: 1;
+}

@@ -554,50 +554,57 @@ class PesananController extends Controller
 
         Pesanan::whereIn('id', $pesanans->pluck('id'))->update($updateData);
 
-        if ($paymentStatus === 'sudah_bayar') {
-            DB::beginTransaction();
+       if ($paymentStatus === 'sudah_bayar') {
+    DB::beginTransaction();
 
-            try {
-                $pesanansFresh = Pesanan::with('barang')
-                    ->whereIn('id', $pesanans->pluck('id'))
-                    ->lockForUpdate()
-                    ->get();
+    try {
+        $pesanansFresh = Pesanan::with('barang')
+            ->whereIn('id', $pesanans->pluck('id'))
+            ->lockForUpdate()
+            ->get();
 
-                foreach ($pesanansFresh as $item) {
-                    if (!$item->stok_dikurangi) {
-                        if (!$item->barang) {
-                            continue;
-                        }
-
-                        if ($item->barang->stok < $item->jumlah) {
-                            Log::warning('Stok tidak cukup saat pembayaran berhasil', [
-                                'pesanan_id' => $item->id,
-                                'barang_id' => $item->barang_id,
-                                'stok' => $item->barang->stok,
-                                'jumlah' => $item->jumlah,
-                            ]);
-
-                            continue;
-                        }
-
-                        $item->barang->decrement('stok', $item->jumlah);
-
-                        $item->update([
-                            'stok_dikurangi' => true,
-                        ]);
-                    }
-                }
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-
-                Log::error('Gagal mengurangi stok setelah pembayaran berhasil', [
-                    'error' => $e->getMessage(),
-                    'order_id' => $orderId,
-                ]);
+        foreach ($pesanansFresh as $item) {
+            if ((bool) $item->stok_dikurangi === true) {
+                continue;
             }
+
+            if (!$item->barang) {
+                continue;
+            }
+
+            if ($item->barang->stok < $item->jumlah) {
+                Log::warning('Stok tidak cukup saat pembayaran berhasil', [
+                    'pesanan_id' => $item->id,
+                    'barang_id' => $item->barang_id,
+                    'stok' => $item->barang->stok,
+                    'jumlah' => $item->jumlah,
+                ]);
+
+                continue;
+            }
+
+            DB::table('barangs')
+                ->where('id', $item->barang_id)
+                ->decrement('stok', $item->jumlah);
+
+            DB::table('pesanans')
+                ->where('id', $item->id)
+                ->update([
+                    'stok_dikurangi' => true,
+                    'updated_at' => now(),
+                ]);
         }
+
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        Log::error('Gagal mengurangi stok setelah pembayaran berhasil', [
+            'error' => $e->getMessage(),
+            'order_id' => $orderId,
+        ]);
+    }
+}
 
         Log::info('Pesanan grup berhasil diupdate dari webhook Midtrans', [
             'order_id_midtrans' => $orderId,

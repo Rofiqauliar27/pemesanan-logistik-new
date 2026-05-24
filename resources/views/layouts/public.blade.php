@@ -111,8 +111,7 @@
             <div class="bst-auth-area">
                 @auth
                     @if(auth()->user()->role === 'customer')
-                        <a href="{{ route('customer.keranjang.index') }}" class="public-cart-button">
-                            <i class="bi bi-cart public-cart-icon"></i>
+<a href="{{ route('customer.keranjang.index') }}" class="public-cart-button" id="navbarCartButton">                            <i class="bi bi-cart public-cart-icon"></i>
                             <span>Keranjang</span>
                             <span class="public-cart-count">{{ $cartCount ?? 0 }}</span>
                         </a>
@@ -257,8 +256,9 @@
 
 <div class="market-page">
     <div class="container">
-        @yield('content')
-    </div>
+<main class="public-page-content">
+    @yield('content')
+</main>    </div>
 </div>
 
 <div class="market-footer">
@@ -271,7 +271,81 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cartButton = document.getElementById('navbarCartButton');
+
+        function flyToCart(startElement) {
+            if (!cartButton || !startElement) {
+                return;
+            }
+
+            const startRect = startElement.getBoundingClientRect();
+            const endRect = cartButton.getBoundingClientRect();
+
+            const flyIcon = document.createElement('div');
+            flyIcon.className = 'fly-cart-icon';
+            flyIcon.innerHTML = '<i class="bi bi-cart"></i>';
+
+            flyIcon.style.left = (startRect.left + startRect.width / 2 - 21) + 'px';
+            flyIcon.style.top = (startRect.top + startRect.height / 2 - 21) + 'px';
+
+            document.body.appendChild(flyIcon);
+
+            requestAnimationFrame(function () {
+                flyIcon.style.left = (endRect.left + endRect.width / 2 - 21) + 'px';
+                flyIcon.style.top = (endRect.top + endRect.height / 2 - 21) + 'px';
+                flyIcon.style.transform = 'scale(0.35) rotate(16deg)';
+                flyIcon.style.opacity = '0';
+            });
+
+            setTimeout(function () {
+                flyIcon.remove();
+            }, 700);
+        }
+
+        document.querySelectorAll('.js-fly-to-cart').forEach(function (button) {
+            button.addEventListener('click', function () {
+                flyToCart(button);
+            });
+        });
+    });
+</script>
 @yield('scripts')
+
+
+@php
+    $profilPerusahaanWa = $profilPerusahaan ?? \App\Models\ProfilPerusahaan::first();
+
+    $nomorWaAdmin = $profilPerusahaanWa->telepon ?? '6281234567890';
+
+    // Bersihkan nomor dari spasi, strip, tanda plus, dan karakter selain angka
+    $nomorWaAdmin = preg_replace('/[^0-9]/', '', $nomorWaAdmin);
+
+    // Jika nomor diawali 0, ubah ke format Indonesia 62
+    if (substr($nomorWaAdmin, 0, 1) === '0') {
+        $nomorWaAdmin = '62' . substr($nomorWaAdmin, 1);
+    }
+
+    // Jika nomor kosong, gunakan nomor default
+    if (empty($nomorWaAdmin)) {
+        $nomorWaAdmin = '6281234567890';
+    }
+
+    $pesanWaAdmin = 'Halo Admin CV. Bintang Saida Teknik, saya ingin bertanya mengenai produk atau pesanan.';
+@endphp
+
+@if(!auth()->check() || auth()->user()->role === 'customer')
+    <a href="https://wa.me/{{ $nomorWaAdmin }}?text={{ urlencode($pesanWaAdmin) }}"
+       class="floating-whatsapp"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Hubungi Admin via WhatsApp"
+       title="Hubungi Admin">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+@endif
 
 </body>
 </html>

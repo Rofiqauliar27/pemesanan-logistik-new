@@ -254,9 +254,9 @@
                                                 Batal
                                             </button>
 
-                                            <button type="submit" class="btn-cart-submit">
-                                                Tambah ke Keranjang
-                                            </button>
+                                            <button type="submit" class="btn-cart-submit js-fly-to-cart">
+    Tambah ke Keranjang
+</button>
                                         </div>
                                     </form>
                                 </div>
