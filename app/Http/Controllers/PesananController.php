@@ -474,87 +474,77 @@ class PesananController extends Controller
     }
 
     public function notificationHandler(Request $request)
-    {
-        Log::info('Midtrans notification masuk', $request->all());
+{
+    Log::info('Midtrans notification masuk', $request->all());
 
-        $serverKey = config('midtrans.server_key');
+    $serverKey = config('midtrans.server_key');
 
-        $signatureKey = hash(
-            'sha512',
-            $request->order_id .
-            $request->status_code .
-            $request->gross_amount .
-            $serverKey
-        );
+    $signatureKey = hash(
+        'sha512',
+        $request->order_id .
+        $request->status_code .
+        $request->gross_amount .
+        $serverKey
+    );
 
-        if ($signatureKey !== $request->signature_key) {
-            Log::warning('Signature Midtrans tidak valid', $request->all());
+    if ($signatureKey !== $request->signature_key) {
+        Log::warning('Signature Midtrans tidak valid', $request->all());
 
-            return response()->json([
-                'message' => 'Signature tidak valid',
-            ], 403);
-        }
+        return response()->json([
+            'message' => 'Signature tidak valid',
+        ], 403);
+    }
 
-        $orderId = $request->order_id;
+    $orderId = $request->order_id;
 
-        $pesanans = Pesanan::where('group_order_id', $orderId)
-            ->orWhere('order_id', $orderId)
-            ->get();
+    $pesanans = Pesanan::where('group_order_id', $orderId)
+        ->orWhere('order_id', $orderId)
+        ->get();
 
-        if ($pesanans->isEmpty()) {
-            Log::warning('Midtrans notification masuk, tapi pesanan tidak ditemukan', [
-                'order_id' => $orderId,
-                'payload' => $request->all(),
-            ]);
+    if ($pesanans->isEmpty()) {
+        Log::warning('Midtrans notification masuk, tapi pesanan tidak ditemukan', [
+            'order_id' => $orderId,
+            'payload' => $request->all(),
+        ]);
 
-            return response()->json([
-                'message' => 'Notification diterima, tapi pesanan tidak ditemukan',
-                'order_id' => $orderId,
-            ], 200);
-        }
+        return response()->json([
+            'message' => 'Notification diterima, tapi pesanan tidak ditemukan',
+            'order_id' => $orderId,
+        ], 200);
+    }
 
-        $transactionStatus = $request->transaction_status;
-        $paymentType = $request->payment_type ?? null;
-        $fraudStatus = $request->fraud_status ?? null;
+    $transactionStatus = $request->transaction_status;
+    $paymentType = $request->payment_type ?? null;
+    $fraudStatus = $request->fraud_status ?? null;
 
-        $paymentStatus = 'belum_bayar';
-        $paidAt = null;
+    $paymentStatus = 'belum_bayar';
+    $paidAt = null;
 
-        if ($transactionStatus === 'capture') {
-            if ($fraudStatus === 'accept') {
-                $paymentStatus = 'sudah_bayar';
-                $paidAt = now();
-            } else {
-                $paymentStatus = 'challenge';
-            }
-        } elseif ($transactionStatus === 'settlement') {
+    if ($transactionStatus === 'capture') {
+        if ($fraudStatus === 'accept') {
             $paymentStatus = 'sudah_bayar';
             $paidAt = now();
-        } elseif ($transactionStatus === 'pending') {
-            $paymentStatus = 'pending';
-        } elseif (in_array($transactionStatus, ['deny', 'cancel'])) {
-            $paymentStatus = 'failed';
-        } elseif ($transactionStatus === 'expire') {
-            $paymentStatus = 'expire';
+        } else {
+            $paymentStatus = 'challenge';
         }
+    } elseif ($transactionStatus === 'settlement') {
+        $paymentStatus = 'sudah_bayar';
+        $paidAt = now();
+    } elseif ($transactionStatus === 'pending') {
+        $paymentStatus = 'pending';
+    } elseif (in_array($transactionStatus, ['deny', 'cancel'])) {
+        $paymentStatus = 'failed';
+    } elseif ($transactionStatus === 'expire') {
+        $paymentStatus = 'expire';
+    }
 
-        $updateData = [
-            'payment_status' => $paymentStatus,
-            'transaction_status' => $transactionStatus,
-            'payment_type' => $paymentType,
-        ];
+    $statusLunas = [
+        'sudah_bayar',
+        'settlement',
+        'paid',
+        'capture',
+    ];
 
-        if ($paidAt) {
-            $updateData['paid_at'] = $paidAt;
-        }
-
-        if (in_array($paymentStatus, ['failed', 'expire'])) {
-            $updateData['status'] = 'dibatalkan';
-        }
-
-        Pesanan::whereIn('id', $pesanans->pluck('id'))->update($updateData);
-
-       if ($paymentStatus === 'sudah_bayar') {
     DB::beginTransaction();
 
     try {
@@ -564,61 +554,102 @@ class PesananController extends Controller
             ->get();
 
         foreach ($pesanansFresh as $item) {
-            if ((bool) $item->stok_dikurangi === true) {
-                continue;
+            $statusSebelumnyaLunas = in_array($item->payment_status, $statusLunas);
+            $statusBaruLunas = $paymentStatus === 'sudah_bayar';
+
+            $updateData = [
+                'payment_status' => $paymentStatus,
+                'transaction_status' => $transactionStatus,
+                'payment_type' => $paymentType,
+            ];
+
+            if ($paidAt && empty($item->paid_at)) {
+                $updateData['paid_at'] = $paidAt;
             }
 
-            if (!$item->barang) {
-                continue;
+            if (in_array($paymentStatus, ['failed', 'expire'])) {
+                $updateData['status'] = 'dibatalkan';
             }
 
-            if ($item->barang->stok < $item->jumlah) {
-                Log::warning('Stok tidak cukup saat pembayaran berhasil', [
-                    'pesanan_id' => $item->id,
-                    'barang_id' => $item->barang_id,
-                    'stok' => $item->barang->stok,
-                    'jumlah' => $item->jumlah,
-                ]);
-
-                continue;
+            /*
+             * Kalau pesanan lama sudah lunas, tapi stok_dikurangi masih 0,
+             * jangan potong stok lagi. Cukup tandai agar webhook lama tidak
+             * mengurangi stok saat masuk ulang.
+             */
+            if ($statusSebelumnyaLunas && !$item->stok_dikurangi) {
+                $updateData['stok_dikurangi'] = true;
             }
 
-            DB::table('barangs')
-                ->where('id', $item->barang_id)
-                ->decrement('stok', $item->jumlah);
+            /*
+             * Stok hanya dikurangi kalau:
+             * 1. status baru lunas
+             * 2. status sebelumnya belum lunas
+             * 3. stok belum pernah dikurangi
+             */
+            if (
+                $statusBaruLunas &&
+                !$statusSebelumnyaLunas &&
+                !$item->stok_dikurangi
+            ) {
+                if (!$item->barang) {
+                    Log::warning('Barang tidak ditemukan saat pembayaran berhasil', [
+                        'pesanan_id' => $item->id,
+                        'barang_id' => $item->barang_id,
+                    ]);
 
-            DB::table('pesanans')
-                ->where('id', $item->id)
-                ->update([
-                    'stok_dikurangi' => true,
-                    'updated_at' => now(),
-                ]);
+                    $item->update($updateData);
+                    continue;
+                }
+
+                if ($item->barang->stok < $item->jumlah) {
+                    Log::warning('Stok tidak cukup saat pembayaran berhasil', [
+                        'pesanan_id' => $item->id,
+                        'barang_id' => $item->barang_id,
+                        'stok' => $item->barang->stok,
+                        'jumlah' => $item->jumlah,
+                    ]);
+
+                    $item->update($updateData);
+                    continue;
+                }
+
+                DB::table('barangs')
+                    ->where('id', $item->barang_id)
+                    ->decrement('stok', $item->jumlah);
+
+                $updateData['stok_dikurangi'] = true;
+            }
+
+            $item->update($updateData);
         }
 
         DB::commit();
     } catch (\Exception $e) {
         DB::rollBack();
 
-        Log::error('Gagal mengurangi stok setelah pembayaran berhasil', [
+        Log::error('Gagal memproses notifikasi Midtrans', [
             'error' => $e->getMessage(),
             'order_id' => $orderId,
         ]);
-    }
-}
-
-        Log::info('Pesanan grup berhasil diupdate dari webhook Midtrans', [
-            'order_id_midtrans' => $orderId,
-            'jumlah_pesanan_diupdate' => $pesanans->count(),
-            'payment_status' => $paymentStatus,
-            'transaction_status' => $transactionStatus,
-            'payment_type' => $paymentType,
-            'paid_at' => $paidAt,
-        ]);
 
         return response()->json([
-            'message' => 'Notification berhasil diproses',
-        ], 200);
+            'message' => 'Gagal memproses notification',
+        ], 500);
     }
+
+    Log::info('Pesanan grup berhasil diupdate dari webhook Midtrans', [
+        'order_id_midtrans' => $orderId,
+        'jumlah_pesanan_diupdate' => $pesanans->count(),
+        'payment_status' => $paymentStatus,
+        'transaction_status' => $transactionStatus,
+        'payment_type' => $paymentType,
+        'paid_at' => $paidAt,
+    ]);
+
+    return response()->json([
+        'message' => 'Notification berhasil diproses',
+    ], 200);
+}
 
     private function batalkanPesananExpired()
     {
