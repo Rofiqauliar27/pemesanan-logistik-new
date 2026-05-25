@@ -85,14 +85,14 @@ class CustomerProfileController extends Controller
             ->latest()
             ->get();
 
-        return view('customer.dashboard', compact(
-            'user',
-            'tab',
-            'filter',
-            'pesanans',
-            'semuaPesanan',
-            'pesananBelumBayar'
-        ));
+       return view('customer.profile.index', compact(
+    'user',
+    'tab',
+    'filter',
+    'pesanans',
+    'semuaPesanan',
+    'pesananBelumBayar'
+));
     }
 
     public function edit()

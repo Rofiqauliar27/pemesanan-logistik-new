@@ -339,5 +339,62 @@
     </a>
 @endif
 
+@auth
+    @if(auth()->user()->role === 'customer')
+        <nav class="mobile-bottom-nav">
+            <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">
+                <i class="bi bi-house-door"></i>
+                <span>Beranda</span>
+            </a>
+
+            <a href="{{ route('public.produk') }}" class="{{ request()->is('produk') || request()->is('produk/*') ? 'active' : '' }}">
+                <i class="bi bi-grid"></i>
+                <span>Produk</span>
+            </a>
+
+            <a href="{{ route('customer.keranjang.index') }}" class="{{ request()->is('customer/keranjang*') ? 'active' : '' }}">
+                <div class="mobile-nav-cart-icon">
+                    <i class="bi bi-cart"></i>
+                    @if(($cartCount ?? 0) > 0)
+                        <em>{{ $cartCount }}</em>
+                    @endif
+                </div>
+                <span>Keranjang</span>
+            </a>
+
+            <a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}" class="{{ request()->is('customer/profile') && request('tab') == 'pesanan' ? 'active' : '' }}">
+                <i class="bi bi-receipt"></i>
+                <span>Pesanan</span>
+            </a>
+
+            <a href="{{ route('customer.profile') }}" class="{{ request()->is('customer/profile') && request('tab', 'profil') == 'profil' ? 'active' : '' }}">
+                <i class="bi bi-person"></i>
+                <span>Saya</span>
+            </a>
+        </nav>
+    @endif
+@else
+    <nav class="mobile-bottom-nav">
+        <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">
+            <i class="bi bi-house-door"></i>
+            <span>Beranda</span>
+        </a>
+
+        <a href="{{ route('public.produk') }}" class="{{ request()->is('produk') || request()->is('produk/*') ? 'active' : '' }}">
+            <i class="bi bi-grid"></i>
+            <span>Produk</span>
+        </a>
+
+        <a href="{{ route('login') }}">
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span>Login</span>
+        </a>
+
+        <a href="{{ route('register') }}">
+            <i class="bi bi-person-plus"></i>
+            <span>Daftar</span>
+        </a>
+    </nav>
+@endauth
 </body>
 </html>
