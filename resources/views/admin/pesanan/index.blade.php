@@ -211,6 +211,15 @@
                                     <span class="admin-status-badge payment-failed">
                                         Dibatalkan
                                     </span>
+                                @elseif($statusPesanan == 'cancel_request')
+    <span class="admin-status-badge payment-waiting">
+        Menunggu Refund
+    </span>
+
+@elseif($statusPesanan == 'refund_success')
+    <span class="admin-status-badge status-success">
+        Refund Berhasil
+    </span>
                                 @elseif(in_array($statusBayar, ['pending', 'challenge']))
                                     <span class="admin-status-badge payment-waiting">
                                         {{ $statusTampil }}
@@ -227,12 +236,14 @@
                             </td>
 
                             <td>
-                                <div class="admin-action-group">
-                                    <a href="{{ route('admin.pesanan.show', $item->id) }}" class="btn-table-edit">
-                                        Detail
-                                    </a>
-                                </div>
-                            </td>
+    <div class="admin-action-group">
+
+        <a href="{{ route('admin.pesanan.show', $item->id) }}"
+           class="btn-table-edit">
+            Detail
+        </a>
+    </div>
+</td>
                         </tr>
                     @empty
                         <tr>

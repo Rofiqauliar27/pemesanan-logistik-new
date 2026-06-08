@@ -265,7 +265,7 @@ class PesananController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,diproses,dikirim,selesai,dibatalkan',
+           'status' => 'required|in:pending,diproses,dikirim,selesai',
         ]);
 
         $pesanan = Pesanan::with('barang')->findOrFail($id);
@@ -305,10 +305,9 @@ class PesananController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pesanan.index')->with(
-                'success',
-                'Status pesanan berhasil diupdate.'
-            );
+           return redirect()
+    ->route('admin.pesanan.show', $id)
+    ->with('success', 'Status berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -355,17 +354,30 @@ class PesananController extends Controller
         })->values();
 
         $totalPesanan = $pesanans->count();
-        $totalPendapatan = $pesanans
-            ->filter(function ($item) {
-                return in_array($item->payment_status, ['sudah_bayar', 'settlement', 'paid', 'capture']);
-            })
-            ->sum('total_grup');
+       $totalPendapatan = $pesanans
+    ->filter(function ($item) {
+        return in_array($item->payment_status, [
+            'sudah_bayar',
+            'settlement',
+            'paid',
+            'capture'
+        ])
+        && $item->status !== 'refund_success';
+    })
+    ->sum('total_grup');
+
+    $totalRefund = $pesanans
+    ->filter(function ($item) {
+        return $item->status === 'refund_success';
+    })
+    ->sum('total_grup');
 
         return view('admin.pesanan.laporan', compact(
-            'pesanans',
-            'totalPesanan',
-            'totalPendapatan'
-        ));
+    'pesanans',
+    'totalPesanan',
+    'totalPendapatan',
+    'totalRefund'
+));
     }
 
     public function printLaporan(Request $request)
@@ -404,17 +416,29 @@ class PesananController extends Controller
         })->values();
 
         $totalPesanan = $pesanans->count();
-        $totalPendapatan = $pesanans
-            ->filter(function ($item) {
-                return in_array($item->payment_status, ['sudah_bayar', 'settlement', 'paid', 'capture']);
-            })
-            ->sum('total_grup');
+       $totalPendapatan = $pesanans
+    ->filter(function ($item) {
+        return in_array($item->payment_status, [
+            'sudah_bayar',
+            'settlement',
+            'paid',
+            'capture'
+        ])
+        && $item->status !== 'refund_success';
+    })
+    ->sum('total_grup');
 
-        return view('admin.pesanan.print', compact(
-            'pesanans',
-            'totalPesanan',
-            'totalPendapatan'
-        ));
+    $totalRefund = $pesanans
+    ->filter(function ($item) {
+        return $item->status === 'refund_success';
+    })
+    ->sum('total_grup');
+       return view('admin.pesanan.print', compact(
+    'pesanans',
+    'totalPesanan',
+    'totalPendapatan',
+    'totalRefund'
+));
     }
 
     public function showBayar($id)
@@ -676,4 +700,62 @@ class PesananController extends Controller
 
         return $code;
     }
+
+    public function cancel(Request $request, $id)
+{
+    $request->validate([
+        'cancel_reason' => 'required|string|max:500',
+
+        'refund_bank' => 'required|string',
+
+        'refund_account_number' => 'required|string|max:50',
+
+        'refund_account_name' => 'required|string|max:100',
+    ]);
+
+    $pesanan = Pesanan::findOrFail($id);
+
+    if ($pesanan->user_id != auth()->id()) {
+        abort(403);
+    }
+
+    $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id;
+
+   Pesanan::where(function ($query) use ($groupOrderId, $pesanan) {
+    $query->where('group_order_id', $groupOrderId)
+          ->orWhere('order_id', $pesanan->order_id);
+})->update([
+    'status' => 'cancel_request',
+
+    'cancel_reason' => $request->cancel_reason,
+
+    'refund_bank' => $request->refund_bank,
+
+    'refund_account_number' => $request->refund_account_number,
+
+    'refund_account_name' => $request->refund_account_name,
+]);
+
+    return redirect()
+        ->route('customer.profile', ['tab' => 'pesanan'])
+        ->with('success', 'Permintaan pembatalan berhasil dikirim.');
+}
+
+public function refund($id)
+{
+    $pesanan = Pesanan::findOrFail($id);
+
+    $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id;
+
+    Pesanan::where(function ($query) use ($groupOrderId, $pesanan) {
+        $query->where('group_order_id', $groupOrderId)
+              ->orWhere('order_id', $pesanan->order_id);
+    })->update([
+        'status' => 'refund_success'
+    ]);
+
+    return redirect()
+        ->back()
+        ->with('success', 'Refund berhasil diproses.');
+}
 }

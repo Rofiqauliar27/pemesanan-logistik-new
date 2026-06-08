@@ -48,16 +48,27 @@
         'expire' => 'Expired',
     ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
-    $labelStatusPesanan = ucfirst(str_replace('_', ' ', $statusPesanan));
+$labelStatusPesanan = [
+    'pending' => 'Pending',
+    'diproses' => 'Diproses',
+    'dikirim' => 'Dikirim',
+    'selesai' => 'Selesai',
+    'dibatalkan' => 'Dibatalkan',
+    'cancel_request' => 'Menunggu Refund',
+    'refund_success' => 'Refund Berhasil',
+][$statusPesanan] ?? ucfirst(str_replace('_', ' ', $statusPesanan));
+
 
     $statusPesananClass = match($statusPesanan) {
-        'pending' => 'bg-secondary',
-        'diproses' => 'bg-warning text-dark',
-        'dikirim' => 'bg-primary',
-        'selesai' => 'bg-success',
-        'dibatalkan' => 'bg-danger',
-        default => 'bg-dark',
-    };
+    'pending' => 'bg-secondary',
+    'diproses' => 'bg-warning text-dark',
+    'dikirim' => 'bg-primary',
+    'selesai' => 'bg-success',
+    'dibatalkan' => 'bg-danger',
+    'cancel_request' => 'bg-warning text-dark',
+    'refund_success' => 'bg-success',
+    default => 'bg-dark',
+};
 
     $statusBayarClass = in_array($statusBayar, ['sudah_bayar', 'settlement', 'paid', 'capture'])
         ? 'bg-success'
@@ -373,66 +384,148 @@
                 <strong>Catatan:</strong> {{ $pesanan->catatan }}
             </div>
         @endif
-    </div>
 
+        @if(!empty($pesanan->cancel_reason))
+
+<div class="alert alert-warning mt-3">
+
+    <h6><strong>Data Refund Customer</strong></h6>
+
+    <hr>
+
+    <p>
+        <strong>Alasan Pembatalan:</strong><br>
+        {{ $pesanan->cancel_reason }}
+    </p>
+
+    <p>
+        <strong>Bank Tujuan:</strong><br>
+        {{ $pesanan->refund_bank ?? '-' }}
+    </p>
+
+    <p>
+        <strong>Nomor Rekening:</strong><br>
+        {{ $pesanan->refund_account_number ?? '-' }}
+    </p>
+
+    <p class="mb-0">
+        <strong>Nama Pemilik Rekening:</strong><br>
+        {{ $pesanan->refund_account_name ?? '-' }}
+    </p>
+
+</div>
+
+@endif
+
+</div>
     <div class="detail-card">
-        <h4 class="detail-section-title">Kelola Pesanan</h4>
+       <h4 class="detail-section-title">Kelola Pesanan</h4>
 
-        @if(!$sudahLunas)
-            <div class="status-warning-box">
-                Pesanan belum lunas. Admin hanya dapat mengubah status ke Pending atau Dibatalkan.
-            </div>
-        @endif
+@if(!$sudahLunas)
+    <div class="status-warning-box">
+        Pesanan belum lunas. Admin hanya dapat mengubah status ke Pending atau Dibatalkan.
+    </div>
+@endif
 
-        <form action="{{ route('admin.pesanan.updateStatus', $pesanan->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+@if($pesanan->status == 'cancel_request')
 
-            <div class="row align-items-end">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Pilih Status Baru</label>
-
-                    <select name="status" class="form-control" required>
-                        <option value="pending" {{ $pesanan->status == 'pending' ? 'selected' : '' }}>
-                            Pending
-                        </option>
-
-                        @if($sudahLunas)
-                            <option value="diproses" {{ $pesanan->status == 'diproses' ? 'selected' : '' }}>
-                                Diproses
-                            </option>
-
-                            <option value="dikirim" {{ $pesanan->status == 'dikirim' ? 'selected' : '' }}>
-                                Dikirim
-                            </option>
-
-                            <option value="selesai" {{ $pesanan->status == 'selesai' ? 'selected' : '' }}>
-                                Selesai
-                            </option>
-                        @endif
-
-                        <option value="dibatalkan" {{ $pesanan->status == 'dibatalkan' ? 'selected' : '' }}>
-                            Dibatalkan
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-md-8 mb-3">
-                    <div class="detail-action-bar">
-                        <button type="submit" class="btn-detail-action btn-status-action">
-                            Update Status
-                        </button>
-
-                        <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}" class="btn-detail-action btn-invoice-action">
-                            Cetak Invoice
-                        </a>
-
-                        
-                    </div>
-                </div>
-            </div>
-        </form>
+    <div class="alert alert-warning">
+        <strong>Pesanan Menunggu Refund</strong><br>
+        Customer telah mengajukan pembatalan pesanan.
     </div>
 
+    <div class="detail-action-bar">
+
+        <form action="{{ route('admin.pesanan.refund', $pesanan->id) }}"
+              method="POST">
+
+            @csrf
+
+            <button type="submit"
+                    class="btn-detail-action btn-status-action">
+                Refund Selesai
+            </button>
+
+        </form>
+
+    </div>
+
+@elseif($pesanan->status == 'refund_success')
+
+    <div class="alert alert-success">
+        <strong>Refund Berhasil</strong><br>
+        Dana customer telah dikembalikan.
+    </div>
+
+@else
+
+    <form action="{{ route('admin.pesanan.updateStatus', $pesanan->id) }}"
+          method="POST">
+
+        @csrf
+        @method('PUT')
+
+        <div class="row align-items-end">
+
+            <div class="col-md-4 mb-3">
+
+                <label class="form-label">
+                    Pilih Status Baru
+                </label>
+
+                <select name="status"
+                        class="form-control"
+                        required>
+
+                    <option value="pending"
+                        {{ $pesanan->status == 'pending' ? 'selected' : '' }}>
+                        Pending
+                    </option>
+
+                    @if($sudahLunas)
+
+                        <option value="diproses"
+                            {{ $pesanan->status == 'diproses' ? 'selected' : '' }}>
+                            Diproses
+                        </option>
+
+                        <option value="dikirim"
+                            {{ $pesanan->status == 'dikirim' ? 'selected' : '' }}>
+                            Dikirim
+                        </option>
+
+                        <option value="selesai"
+                            {{ $pesanan->status == 'selesai' ? 'selected' : '' }}>
+                            Selesai
+                        </option>
+
+                    @endif
+                </select>
+
+            </div>
+
+            <div class="col-md-8 mb-3">
+
+                <div class="detail-action-bar">
+
+                    <button type="submit"
+                            class="btn-detail-action btn-status-action">
+                        Update Status
+                    </button>
+
+                    <a href="{{ route('admin.pesanan.invoice', $pesanan->id) }}"
+                       class="btn-detail-action btn-invoice-action">
+                        Cetak Invoice
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+@endif
 </div>
 @endsection

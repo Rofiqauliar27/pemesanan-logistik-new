@@ -70,6 +70,8 @@
         'dikirim' => 'Dikirim',
         'selesai' => 'Selesai',
         'dibatalkan' => 'Dibatalkan',
+        'cancel_request' => 'Menunggu Refund',
+        'refund_success' => 'Refund Berhasil',
     ][$statusPesanan] ?? ucfirst(str_replace('_', ' ', $statusPesanan));
 
     $alamatLengkap = collect([
@@ -243,46 +245,101 @@
                 <strong>{{ $groupOrderId }}</strong>
             </div>
 
-            <div class="order-status-line">
-                <div class="order-status-step {{ $stepPesananDibuat ? 'active' : '' }}">
-                    <div class="step-circle">1</div>
-                    <strong>Pesanan Dibuat</strong>
-                    <span>{{ $tanggalPesanan }}</span>
-                </div>
+           <div class="order-status-line">
 
-                <div class="step-connector {{ $stepPembayaran ? 'active' : '' }}"></div>
+@if($statusPesanan == 'cancel_request')
 
-                <div class="order-status-step {{ $stepPembayaran ? 'active' : '' }}">
-                    <div class="step-circle">2</div>
-                    <strong>Pembayaran Dikonfirmasi</strong>
-                    <span>{{ $tanggalBayar }}</span>
-                </div>
+    <div class="order-status-step active">
+        <div class="step-circle">1</div>
+        <strong>Pesanan Dibuat</strong>
+        <span>{{ $tanggalPesanan }}</span>
+    </div>
 
-                <div class="step-connector {{ $stepDiproses ? 'active' : '' }}"></div>
+    <div class="step-connector active"></div>
 
-                <div class="order-status-step {{ $stepDiproses ? 'active' : '' }}">
-                    <div class="step-circle">3</div>
-                    <strong>Diproses</strong>
-                    <span>Pesanan sedang disiapkan</span>
-                </div>
+    <div class="order-status-step active">
+        <div class="step-circle">2</div>
+        <strong>Pembayaran Dikonfirmasi</strong>
+        <span>{{ $tanggalBayar }}</span>
+    </div>
 
-                <div class="step-connector {{ $stepDikirim ? 'active' : '' }}"></div>
+    <div class="step-connector active"></div>
 
-                <div class="order-status-step {{ $stepDikirim ? 'active' : '' }}">
-                    <div class="step-circle">4</div>
-                    <strong>Dikirim</strong>
-                    <span>Pesanan dalam pengiriman</span>
-                </div>
+    <div class="order-status-step active">
+        <div class="step-circle">3</div>
+        <strong>Menunggu Refund</strong>
+        <span>Permintaan refund sedang diproses</span>
+    </div>
 
-                <div class="step-connector {{ $stepSelesai ? 'active' : '' }}"></div>
+@elseif($statusPesanan == 'refund_success')
 
-                <div class="order-status-step {{ $stepSelesai ? 'active' : '' }}">
-                    <div class="step-circle">5</div>
-                    <strong>Selesai</strong>
-                    <span>Pesanan selesai</span>
-                </div>
-            </div>
-        </div>
+    <div class="order-status-step active">
+        <div class="step-circle">1</div>
+        <strong>Pesanan Dibuat</strong>
+        <span>{{ $tanggalPesanan }}</span>
+    </div>
+
+    <div class="step-connector active"></div>
+
+    <div class="order-status-step active">
+        <div class="step-circle">2</div>
+        <strong>Pembayaran Dikonfirmasi</strong>
+        <span>{{ $tanggalBayar }}</span>
+    </div>
+
+    <div class="step-connector active"></div>
+
+    <div class="order-status-step active">
+        <div class="step-circle">3</div>
+        <strong>Refund Berhasil</strong>
+        <span>Dana telah dikembalikan</span>
+    </div>
+
+@else
+
+    {{-- Timeline lama tetap dipakai --}}
+
+    <div class="order-status-step {{ $stepPesananDibuat ? 'active' : '' }}">
+        <div class="step-circle">1</div>
+        <strong>Pesanan Dibuat</strong>
+        <span>{{ $tanggalPesanan }}</span>
+    </div>
+
+    <div class="step-connector {{ $stepPembayaran ? 'active' : '' }}"></div>
+
+    <div class="order-status-step {{ $stepPembayaran ? 'active' : '' }}">
+        <div class="step-circle">2</div>
+        <strong>Pembayaran Dikonfirmasi</strong>
+        <span>{{ $tanggalBayar }}</span>
+    </div>
+
+    <div class="step-connector {{ $stepDiproses ? 'active' : '' }}"></div>
+
+    <div class="order-status-step {{ $stepDiproses ? 'active' : '' }}">
+        <div class="step-circle">3</div>
+        <strong>Diproses</strong>
+        <span>Pesanan sedang disiapkan</span>
+    </div>
+
+    <div class="step-connector {{ $stepDikirim ? 'active' : '' }}"></div>
+
+    <div class="order-status-step {{ $stepDikirim ? 'active' : '' }}">
+        <div class="step-circle">4</div>
+        <strong>Dikirim</strong>
+        <span>Pesanan dalam pengiriman</span>
+    </div>
+
+    <div class="step-connector {{ $stepSelesai ? 'active' : '' }}"></div>
+
+    <div class="order-status-step {{ $stepSelesai ? 'active' : '' }}">
+        <div class="step-circle">5</div>
+        <strong>Selesai</strong>
+        <span>Pesanan selesai</span>
+    </div>
+
+@endif
+
+</div>
 
         <div class="order-detail-layout">
             <div class="order-detail-left">
@@ -379,17 +436,140 @@
                 @endif
 
                 <button class="btn-payment-disabled" disabled>
-                    Pesanan Sudah Dibayar
-                </button>
+    Pesanan Sudah Dibayar
+</button>
 
-                <a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}" class="btn-order-history">
-                    Lihat Pesanan Saya
-                </a>
+@if(in_array($statusPesanan, ['pending','diproses']))
+    <button
+        type="button"
+        class="btn btn-danger w-100 mt-2"
+        data-bs-toggle="modal"
+        data-bs-target="#cancelModal">
+
+        Ajukan Pembatalan
+    </button>
+@endif
+
+<a href="{{ route('customer.profile', ['tab' => 'pesanan']) }}"
+   class="btn-order-history">
+    Lihat Pesanan Saya
+</a>
             </aside>
         </div>
 
     </div>
 @endif
+
+<div class="modal fade"
+     id="cancelModal"
+     tabindex="-1">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form action="{{ route('customer.pesanan.cancel', $pesananUtama->id) }}"
+                  method="POST">
+
+                @csrf
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Pembatalan Pesanan
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <label class="form-label">
+                        Alasan Pembatalan
+                    </label>
+
+                    <textarea
+                        name="cancel_reason"
+                        class="form-control"
+                        rows="4"
+                        required></textarea>
+
+                        <div class="mt-3">
+
+    <label class="form-label">
+        Bank Tujuan Refund
+    </label>
+
+    <select name="refund_bank"
+            class="form-control"
+            required>
+
+        <option value="">-- Pilih Bank --</option>
+
+        <option value="BCA">BCA</option>
+        <option value="BRI">BRI</option>
+        <option value="BNI">BNI</option>
+        <option value="Mandiri">Mandiri</option>
+        <option value="BSI">BSI</option>
+        <option value="CIMB Niaga">CIMB Niaga</option>
+
+    </select>
+
+</div>
+
+<div class="mt-3">
+
+    <label class="form-label">
+        Nomor Rekening
+    </label>
+
+    <input type="text"
+           name="refund_account_number"
+           class="form-control"
+           required>
+
+</div>
+
+<div class="mt-3">
+
+    <label class="form-label">
+        Nama Pemilik Rekening
+    </label>
+
+    <input type="text"
+           name="refund_account_name"
+           class="form-control"
+           required>
+
+</div>
+                    <small class="text-muted">
+                        Refund akan diproses oleh admin.
+                    </small>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Tutup
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Kirim Permintaan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
 @endsection
 
 @section('scripts')

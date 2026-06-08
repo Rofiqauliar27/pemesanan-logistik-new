@@ -288,8 +288,9 @@
                                                 'dikirim' => 'Dikirim',
                                                 'selesai' => 'Selesai',
                                                 'dibatalkan' => 'Dibatalkan',
-                                            ][$statusPesanan] ?? ucfirst(str_replace('_', ' ', $statusPesanan));
-
+                                                'cancel_request' => 'Menunggu Refund',
+                                                'refund_success' => 'Refund Berhasil',
+][$statusPesanan] ?? ucfirst(str_replace('_', ' ', $statusPesanan));
                                             $statusClass = $statusPesanan;
                                         }
                                     @endphp
@@ -321,19 +322,25 @@
                                             </span>
                                         </td>
 
-                                        <td>
-                                            @if($statusBelumLunas)
-                                                <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
-                                                   class="btn btn-sm btn-primary">
-                                                    Lihat / Bayar
-                                                </a>
-                                            @else
-                                                <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
-                                                   class="btn btn-sm btn-info">
-                                                    Lihat Detail
-                                                </a>
-                                            @endif
-                                        </td>
+                                       <td>
+
+    @if($statusBelumLunas)
+
+        <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
+           class="btn btn-sm btn-primary">
+            Lihat / Bayar
+        </a>
+
+    @else
+
+        <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
+           class="btn btn-sm btn-info mb-1">
+            Lihat Detail
+        </a>
+
+    @endif
+
+</td>
                                     </tr>
                                 @empty
                                     <tr>

@@ -150,6 +150,11 @@ Route::get('/customer/pesanan/create/{barang_id}', [PesananController::class, 'c
 Route::post('/customer/pesanan/store', [PesananController::class, 'store'])
     ->middleware(['auth', 'role:customer'])
     ->name('customer.pesanan.store');
+
+Route::post('/customer/pesanan/{id}/cancel', [PesananController::class, 'cancel'])
+    ->middleware(['auth', 'role:customer'])
+    ->name('customer.pesanan.cancel');
+
 Route::get('/admin/pesanan', [PesananController::class, 'adminIndex'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.pesanan.index');
@@ -166,6 +171,10 @@ Route::put('/admin/pesanan/{id}/update-status', [PesananController::class, 'upda
     ->middleware(['auth', 'role:admin'])
     ->name('admin.pesanan.updateStatus');
 
+Route::post('/admin/pesanan/{id}/refund', [PesananController::class, 'refund'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.pesanan.refund');
+    
 Route::get('/admin/laporan-pesanan', [PesananController::class, 'laporan'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.pesanan.laporan');

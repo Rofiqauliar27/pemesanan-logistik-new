@@ -80,17 +80,35 @@
         </form>
     </div>
 
-    <div class="admin-report-summary-grid">
-        <div class="admin-report-summary-card">
-            <span>Total Pesanan</span>
-            <strong>{{ $totalPesanan }}</strong>
-        </div>
+   <div class="admin-report-summary-grid">
 
-        <div class="admin-report-summary-card green">
-            <span>Total Pendapatan Sudah Bayar</span>
-            <strong>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</strong>
-        </div>
+    <div class="admin-report-summary-card">
+        <span>Total Pesanan</span>
+        <strong>{{ $totalPesanan }}</strong>
     </div>
+
+    <div class="admin-report-summary-card green">
+        <span>Total Pendapatan</span>
+        <strong>
+            Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
+        </strong>
+    </div>
+
+    <div class="admin-report-summary-card">
+        <span>Total Refund</span>
+        <strong>
+            Rp {{ number_format($totalRefund, 0, ',', '.') }}
+        </strong>
+    </div>
+
+    <div class="admin-report-summary-card green">
+        <span>Pendapatan Bersih</span>
+        <strong>
+            Rp {{ number_format($totalPendapatan - $totalRefund, 0, ',', '.') }}
+        </strong>
+    </div>
+
+</div>
 
     <div class="admin-card">
         <div class="admin-table-header">
@@ -208,6 +226,15 @@
                             <span class="admin-status-badge status-success">
                                 Selesai
                             </span>
+                        @elseif($statusPesanan == 'cancel_request')
+    <span class="admin-status-badge payment-waiting">
+        Menunggu Refund
+    </span>
+
+@elseif($statusPesanan == 'refund_success')
+    <span class="admin-status-badge status-success">
+        Refund Berhasil
+    </span>
                         @elseif($statusPesanan == 'dibatalkan')
                             <span class="admin-status-badge payment-failed">
                                 Dibatalkan
