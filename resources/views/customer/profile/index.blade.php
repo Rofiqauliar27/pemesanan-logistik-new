@@ -288,6 +288,7 @@
                                                 'dikirim' => 'Dikirim',
                                                 'selesai' => 'Selesai',
                                                 'dibatalkan' => 'Dibatalkan',
+                                                'expired' => 'Kadaluarsa',
                                                 'cancel_request' => 'Menunggu Refund',
                                                 'refund_success' => 'Refund Berhasil',
 ][$statusPesanan] ?? ucfirst(str_replace('_', ' ', $statusPesanan));

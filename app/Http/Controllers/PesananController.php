@@ -265,7 +265,7 @@ class PesananController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-           'status' => 'required|in:pending,diproses,dikirim,selesai',
+           'status' => 'required|in:pending,diproses,dikirim,selesai,dibatalkan',
         ]);
 
         $pesanan = Pesanan::with('barang')->findOrFail($id);
@@ -464,11 +464,11 @@ class PesananController extends Controller
             now()->greaterThan($pesananUtama->expired_at) &&
             !in_array($pesananUtama->payment_status, ['sudah_bayar', 'settlement', 'paid', 'capture'])
         ) {
-            Pesanan::whereIn('id', $pesanans->pluck('id'))->update([
-                'status' => 'dibatalkan',
-                'payment_status' => 'expire',
-                'transaction_status' => 'expire',
-            ]);
+           Pesanan::whereIn('id', $pesanans->pluck('id'))->update([
+    'status' => 'expired',
+    'payment_status' => 'expire',
+    'transaction_status' => 'expire',
+]);
         }
 
         $total = $pesanans->sum('total_harga');
@@ -582,13 +582,21 @@ class PesananController extends Controller
                 'payment_type' => $paymentType,
             ];
 
+            if ($paymentStatus == 'sudah_bayar' && $item->status == 'pending') {
+    $updateData['status'] = 'diproses';
+}
+
             if ($paidAt && empty($item->paid_at)) {
                 $updateData['paid_at'] = $paidAt;
             }
 
-            if (in_array($paymentStatus, ['failed', 'expire'])) {
-                $updateData['status'] = 'dibatalkan';
-            }
+            if ($paymentStatus == 'failed') {
+    $updateData['status'] = 'dibatalkan';
+}
+
+if ($paymentStatus == 'expire') {
+    $updateData['status'] = 'expired';
+}
 
             /*
              * Kalau pesanan lama sudah lunas, tapi stok_dikurangi masih 0,
@@ -675,12 +683,12 @@ class PesananController extends Controller
         Pesanan::whereNotIn('payment_status', ['sudah_bayar', 'settlement', 'paid', 'capture'])
             ->whereNotNull('expired_at')
             ->where('expired_at', '<', now())
-            ->where('status', '!=', 'dibatalkan')
-            ->update([
-                'status' => 'dibatalkan',
-                'payment_status' => 'expire',
-                'transaction_status' => 'expire',
-            ]);
+            ->where('status', '!=', 'expired')
+->update([
+    'status' => 'expired',
+    'payment_status' => 'expire',
+    'transaction_status' => 'expire',
+]);
     }
 
     private function generateOrderCode()

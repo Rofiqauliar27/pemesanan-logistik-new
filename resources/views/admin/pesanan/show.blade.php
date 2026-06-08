@@ -45,7 +45,7 @@
         'capture' => 'Sudah Bayar',
         'failed' => 'Gagal',
         'gagal' => 'Gagal',
-        'expire' => 'Expired',
+        'expire' => 'Kadaluarsa',
     ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
 $labelStatusPesanan = [
@@ -54,6 +54,7 @@ $labelStatusPesanan = [
     'dikirim' => 'Dikirim',
     'selesai' => 'Selesai',
     'dibatalkan' => 'Dibatalkan',
+    'expired' => 'Kadaluarsa',
     'cancel_request' => 'Menunggu Refund',
     'refund_success' => 'Refund Berhasil',
 ][$statusPesanan] ?? ucfirst(str_replace('_', ' ', $statusPesanan));
@@ -65,6 +66,7 @@ $labelStatusPesanan = [
     'dikirim' => 'bg-primary',
     'selesai' => 'bg-success',
     'dibatalkan' => 'bg-danger',
+    'expired' => 'bg-secondary',
     'cancel_request' => 'bg-warning text-dark',
     'refund_success' => 'bg-success',
     default => 'bg-dark',
@@ -481,6 +483,11 @@ $labelStatusPesanan = [
                         {{ $pesanan->status == 'pending' ? 'selected' : '' }}>
                         Pending
                     </option>
+
+                      <option value="dibatalkan"
+        {{ $pesanan->status == 'dibatalkan' ? 'selected' : '' }}>
+        Dibatalkan
+    </option>
 
                     @if($sudahLunas)
 
