@@ -52,17 +52,17 @@
         : '-';
 
     $labelStatusBayar = [
-        'belum_bayar' => 'Belum Dibayar',
-        'pending' => 'Menunggu Pembayaran',
-        'challenge' => 'Menunggu Konfirmasi',
-        'sudah_bayar' => 'Sudah Bayar',
-        'settlement' => 'Sudah Bayar',
-        'paid' => 'Sudah Bayar',
-        'capture' => 'Sudah Bayar',
-        'failed' => 'Gagal',
-        'gagal' => 'Gagal',
-        'expire' => 'Expired',
-    ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
+    'belum_bayar' => 'Belum Dibayar',
+    'pending' => 'Menunggu Pembayaran',
+    'challenge' => 'Menunggu Konfirmasi',
+    'sudah_bayar' => 'Sudah Bayar',
+    'settlement' => 'Sudah Bayar',
+    'paid' => 'Sudah Bayar',
+    'capture' => 'Sudah Bayar',
+    'failed' => 'Gagal',
+    'gagal' => 'Gagal',
+    'expire' => 'Kadaluarsa',
+][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
     $labelStatusPesanan = [
         'pending' => 'Pending',
@@ -95,12 +95,28 @@
 
         <div class="checkout-payment-header">
             <div>
-                <h2>Pembayaran Pesanan</h2>
-                <p>
-                    Periksa kembali item yang Anda checkout sebelum melanjutkan pembayaran.
-                </p>
+
+                @if($sudahExpired)
+                    <h2>Detail Pesanan Kadaluarsa</h2>
+                    <p>
+                        Pesanan telah melewati batas waktu pembayaran dan tidak dapat dibayar lagi.
+                    </p>
+                @else
+                    <h2>Pembayaran Pesanan</h2>
+                    <p>
+                        Periksa kembali item yang Anda checkout sebelum melanjutkan pembayaran.
+                    </p>
+                @endif
+
             </div>
         </div>
+
+        @if($sudahExpired)
+    <div class="alert alert-warning mb-4">
+        <strong>Pesanan Kadaluarsa</strong><br>
+        Pesanan ini telah melewati batas waktu pembayaran 24 jam dan otomatis dibatalkan oleh sistem.
+    </div>
+@endif
 
         <div class="checkout-payment-layout">
 

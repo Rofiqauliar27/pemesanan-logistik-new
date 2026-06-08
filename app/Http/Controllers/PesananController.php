@@ -469,11 +469,6 @@ class PesananController extends Controller
                 'payment_status' => 'expire',
                 'transaction_status' => 'expire',
             ]);
-
-            return redirect()->route('customer.profile', [
-                'tab' => 'pesanan',
-                'filter' => 'gagal',
-            ])->with('error', 'Pesanan sudah melewati batas pembayaran 24 jam dan otomatis dibatalkan.');
         }
 
         $total = $pesanans->sum('total_harga');

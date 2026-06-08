@@ -322,24 +322,18 @@
                                             </span>
                                         </td>
 
-                                       <td>
-
-    @if($statusBelumLunas)
-
+                                     <td>
+    @if(in_array($statusBayar, ['belum_bayar', 'pending', 'challenge']))
         <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
            class="btn btn-sm btn-primary">
             Lihat / Bayar
         </a>
-
     @else
-
         <a href="{{ route('customer.pesanan.showBayar', $itemUtama->id) }}"
-           class="btn btn-sm btn-info mb-1">
+           class="btn btn-sm btn-info">
             Lihat Detail
         </a>
-
     @endif
-
 </td>
                                     </tr>
                                 @empty
