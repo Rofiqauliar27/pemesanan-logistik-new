@@ -87,17 +87,17 @@
         <strong>{{ $totalPesanan }}</strong>
     </div>
 
+     <div class="admin-report-summary-card">
+        <span>Total Refund</span>
+        <strong>
+            Rp {{ number_format($totalRefund, 0, ',', '.') }}
+        </strong>
+    </div>
+
     <div class="admin-report-summary-card green">
         <span>Total Pendapatan</span>
         <strong>
             Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
-        </strong>
-    </div>
-
-    <div class="admin-report-summary-card">
-        <span>Total Refund</span>
-        <strong>
-            Rp {{ number_format($totalRefund, 0, ',', '.') }}
         </strong>
     </div>
 

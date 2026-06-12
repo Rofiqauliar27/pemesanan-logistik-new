@@ -45,6 +45,17 @@
                     <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>
                         Dibatalkan
                     </option>
+                    <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>
+                        Kadaluarsa
+                    </option>
+
+                    <option value="cancel_request" {{ request('status') == 'cancel_request' ? 'selected' : '' }}>
+                        Menunggu Refund
+                    </option>
+
+                    <option value="refund_success" {{ request('status') == 'refund_success' ? 'selected' : '' }}>
+                        Refund Berhasil
+                    </option>
                 </select>
             </div>
 

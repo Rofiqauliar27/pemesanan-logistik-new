@@ -45,7 +45,7 @@
         'capture' => 'Sudah Bayar',
         'failed' => 'Gagal',
         'gagal' => 'Gagal',
-        'expire' => 'Kadaluarsa',
+        'expire' => 'Expire',
     ][$statusBayar] ?? ucfirst(str_replace('_', ' ', $statusBayar));
 
 $labelStatusPesanan = [

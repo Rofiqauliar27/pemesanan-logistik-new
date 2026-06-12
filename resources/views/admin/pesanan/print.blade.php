@@ -6,71 +6,229 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body {
-            font-size: 12px;
-            margin: 20px;
-        }
 
-        .judul {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+body{
+    font-size:13px;
+    margin:20px;
+    color:#222;
+}
 
-        .judul h3,
-        .judul p {
-            margin: 0;
-        }
+.header-company{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:15px;
+    margin-bottom:10px;
+}
 
-        .info-ringkas {
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+.logo-laporan{
+    width:65px;
+    height:65px;
+    object-fit:contain;
+}
 
-        .table th,
-        .table td {
-            vertical-align: middle;
-        }
+.company-text{
+    text-align:left;
+}
 
-        @media print {
-            .no-print {
-                display: none !important;
-            }
+.company-text h2{
+    margin:0;
+    font-weight:700;
+    font-size:22px;
+}
 
-            body {
-                margin: 0;
-            }
-        }
+.company-text p{
+    margin:0;
+    font-size:13px;
+}
+
+.judul-laporan{
+    text-align:center;
+    font-weight:700;
+    margin:20px 0;
+}
+
+.report-info{
+    margin:25px 0;
+}
+
+.info-item{
+    display:flex;
+    margin-bottom:8px;
+}
+
+.info-item span{
+    width:180px;
+    font-weight:700;
+}
+
+.summary-box{
+    width:600px;
+    margin:25px auto;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+}
+
+.summary-row strong{
+    font-size:14px;
+}
+
+.summary-net{
+    color:#198754;
+    font-weight:700;
+}
+
+.table th,
+.table td{
+    vertical-align:middle;
+}
+
+.table thead th{
+    background:#f1f3f5 !important;
+    font-weight:700;
+}
+
+.section-title{
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.signature{
+    width:280px;
+    margin-left:auto;
+    margin-top:50px;
+    text-align:center;
+}
+
+@media print{
+
+    .no-print{
+        display:none !important;
+    }
+
+    body{
+        margin:0;
+    }
+}
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
-    <div class="judul">
-        <h3>LAPORAN PESANAN</h3>
-        <p>CV Bintang Saida Teknik</p>
-        <p>Sistem Pemesanan Logistik Perkapalan</p>
+
+    <div class="header-company">
+
+        <img
+            src="{{ asset('images/logo.png') }}"
+            alt="Logo"
+            class="logo-laporan">
+
+        <div class="company-text">
+            <h2>CV BINTANG SAIDA TEKNIK</h2>
+            <p>Sistem Pemesanan Logistik Perkapalan</p>
+        </div>
+
     </div>
+
+    <hr>
+
+    <h3 class="judul-laporan">
+        LAPORAN PESANAN
+    </h3>
 
     <div class="no-print mb-3">
         <button onclick="window.print()" class="btn btn-primary">
             Print Sekarang
         </button>
 
-        <a href="{{ route('admin.pesanan.laporan') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.pesanan.laporan') }}"
+           class="btn btn-secondary">
             Kembali
         </a>
     </div>
 
-    <div class="info-ringkas">
-        <p><strong>Total Pesanan:</strong> {{ $totalPesanan }}</p>
-        <p><strong>Total Pendapatan Sudah Bayar:</strong> Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</p>
-        <p><strong>Tanggal Cetak:</strong> {{ date('d-m-Y H:i:s') }}</p>
-        <p><strong>Filter Tanggal Awal:</strong> {{ request('tanggal_awal') ?? '-' }}</p>
-        <p><strong>Filter Tanggal Akhir:</strong> {{ request('tanggal_akhir') ?? '-' }}</p>
-        <p><strong>Status Pesanan:</strong> {{ request('status') ?? '-' }}</p>
-        <p><strong>Status Pembayaran:</strong> {{ request('payment_status') ?? '-' }}</p>
+<div class="report-info">
+
+    <div class="info-item">
+        <span>Periode</span>
+        <strong>
+            {{ request('tanggal_awal') ?? '-' }}
+            s/d
+            {{ request('tanggal_akhir') ?? '-' }}
+        </strong>
     </div>
 
+    <div class="info-item">
+        <span>Status Pesanan</span>
+        <strong>
+            {{ request('status')
+                ? ucfirst(request('status'))
+                : 'Semua'
+            }}
+        </strong>
+    </div>
+
+    <div class="info-item">
+        <span>Status Pembayaran</span>
+        <strong>
+            {{ request('payment_status')
+                ? ucfirst(str_replace('_',' ',request('payment_status')))
+                : 'Semua'
+            }}
+        </strong>
+    </div>
+
+    <div class="info-item">
+        <span>Tanggal Cetak</span>
+        <strong>{{ date('d-m-Y H:i:s') }}</strong>
+    </div>
+
+</div>
+
+</div>
+
+   <div class="summary-box">
+
+    <div class="summary-row">
+        <span>Total Pesanan</span>
+        <strong>{{ $totalPesanan }}</strong>
+    </div>
+
+    <div class="summary-row">
+        <span>Total Pendapatan</span>
+        <strong>
+            Rp {{ number_format($totalPendapatan,0,',','.') }}
+        </strong>
+    </div>
+
+    <div class="summary-row">
+        <span>Total Refund</span>
+        <strong>
+            Rp {{ number_format($totalRefund ?? 0,0,',','.') }}
+        </strong>
+    </div>
+
+    <div class="summary-row summary-net">
+        <span>Pendapatan Bersih</span>
+        <strong>
+            Rp {{ number_format(($totalPendapatan ?? 0)-($totalRefund ?? 0),0,',','.') }}
+        </strong>
+    </div>
+
+</div>
+
+<hr>
+
+<div class="section-title">
+    Detail Data Pesanan
+</div>
+    <hr class="mb-3">
     <table class="table table-bordered">
         <thead class="table-light">
             <tr>
@@ -148,7 +306,7 @@
                     </td>
 
                     <td>
-                        {{ $jumlahJenisBarang }} Jenis Barang / {{ $totalJumlah }} Item
+{{ $totalJumlah }} Item
                     </td>
 
                     <td>
@@ -168,8 +326,16 @@
             @endforelse
         </tbody>
     </table>
-</div>
 
+<div class="signature">
+    <p>Banjarmasin, {{ date('d-m-Y') }}</p>
+
+    <br><br><br>
+
+    <strong>Admin CV Bintang Saida Teknik</strong>
+</div>
+    
+</div>
 <script>
     window.onload = function() {
         window.print();

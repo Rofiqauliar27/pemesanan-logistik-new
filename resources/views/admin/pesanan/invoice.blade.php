@@ -92,9 +92,7 @@
 }
 
 .company-info {
-    font-size: 9px;
-    line-height: 1.3;
-    color: #555;
+    font-size: 12px;
 }
 
         .invoice-title {
@@ -126,119 +124,80 @@
     line-height: 1.3;
 }
 
-       .meta-label {
-    width: 105px;
+     .meta-label {
+    width: 120px;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 14px;
 }
 
 .meta-value {
     flex: 1;
-    color: #444;
-    font-size: 10px;
+    color: #111;
+    font-size: 14px;
 }
 
-        .date-label {
-            font-weight: 700;
-            font-size: 16px;
-            margin-right: 20px;
-        }
-
-        .date-value {
-            color: #444;
-            font-size: 15px;
-        }
+       .date-label,
+.date-value {
+    font-size: 14px;
+}
 
         .section-line {
             border-top: 1px dotted #333;
             margin: 10px 0;
         }
 
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-        }
+       .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
 
-        .items-table thead th {
-            font-size: 11px;
-            text-align: left;
-            padding: 6px 0;
-            border-bottom: 1px dotted #333;
-            font-weight: 700;
-        }
+.items-table th,
+.items-table td {
+    border: 1px solid #333;
+    padding: 8px 10px;
+    font-size: 14px;
+}
 
-        .items-table tbody td {
-            padding: 6px 0;
-            font-size: 10px;
-            color: #333;
-            vertical-align: top;
-        }
+.items-table thead th {
+    background: #f2f2f2;
+    font-weight: 700;
+    text-align: center;
+}
 
-        .items-table .col-no {
-            width: 12%;
-            text-align: center;
-        }
+.items-table td {
+    vertical-align: middle;
+}
 
-        .items-table .col-desc {
-            width: 46%;
-        }
+.items-table .col-qty,
+.items-table .col-price,
+.items-table .col-amount {
+        text-align: right;
 
-        .items-table .col-qty {
-            width: 14%;
-            text-align: center;
-        }
-
-        .items-table .col-price {
-            width: 14%;
-            text-align: right;
-        }
-
-        .items-table .col-amount {
-            width: 14%;
-            text-align: right;
-        }
-
-        .total-section {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-top: 8px;
-            margin-bottom: 14px;
-        }
-
-        .total-label {
-            font-size: 18px;
-            font-weight: 700;
-            margin-right: 40px;
-        }
-
-        .total-value {
-            font-size: 18px;
-            font-weight: 700;
-        }
+}
 
         .payment-info {
-            width: 65%;
-            margin-top: 20px;
-            margin-bottom: 34px;
-        }
+    width: 50%;
+    margin-top: 15px;
+}
 
         .payment-row {
             display: flex;
             margin-bottom: 10px;
         }
 
-        .payment-label {
-            width: 165px;
-            font-size: 16px;
-            font-weight: 700;
-        }
+     .payment-label {
+    width: 180px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+}
 
-        .payment-value {
-            font-size: 15px;
-            color: #444;
-        }
+.payment-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111;
+}
 
         .footer-note {
             text-align: center;
@@ -439,39 +398,42 @@
         <table class="items-table">
             <thead>
                 <tr>
-                    <th class="col-no">Item</th>
-                    <th class="col-desc">Description</th>
-                    <th class="col-qty">Qty</th>
-                    <th class="col-price">Price</th>
-                    <th class="col-amount">Amount</th>
+                    <th>Nama Barang</th>
+<th class="col-qty">Qty</th>
+<th class="col-price">Harga</th>
+<th class="col-amount">Subtotal</th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach($pesananItems as $item)
-                    <tr>
-                        <td class="col-no">{{ $loop->iteration }}.</td>
-                        <td class="col-desc">{{ $item->barang->nama_barang ?? '-' }}</td>
-                        <td class="col-qty">{{ $item->jumlah }}</td>
-                        <td class="col-price">
-                            Rp {{ number_format(($item->total_harga ?? 0) / max(($item->jumlah ?? 1), 1), 0, ',', '.') }}
-                        </td>
-                        <td class="col-amount">
-                            Rp {{ number_format($item->total_harga ?? 0, 0, ',', '.') }}
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
+@foreach($pesananItems as $item)
+<tr>
+    <td>{{ $item->barang->nama_barang ?? '-' }}</td>
+
+    <td class="col-qty">
+        {{ $item->jumlah }}
+    </td>
+
+    <td class="col-price">
+        Rp {{ number_format(($item->total_harga ?? 0) / max(($item->jumlah ?? 1),1),0,',','.') }}
+    </td>
+
+    <td class="col-amount">
+        Rp {{ number_format($item->total_harga ?? 0,0,',','.') }}
+    </td>
+</tr>
+@endforeach
+
+<tr style="background:#f2f2f2;">
+    <td colspan="3" style="text-align:center;font-weight:bold;">
+        TOTAL
+    </td>
+    <td style="font-weight:bold;text-align:right;">
+        Rp {{ number_format($totalGrup,0,',','.') }}
+    </td>
+</tr>
+</tbody>
         </table>
-
-        <div class="section-line"></div>
-
-        <div class="total-section">
-            <div class="total-label">Total</div>
-            <div class="total-value">
-                Rp {{ number_format($totalGrup, 0, ',', '.') }}
-            </div>
-        </div>
 
         <div class="payment-info">
             <div class="payment-row">
@@ -486,35 +448,10 @@
 
             <div class="payment-row">
                 <div class="payment-label">Metode Pembayaran:</div>
-                <div class="payment-value">{{ $pesanan->payment_type ?? '-' }}</div>
+                <div class="payment-value">
+    {{ strtoupper($pesanan->payment_type ?? '-') }}
+</div>
             </div>
-
-            <div class="payment-row">
-                <div class="payment-label">Tanggal Pesanan:</div>
-                <div class="payment-value">{{ $tanggalPesananLengkap }}</div>
-            </div>
-
-            <div class="payment-row">
-                <div class="payment-label">Batas Pembayaran:</div>
-                <div class="payment-value">{{ $batasBayar }}</div>
-            </div>
-
-            <div class="payment-row">
-                <div class="payment-label">Tanggal Bayar:</div>
-                <div class="payment-value">{{ $tanggalBayar }}</div>
-            </div>
-
-            <div class="payment-row">
-                <div class="payment-label">Catatan:</div>
-                <div class="payment-value">{{ $pesanan->catatan ?? '-' }}</div>
-            </div>
-        </div>
-
-        <div class="signature">
-            <p>Mengetahui,</p>
-            <div class="signature-space"></div>
-            <p><strong>Admin CV Bintang Saida Teknik</strong></p>
-        </div>
 
         
     </div>
