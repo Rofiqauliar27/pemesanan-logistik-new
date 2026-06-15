@@ -13,10 +13,6 @@
                 pengiriman, dan pembayaran berjalan lebih mudah.
             </p>
         </div>
-
-        <a href="{{ route('customer.profile', ['tab' => 'profil']) }}" class="customer-back-btn">
-            Kembali ke Profil
-        </a>
     </div>
 
     @if(session('success'))
