@@ -8,7 +8,7 @@
     <div class="admin-page-header">
         <div>
             <h2>Data Barang</h2>
-            <p>Kelola data barang, kategori, harga, stok, dan gambar produk.</p>
+            <p>Kelola data barang, kategori, harga, status barang, dan gambar produk.</p>
         </div>
 
         <div class="admin-page-actions">
@@ -60,7 +60,7 @@
                         <th>Kategori</th>
                         <th>Satuan</th>
                         <th>Harga</th>
-                        <th>Stok</th>
+                        <th>Status</th>
                         <th>Deskripsi</th>
                         <th width="150">Aksi</th>
                     </tr>
@@ -105,10 +105,16 @@
                                 </strong>
                             </td>
 
-                           <td>
-    <span class="admin-stock-badge {{ $item->stok <= 5 ? 'low' : '' }}">
-        {{ number_format($item->stok, 0, ',', '.') }}
-    </span>
+                          <td>
+    @if($item->status == 'aktif')
+        <span class="badge bg-success">
+            Aktif
+        </span>
+    @else
+        <span class="badge bg-danger">
+            Tidak Aktif
+        </span>
+    @endif
 </td>
                             <td>
                                 <div class="admin-desc-text">

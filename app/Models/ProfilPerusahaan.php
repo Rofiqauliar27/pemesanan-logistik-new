@@ -11,6 +11,7 @@ class ProfilPerusahaan extends Model
         'bidang_usaha',
         'deskripsi',
         'alamat',
+        'pesan_whatsapp',
         'telepon',
         'email',
         'visi',

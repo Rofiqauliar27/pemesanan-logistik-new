@@ -306,26 +306,24 @@
 </script>
 @yield('scripts')
 
-
-@php
+   @php
     $profilPerusahaanWa = $profilPerusahaan ?? \App\Models\ProfilPerusahaan::first();
 
     $nomorWaAdmin = $profilPerusahaanWa->telepon ?? '6281234567890';
 
-    // Bersihkan nomor dari spasi, strip, tanda plus, dan karakter selain angka
     $nomorWaAdmin = preg_replace('/[^0-9]/', '', $nomorWaAdmin);
 
-    // Jika nomor diawali 0, ubah ke format Indonesia 62
     if (substr($nomorWaAdmin, 0, 1) === '0') {
         $nomorWaAdmin = '62' . substr($nomorWaAdmin, 1);
     }
 
-    // Jika nomor kosong, gunakan nomor default
     if (empty($nomorWaAdmin)) {
         $nomorWaAdmin = '6281234567890';
     }
 
-    $pesanWaAdmin = 'Halo Admin CV. Bintang Saida Teknik, saya ingin bertanya mengenai produk atau pesanan.';
+    $pesanWaAdmin = !empty($profilPerusahaanWa->pesan_whatsapp)
+        ? $profilPerusahaanWa->pesan_whatsapp
+        : 'Halo Admin, saya ingin bertanya mengenai produk.';
 @endphp
 
 @if(!auth()->check() || auth()->user()->role === 'customer')

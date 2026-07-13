@@ -34,6 +34,13 @@ class KeranjangController extends Controller
 
         $barang = Barang::findOrFail($barangId);
 
+        if ($barang->status !== 'aktif') {
+
+    return redirect()->back()
+        ->with('error', 'Barang sedang tidak tersedia dan tidak dapat dipesan.');
+
+}
+
         $keranjang = Keranjang::where('user_id', Auth::id())
             ->where('barang_id', $barang->id)
             ->first();

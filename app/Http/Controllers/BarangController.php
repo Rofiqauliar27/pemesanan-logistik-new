@@ -44,7 +44,7 @@ class BarangController extends Controller
             'kategori' => 'nullable|max:255',
             'satuan' => 'nullable|max:100',
             'harga' => 'required',
-            'stok' => 'required|integer|min:0',
+            'status' => 'required|in:aktif,tidak_aktif',
             'deskripsi' => 'nullable',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -62,7 +62,7 @@ class BarangController extends Controller
             'kategori' => $request->kategori,
             'satuan' => $request->satuan,
             'harga' => $harga,
-            'stok' => (int) $request->stok,
+            'status' => $request->status,
             'deskripsi' => $request->deskripsi,
             'gambar' => $pathGambar,
         ]);
@@ -93,7 +93,7 @@ class BarangController extends Controller
             'kategori' => 'nullable|max:255',
             'satuan' => 'nullable|max:100',
             'harga' => 'required',
-            'stok' => 'required|integer|min:0',
+            'status' => 'required|in:aktif,tidak_aktif',
             'deskripsi' => 'nullable',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -115,7 +115,7 @@ class BarangController extends Controller
             'kategori' => $request->kategori,
             'satuan' => $request->satuan,
             'harga' => $harga,
-            'stok' =>  $request->stok,
+            'status' => $request->status,
             'deskripsi' => $request->deskripsi,
             'gambar' => $pathGambar,
         ]);

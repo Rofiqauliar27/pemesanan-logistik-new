@@ -109,3 +109,68 @@ body {
     }
 }
 
+/* ================================
+   STATUS BARANG TIDAK TERSEDIA
+================================ */
+
+button:disabled,
+input:disabled,
+.btn-buy-now-mini:disabled,
+.btn-detail-cart:disabled,
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Warna tombol keranjang saat disabled */
+.btn-detail-cart:disabled {
+    background: #bdbdbd !important;
+    border-color: #bdbdbd !important;
+    color: #ffffff !important;
+}
+
+/* Warna tombol pesan sekarang saat disabled */
+.btn-buy-now-mini:disabled {
+    background: #bdbdbd !important;
+    color: #ffffff !important;
+}
+
+/* ===============================
+   STATUS BARANG TIDAK TERSEDIA
+================================ */
+
+/* Keranjang */
+.btn-detail-cart:disabled{
+    background:#d1d5db !important;
+    border-color:#d1d5db !important;
+    color:#6b7280 !important;
+    cursor:not-allowed;
+    opacity:.7;
+    pointer-events:none;
+}
+
+/* Pesan Sekarang */
+.btn-buy-now-mini:disabled{
+    background:#d1d5db !important;
+    color:#6b7280 !important;
+    border:none;
+    cursor:not-allowed;
+    opacity:.7;
+    pointer-events:none;
+}
+
+/* Input jumlah */
+.qty-input:disabled{
+    background:#f3f4f6;
+    color:#6b7280;
+    cursor:not-allowed;
+}
+
+/* Tombol + dan - */
+.qty-btn:disabled{
+    background:#f3f4f6;
+    color:#9ca3af;
+    cursor:not-allowed;
+    opacity:.6;
+}

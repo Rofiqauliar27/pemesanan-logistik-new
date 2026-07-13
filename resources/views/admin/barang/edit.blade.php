@@ -8,7 +8,7 @@
     <div class="admin-page-header">
         <div>
             <h2>Edit Barang</h2>
-            <p>Perbarui data barang, kategori, harga, stok, deskripsi, dan gambar produk.</p>
+            <p>Perbarui data barang, kategori, harga, status barang, deskripsi, dan gambar produk.</p>
         </div>
 
         <div class="admin-page-actions">
@@ -38,7 +38,7 @@
         <div class="admin-card">
             <div class="admin-form-section-title">
                 <h4>Informasi Barang</h4>
-                <p>Ubah nama, kategori, satuan, harga, stok, dan deskripsi barang.</p>
+                <p>Ubah nama, kategori, satuan, harga, status barang, dan deskripsi barang.</p>
             </div>
 
             <div class="admin-form-grid">
@@ -95,17 +95,26 @@
                 </div>
 
                 <div class="admin-form-group">
-                    <label>Stok</label>
-                    <input
-                        type="number"
-                        name="stok"
-                        value="{{ old('stok', (int) $barang->stok) }}"
-                        placeholder="Contoh: 20"
-                        min="0"
-                        step="1"
-                        required
-                    >
-                </div>
+    <label>Status Barang</label>
+
+    <select name="status" required>
+
+        <option value="aktif"
+            {{ old('status', $barang->status) == 'aktif' ? 'selected' : '' }}>
+            Aktif
+        </option>
+
+        <option value="tidak_aktif"
+            {{ old('status', $barang->status) == 'tidak_aktif' ? 'selected' : '' }}>
+            Tidak Aktif
+        </option>
+
+    </select>
+
+    <small>
+        Barang yang berstatus aktif dapat dipesan oleh pelanggan.
+    </small>
+</div>
 
                 <div class="admin-form-group full">
                     <label>Deskripsi</label>
@@ -161,10 +170,6 @@
         input.addEventListener('input', function () {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
-    });
-    
-    document.querySelector('form').addEventListener('submit', function () {
-        alert('Stok yang dikirim: ' + document.querySelector('input[name="stok"]').value);
     });
 
 </script>

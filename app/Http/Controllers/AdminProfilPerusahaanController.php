@@ -40,6 +40,7 @@ class AdminProfilPerusahaanController extends Controller
             'email' => 'nullable|email|max:255',
             'visi' => 'nullable',
             'misi' => 'nullable',
+            'pesan_whatsapp' => 'nullable|string|max:1000',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -70,6 +71,7 @@ class AdminProfilPerusahaanController extends Controller
                 'email' => $request->email,
                 'visi' => $request->visi,
                 'misi' => $request->misi,
+                'pesan_whatsapp' => $request->pesan_whatsapp,
                 'logo' => $pathLogo,
             ]
         );

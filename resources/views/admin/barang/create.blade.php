@@ -37,7 +37,7 @@
         <div class="admin-card">
             <div class="admin-form-section-title">
                 <h4>Informasi Barang</h4>
-                <p>Isi nama, kategori, satuan, harga, stok, dan deskripsi barang.</p>
+                <p>Isi nama, kategori, satuan, harga, status barang, dan deskripsi barang.</p>
             </div>
 
             <div class="admin-form-grid">
@@ -92,14 +92,23 @@
 </div>
 
                 <div class="admin-form-group">
-                    <label>Stok</label>
-                    <input 
-                        type="number" 
-                        name="stok" 
-                        value="{{ old('stok') }}" 
-                        placeholder="Contoh: 20"
-                    >
-                </div>
+    <label>Status Barang</label>
+
+    <select name="status" required>
+        <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>
+            Aktif
+        </option>
+
+        <option value="tidak_aktif" {{ old('status') == 'tidak_aktif' ? 'selected' : '' }}>
+            Tidak Aktif
+        </option>
+    </select>
+
+    <small>
+        Barang yang berstatus aktif dapat dipesan pelanggan.
+        Barang yang tidak aktif tidak akan dapat dipesan.
+    </small>
+</div>
 
                 <div class="admin-form-group full">
                     <label>Deskripsi</label>

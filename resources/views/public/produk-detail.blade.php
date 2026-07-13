@@ -33,22 +33,18 @@
             </div>
 
             <div class="detail-meta-modern">
-                @if(isset($barang->stok) && $barang->stok > 0)
-                    <span class="meta-chip meta-status available">
-                        Tersedia
-                    </span>
-                @else
-                    <span class="meta-chip meta-status unavailable">
-                        Stok Habis
-                    </span>
-                @endif
 
-                @if(isset($barang->stok))
-                    <span class="meta-chip meta-stock">
-                        Stok: {{ $barang->stok }}
-                    </span>
-                @endif
-            </div>
+    @if($barang->status == 'aktif')
+        <span class="meta-chip meta-status available">
+            Tersedia
+        </span>
+    @else
+        <span class="meta-chip meta-status unavailable">
+            Tidak Tersedia
+        </span>
+    @endif
+
+</div>
 
             <div class="detail-order-section">
                 @auth
@@ -60,11 +56,15 @@
 
                                 <div class="qty-box">
                                     <label class="qty-label">Jumlah</label>
-
                                     <div class="qty-control">
-                                        <button type="button" class="qty-btn qty-minus" id="qtyMinus">
-                                            -
-                                        </button>
+
+                                    <button
+    type="button"
+    class="qty-btn qty-minus"
+    id="qtyMinus"
+    @if($barang->status != 'aktif') disabled @endif>
+    -
+</button>
 
                                         <input
                                             type="number"
@@ -73,25 +73,49 @@
                                             class="qty-input"
                                             value="1"
                                             min="1"
-                                            max="{{ $barang->stok ?? 999 }}"
+                                            @if($barang->status != 'aktif') disabled @endif
                                             required
                                         >
 
-                                        <button type="button" class="qty-btn qty-plus" id="qtyPlus">
-                                            +
-                                        </button>
+                                        <button
+    type="button"
+    class="qty-btn qty-plus"
+    id="qtyPlus"
+    @if($barang->status != 'aktif') disabled @endif>
+    +
+</button>
                                     </div>
                                 </div>
 
-<button type="submit" class="btn btn-warning btn-detail-cart js-fly-to-cart">
+<button
+    type="{{ $barang->status == 'aktif' ? 'submit' : 'button' }}"
+    class="btn btn-warning btn-detail-cart js-fly-to-cart"
+    @if($barang->status != 'aktif') disabled @endif>
+
     <i class="bi bi-cart"></i>
     <span>Keranjang</span>
+
 </button>
+
                             </form>
 
-                            <a href="{{ route('customer.pesanan.create', $barang->id) }}" class="btn-buy-now-mini">
-                                Pesan Sekarang
-                            </a>
+                            @if($barang->status == 'aktif')
+
+<a href="{{ route('customer.pesanan.create', $barang->id) }}"
+   class="btn-buy-now-mini">
+    Pesan Sekarang
+</a>
+
+@else
+
+<button
+    type="button"
+    class="btn-buy-now-mini"
+    disabled>
+    Pesan Sekarang
+</button>
+
+@endif
 
                         </div>
                     @else
@@ -182,13 +206,12 @@
             });
 
             qtyPlus.addEventListener('click', function () {
-                let current = parseInt(qtyInput.value) || 1;
-                const maxStock = parseInt(qtyInput.getAttribute('max')) || 999;
 
-                if (current < maxStock) {
-                    qtyInput.value = current + 1;
-                }
-            });
+    let current = parseInt(qtyInput.value) || 1;
+
+    qtyInput.value = current + 1;
+
+});
         }
     });
 </script>

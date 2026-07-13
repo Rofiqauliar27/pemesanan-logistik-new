@@ -1417,6 +1417,13 @@ body {
     transition: 0.2s ease;
 }
 
+.qty-btn:disabled{
+    background:#f3f4f6 !important;
+    color:#9ca3af !important;
+    cursor:not-allowed;
+    opacity:.6;
+}
+
 .qty-btn:hover {
     background: #e2e8f0;
 }
@@ -1431,6 +1438,12 @@ body {
     color: #111827;
     outline: none;
     background: #ffffff;
+}
+
+.qty-input:disabled{
+    background:#f3f4f6 !important;
+    color:#9ca3af !important;
+    cursor:not-allowed;
 }
 
 .qty-input::-webkit-outer-spin-button,
@@ -1454,6 +1467,15 @@ body {
     font-size: 14px;
     transition: 0.2s ease;
     white-space: nowrap;
+}
+
+.btn-buy-now-mini:disabled{
+    background:#d1d5db !important;
+    color:#6b7280 !important;
+    border-color:#d1d5db !important;
+    cursor:not-allowed;
+    opacity:.6;
+    pointer-events:none;
 }
 
 .btn-cart-mini {
@@ -7483,6 +7505,15 @@ a {
     white-space: nowrap;
 }
 
+.btn-detail-cart:disabled{
+    background:#d1d5db !important;
+    border-color:#d1d5db !important;
+    color:#6b7280 !important;
+    cursor:not-allowed;
+    opacity:.6;
+    pointer-events:none;
+}
+
 .btn-detail-cart i {
     font-size: 19px;
     line-height: 1;
@@ -9159,4 +9190,39 @@ a {
     .profile-table {
         min-width: 760px;
     }
+}
+
+/* =======================================
+   STATUS BARANG TIDAK TERSEDIA
+======================================= */
+
+.btn-buy-now-mini:disabled{
+    background:#d1d5db !important;
+    color:#6b7280 !important;
+    border-color:#d1d5db !important;
+    cursor:not-allowed;
+    opacity:.6;
+    pointer-events:none;
+}
+
+.btn-detail-cart:disabled{
+    background:#d1d5db !important;
+    border-color:#d1d5db !important;
+    color:#6b7280 !important;
+    cursor:not-allowed;
+    opacity:.6;
+    pointer-events:none;
+}
+
+.qty-btn:disabled{
+    background:#f3f4f6 !important;
+    color:#9ca3af !important;
+    cursor:not-allowed;
+    opacity:.6;
+}
+
+.qty-input:disabled{
+    background:#f3f4f6 !important;
+    color:#9ca3af !important;
+    cursor:not-allowed;
 }

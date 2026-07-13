@@ -83,6 +83,19 @@
                         placeholder="Masukkan alamat perusahaan"
                     >{{ old('alamat', $profil->alamat) }}</textarea>
                 </div>
+                <div class="admin-form-group full">
+    <label>Template Pesan WhatsApp</label>
+
+    <textarea
+        name="pesan_whatsapp"
+        rows="5"
+        placeholder="Contoh: Halo Admin, saya ingin bertanya mengenai produk."
+    >{{ old('pesan_whatsapp', $profil->pesan_whatsapp) }}</textarea>
+
+    <small>
+        Template ini akan digunakan secara otomatis ketika pelanggan menekan tombol WhatsApp.
+    </small>
+</div>
             </div>
         </div>
 
