@@ -123,15 +123,28 @@
         <div class="home-product-grid">
             @forelse($barangs as $barang)
                 <div class="home-product-card">
-                    <a href="{{ route('public.produk.show', $barang->id) }}" class="product-image-area">
-                        @if($barang->gambar)
-                            <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}">
-                        @else
-                            <div class="no-product-image">
-                                Produk
-                            </div>
-                        @endif
-                    </a>
+<div class="catalog-image-wrapper">
+
+    @if($barang->is_top)
+        <div class="catalog-best-badge">
+            🔥 Produk Terlaris
+        </div>
+    @endif
+
+    <a href="{{ route('public.produk.show', $barang->id) }}" class="product-image-area">
+
+        @if($barang->gambar)
+            <img src="{{ asset('storage/' . $barang->gambar) }}"
+                 alt="{{ $barang->nama_barang }}">
+        @else
+            <div class="no-product-image">
+                Produk
+            </div>
+        @endif
+
+    </a>
+
+</div>
 
                     <div class="product-card-body">
                         <a href="{{ route('public.produk.show', $barang->id) }}" class="product-title">

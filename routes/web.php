@@ -18,7 +18,35 @@ use App\Models\KategoriBeranda;
 use App\Http\Controllers\AdminHomeBannerController;
 
 Route::get('/', function () {
-    $barangs = Barang::latest()->take(12)->get();
+    $barangs = Barang::where('status', 'aktif')
+    ->latest()
+    ->take(12)
+    ->get();
+
+    $topProdukIds = Barang::where('status', 'aktif')
+    ->withSum([
+        'pesanans as total_terjual' => function ($q) {
+            $q->where('status', 'selesai');
+        }
+    ], 'jumlah')
+    ->orderByDesc('total_terjual')
+    ->take(5)
+    ->pluck('id')
+    ->toArray();
+
+$barangs->transform(function ($barang) use ($topProdukIds) {
+
+    $barang->is_top = in_array($barang->id, $topProdukIds);
+
+    return $barang;
+
+});
+
+$barangs = $barangs->sortByDesc(function ($barang) {
+
+    return $barang->is_top;
+
+})->values();
 
    $mainBanners = HomeBanner::where('is_active', true)
     ->orderBy('sort_order')

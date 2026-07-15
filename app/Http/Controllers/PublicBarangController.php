@@ -9,7 +9,7 @@ class PublicBarangController extends Controller
 {
     public function index(Request $request)
 {
-    $query = Barang::query();
+    $query = Barang::where('status', 'aktif');
 
     if ($request->filled('search')) {
         $search = $request->search;
@@ -25,9 +25,42 @@ class PublicBarangController extends Controller
         $query->where('kategori', $request->kategori);
     }
 
-    $barangs = $query->latest()
-        ->paginate(20)
-        ->withQueryString();
+    $barangs = $query
+    ->withSum([
+        'pesanans as total_terjual' => function ($q) {
+            $q->where('status', 'selesai');
+        }
+    ], 'jumlah')
+    ->latest()
+    ->paginate(20)
+    ->withQueryString();
+
+   $topProdukIds = Barang::where('status', 'aktif')
+    ->withSum([
+        'pesanans as total_terjual' => function ($q) {
+            $q->where('status', 'selesai');
+        }
+    ], 'jumlah')
+    ->orderByDesc('total_terjual')
+    ->take(5)
+    ->pluck('id')
+    ->toArray();
+
+    $barangs->getCollection()->transform(function ($barang) use ($topProdukIds) {
+
+    $barang->is_top = in_array($barang->id, $topProdukIds);
+
+    return $barang;
+
+});
+
+$sorted = $barangs->getCollection()->sortByDesc(function ($barang) {
+
+    return $barang->is_top;
+
+});
+
+$barangs->setCollection($sorted->values());
 
     $kategoriList = Barang::select('kategori')
         ->whereNotNull('kategori')
@@ -36,14 +69,16 @@ class PublicBarangController extends Controller
         ->orderBy('kategori', 'asc')
         ->pluck('kategori');
 
-    return view('public.produk', compact('barangs', 'kategoriList'));
+    return view('public.produk', compact('barangs', 'kategoriList', 'topProdukIds'));
 }
 
     public function show($id)
 {
-    $barang = Barang::findOrFail($id);
+    $barang = Barang::where('status', 'aktif')
+                ->findOrFail($id);
 
-    $produkTerkait = Barang::where('id', '!=', $barang->id)
+    $produkTerkait = Barang::where('status','aktif')
+    ->where('id','!=',$barang->id)
         ->when($barang->kategori, function ($query) use ($barang) {
             $query->where('kategori', $barang->kategori);
         })

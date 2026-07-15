@@ -9226,3 +9226,38 @@ a {
     color:#9ca3af !important;
     cursor:not-allowed;
 }
+
+.catalog-best-badge{
+    display:inline-block;
+    padding:5px 10px;
+    margin-bottom:10px;
+    border-radius:20px;
+    background:#fff4d6;
+    color:#d97706;
+    font-size:12px;
+    font-weight:700;
+}
+
+.catalog-image-wrapper{
+    position: relative;
+}
+
+.catalog-best-badge{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    z-index: 10;
+
+    background: #ff9800;
+    color: white;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    box-shadow: 0 3px 8px rgba(0,0,0,.15);
+}
