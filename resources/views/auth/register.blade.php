@@ -744,6 +744,24 @@
                         </div>
 
                         <div class="auth-field">
+    <label for="nama_kapal">Nama Kapal</label>
+
+    <input
+        id="nama_kapal"
+        class="auth-input"
+        type="text"
+        name="nama_kapal"
+        value="{{ old('nama_kapal') }}"
+        placeholder="Contoh: KM. Meratus Surabaya"
+        required
+    >
+
+    @error('nama_kapal')
+        <div class="auth-error">{{ $message }}</div>
+    @enderror
+</div>
+
+                        <div class="auth-field">
                             <label for="email">Email</label>
                             <input
                                 id="email"

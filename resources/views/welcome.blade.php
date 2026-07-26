@@ -258,7 +258,15 @@
                                                     </button>
                                                 </div>
 
-                                                <small>Stok tersedia: {{ $barang->stok ?? '-' }}</small>
+                                                @if($barang->status == 'aktif')
+    <small class="text-success fw-semibold">
+        Status : Tersedia
+    </small>
+@else
+    <small class="text-danger fw-semibold">
+        Status : Tidak Tersedia
+    </small>
+@endif
                                             </div>
                                         </div>
 

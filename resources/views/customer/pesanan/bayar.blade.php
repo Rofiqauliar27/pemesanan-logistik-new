@@ -13,12 +13,8 @@
         !empty($user->name) &&
         !empty($user->email) &&
         !empty($user->telepon) &&
-        !empty($user->alamat_lengkap) &&
-        !empty($user->kelurahan) &&
-        !empty($user->kecamatan) &&
-        !empty($user->kabupaten) &&
-        !empty($user->provinsi) &&
-        !empty($user->kode_pos);
+        !empty($user->nama_kapal) &&
+        !empty($user->alamat_lengkap);
 
     $statusBayar = $pesananUtama->payment_status ?? 'belum_bayar';
     $statusPesanan = $pesananUtama->status ?? 'pending';
@@ -76,12 +72,7 @@
 
     $alamatLengkap = collect([
         $user->alamat_lengkap ?? null,
-        $user->kelurahan ?? null,
-        $user->kecamatan ?? null,
-        $user->kabupaten ?? null,
-        $user->provinsi ?? null,
-        $user->kode_pos ?? null,
-    ])->filter()->implode(', ');
+           ])->filter()->implode(', ');
 
     $stepPesananDibuat = true;
     $stepPembayaran = $sudahLunas || in_array($statusPesanan, ['diproses', 'dikirim', 'selesai']);
@@ -366,12 +357,16 @@
                     <div class="order-address-box">
                         <strong>{{ $user->name ?? '-' }}</strong>
 
+                     @if(!empty($user->nama_kapal))
+                    <span>🚢 {{ $user->nama_kapal }}</span>
+                     @endif
+
                         @if(!empty($user->telepon))
                             <span>{{ $user->telepon }}</span>
                         @endif
 
                         <p>
-                            {{ $alamatLengkap ?: 'Alamat belum dilengkapi.' }}
+                            {{ $alamatLengkap ?: 'Lokasi pengiriman belum dilengkapi.' }}
                         </p>
                     </div>
                 </div>

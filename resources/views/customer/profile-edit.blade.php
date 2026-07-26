@@ -77,6 +77,17 @@
                                    value="{{ old('telepon', $user->telepon) }}"
                                    placeholder="Contoh: 081234567890">
                         </div>
+
+                        <div class="customer-input-group">
+    <label>Nama Kapal</label>
+
+    <input
+        type="text"
+        name="nama_kapal"
+        value="{{ old('nama_kapal',$user->nama_kapal) }}"
+        placeholder="Contoh : KM Meratus Surabaya"
+        required>
+</div>
                     </div>
                 </div>
 
@@ -92,66 +103,12 @@
                     <div class="customer-input-group">
                         <label>Alamat Lengkap</label>
                         <textarea name="alamat_lengkap"
-                                  placeholder="Contoh: Jl. Ahmad Yani No. 10, RT 02/RW 04, dekat kantor kelurahan">{{ old('alamat_lengkap', $user->alamat_lengkap) }}</textarea>
+                                  placeholder="Contoh : Pelabuhan Tanjung Perak, Dermaga Jamrud">{{ old('alamat_lengkap', $user->alamat_lengkap) }}</textarea>
+                    </div>
+                   
                     </div>
 
-                    <div class="customer-form-grid">
-                        <div class="customer-input-group">
-                            <label>Provinsi</label>
-                            <input type="text"
-                                   name="provinsi"
-                                   value="{{ old('provinsi', $user->provinsi) }}"
-                                   placeholder="Contoh: Kalimantan Selatan">
-                        </div>
-
-                        <div class="customer-input-group">
-                            <label>Kabupaten / Kota</label>
-                            <input type="text"
-                                   name="kabupaten"
-                                   value="{{ old('kabupaten', $user->kabupaten) }}"
-                                   placeholder="Contoh: Hulu Sungai Selatan">
-                        </div>
-
-                        <div class="customer-input-group">
-                            <label>Kecamatan</label>
-                            <input type="text"
-                                   name="kecamatan"
-                                   value="{{ old('kecamatan', $user->kecamatan) }}"
-                                   placeholder="Contoh: Kandangan">
-                        </div>
-
-                        <div class="customer-input-group">
-                            <label>Kelurahan / Desa</label>
-                            <input type="text"
-                                   name="kelurahan"
-                                   value="{{ old('kelurahan', $user->kelurahan) }}"
-                                   placeholder="Contoh: Kandangan Kota">
-                        </div>
-
-                        <div class="customer-input-group">
-                            <label>Kode Pos</label>
-                            <input type="text"
-                                   name="kode_pos"
-                                   value="{{ old('kode_pos', $user->kode_pos) }}"
-                                   placeholder="Contoh: 71211">
-                        </div>
-
-                        <div class="customer-input-group">
-                            <label>Link Google Maps</label>
-                            <input type="url"
-                                   name="google_maps_link"
-                                   value="{{ old('google_maps_link', $user->google_maps_link) }}"
-                                   placeholder="Tempel link lokasi dari Google Maps">
-                        </div>
-                    </div>
-
-                    <div class="customer-map-help">
-                        <strong>Tips:</strong>
-                        Buka Google Maps, cari lokasi tujuan, klik <b>Bagikan</b>,
-                        lalu salin link dan tempelkan pada kolom Google Maps.
-                    </div>
-                </div>
-
+                   
                 <div class="customer-edit-actions">
                     <a href="{{ route('customer.profile', ['tab' => 'profil']) }}" class="customer-cancel-btn">
                         Batal
@@ -176,41 +133,25 @@
                     <div class="customer-preview-divider"></div>
 
                     <div class="customer-preview-info">
-                        <div>
-                            <span>Telepon</span>
-                            <strong>{{ $user->telepon ?? '-' }}</strong>
-                        </div>
 
-                        <div>
-                            <span>Alamat</span>
-                            <strong>{{ $user->alamat_lengkap ?? '-' }}</strong>
-                        </div>
+    <div>
+        <span>Telepon</span>
+        <strong>{{ $user->telepon ?? '-' }}</strong>
+    </div>
 
-                        <div>
-                            <span>Kecamatan</span>
-                            <strong>{{ $user->kecamatan ?? '-' }}</strong>
-                        </div>
+    <div>
+        <span>Nama Kapal</span>
+        <strong>{{ $user->nama_kapal ?? '-' }}</strong>
+    </div>
 
-                        <div>
-                            <span>Kelurahan / Desa</span>
-                            <strong>{{ $user->kelurahan ?? '-' }}</strong>
-                        </div>
+    <div>
+        <span>Lokasi Pengiriman</span>
+        <strong>{{ $user->alamat_lengkap ?? '-' }}</strong>
+    </div>
 
-                        <div>
-                            <span>Kode Pos</span>
-                            <strong>{{ $user->kode_pos ?? '-' }}</strong>
-                        </div>
-                    </div>
+</div>
 
-                    @if($user->google_maps_link)
-                        <a href="{{ $user->google_maps_link }}" target="_blank" class="customer-maps-button">
-                            Buka Lokasi Google Maps
-                        </a>
-                    @else
-                        <div class="customer-maps-empty">
-                            Link Google Maps belum ditambahkan.
-                        </div>
-                    @endif
+                    
                 </div>
             </aside>
 

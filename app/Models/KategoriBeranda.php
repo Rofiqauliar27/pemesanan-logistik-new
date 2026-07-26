@@ -12,4 +12,9 @@ class KategoriBeranda extends Model
         'is_active',
         'sort_order',
     ];
+
+    public function barangs()
+    {
+        return $this->hasMany(Barang::class, 'kategori_id');
+    }
 }

@@ -117,13 +117,10 @@ class CustomerProfileController extends Controller
             ],
 
             'telepon' => ['nullable', 'string', 'max:30'],
+
+            'nama_kapal' => ['required', 'string', 'max:255'],
+
             'alamat_lengkap' => ['nullable', 'string', 'max:1000'],
-            'provinsi' => ['nullable', 'string', 'max:100'],
-            'kabupaten' => ['nullable', 'string', 'max:100'],
-            'kecamatan' => ['nullable', 'string', 'max:100'],
-            'kelurahan' => ['nullable', 'string', 'max:100'],
-            'kode_pos' => ['nullable', 'string', 'max:20'],
-            'google_maps_link' => ['nullable', 'url', 'max:1000'],
         ]);
 
         $user->update($validated);

@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('kategori')->nullable();
             $table->string('satuan')->nullable();
             $table->unsignedBigInteger('harga')->default(0);
-            $table->integer('stok')->default(0);
             $table->text('deskripsi')->nullable();
             $table->timestamps();
         });

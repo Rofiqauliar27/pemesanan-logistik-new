@@ -293,14 +293,7 @@
     $groupOrderId = $pesanan->group_order_id ?? $pesanan->order_id ?? '-';
     $customer = $pesanan->user;
 
-    $alamatLengkap = collect([
-        $customer->alamat_lengkap ?? null,
-        $customer->kelurahan ?? null,
-        $customer->kecamatan ?? null,
-        $customer->kabupaten ?? null,
-        $customer->provinsi ?? null,
-        $customer->kode_pos ?? null,
-    ])->filter()->implode(', ');
+    $alamatLengkap = $customer->alamat_lengkap ?? '-';
 
     $tanggalPesanan = $pesanan->created_at
         ? $pesanan->created_at->format('d F Y')
@@ -375,18 +368,26 @@
                 </div>
 
                 <div class="meta-row">
-                    <div class="meta-label">Bill to:</div>
-                    <div class="meta-value">
-                        <strong>{{ $customer->name ?? '-' }}</strong><br>
-                        {{ $customer->email ?? '-' }}<br>
-                        @if(!empty($customer->telepon))
-                            Telp: {{ $customer->telepon }}<br>
-                        @endif
-                        {{ $alamatLengkap ?: 'Alamat belum dilengkapi.' }}
-                    </div>
-                </div>
-            </div>
+    <div class="meta-label">Bill to:</div>
 
+    <div class="meta-value">
+
+        <strong>{{ $customer->name ?? '-' }}</strong><br>
+
+        Nama Kapal :
+        {{ $customer->nama_kapal ?? '-' }}<br>
+
+        {{ $customer->email ?? '-' }}<br>
+
+        @if(!empty($customer->telepon))
+            Telp : {{ $customer->telepon }}<br>
+        @endif
+
+        Lokasi Pengiriman :
+        {{ $alamatLengkap ?: '-' }}
+
+    </div>
+</div>
             <div class="date-box">
                 <span class="date-label">Date:</span>
                 <span class="date-value">{{ $tanggalPesanan }}</span>

@@ -19,7 +19,10 @@ class BarangController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nama_barang', 'like', '%' . $search . '%')
                   ->orWhere('kategori', 'like', '%' . $search . '%')
-                  ->orWhere('satuan', 'like', '%' . $search . '%');
+                  ->orWhere('satuan', 'like', '%' . $search . '%')
+                  ->orWhereHas('kategoriBeranda', function ($kategoriQuery) use ($search) {
+                      $kategoriQuery->where('nama', 'like', '%' . $search . '%');
+                  });
             });
         }
 
@@ -41,7 +44,7 @@ class BarangController extends Controller
     {
         $request->validate([
             'nama_barang' => 'required|max:255',
-            'kategori' => 'nullable|max:255',
+            'kategori_id' => 'nullable|exists:kategori_berandas,id',
             'satuan' => 'nullable|max:100',
             'harga' => 'required',
             'status' => 'required|in:aktif,tidak_aktif',
@@ -56,10 +59,12 @@ class BarangController extends Controller
         }
 
         $harga = $this->cleanNumber($request->harga);
+        $kategori = KategoriBeranda::find($request->kategori_id);
 
         Barang::create([
             'nama_barang' => $request->nama_barang,
-            'kategori' => $request->kategori,
+            'kategori' => $kategori?->nama ?? null,
+            'kategori_id' => $request->kategori_id,
             'satuan' => $request->satuan,
             'harga' => $harga,
             'status' => $request->status,
@@ -90,7 +95,7 @@ class BarangController extends Controller
     {
         $request->validate([
             'nama_barang' => 'required|max:255',
-            'kategori' => 'nullable|max:255',
+            'kategori_id' => 'nullable|exists:kategori_berandas,id',
             'satuan' => 'nullable|max:100',
             'harga' => 'required',
             'status' => 'required|in:aktif,tidak_aktif',
@@ -109,10 +114,12 @@ class BarangController extends Controller
         }
 
         $harga = $this->cleanNumber($request->harga);
-        
+        $kategori = KategoriBeranda::find($request->kategori_id);
+
         $barang->update([
             'nama_barang' => $request->nama_barang,
-            'kategori' => $request->kategori,
+            'kategori' => $kategori?->nama ?? null,
+            'kategori_id' => $request->kategori_id,
             'satuan' => $request->satuan,
             'harga' => $harga,
             'status' => $request->status,

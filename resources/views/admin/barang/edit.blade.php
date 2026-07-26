@@ -56,11 +56,11 @@
                 <div class="admin-form-group">
                     <label>Kategori</label>
 
-                    <select name="kategori" required>
+                    <select name="kategori_id" required>
                         <option value="">Pilih Kategori</option>
 
                         @foreach($kategoriList as $kategori)
-                            <option value="{{ $kategori->nama }}" {{ old('kategori', $barang->kategori) == $kategori->nama ? 'selected' : '' }}>
+                            <option value="{{ $kategori->id }}" {{ old('kategori_id', $barang->kategori_id) == $kategori->id ? 'selected' : '' }}>
                                 {{ $kategori->icon ? $kategori->icon . ' ' : '' }}{{ $kategori->nama }}
                             </option>
                         @endforeach

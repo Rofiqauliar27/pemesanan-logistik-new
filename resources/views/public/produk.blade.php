@@ -218,20 +218,29 @@ title="Login">
                     </div>
 
                     <div class="cart-modal-qty">
-                        <label>Jumlah</label>
+                                                <label>Jumlah</label>
 
-                        <div class="qty-control-modal">
-                            <button type="button" class="qty-minus" onclick="decreaseQty('qty{{ $barang->id }}')">−</button>
+                                                <div class="qty-control-modal">
+                                                    <button type="button"
+                                                            class="qty-minus"
+                                                            onclick="decreaseHomeQty('homeQty{{ $barang->id }}')">
+                                                        −
+                                                    </button>
 
-                            <input type="number"
-                                   id="qty{{ $barang->id }}"
-                                   name="jumlah"
-                                   value="1"
-                                   min="1"
-                                   required>
+                                                    <input type="number"
+                                                           id="homeQty{{ $barang->id }}"
+                                                           name="jumlah"
+                                                           value="1"
+                                                           min="1"
+                                                           max="{{ $barang->stok ?? 999 }}"
+                                                           required>
 
-                            <button type="button" class="qty-plus" onclick="increaseQty('qty{{ $barang->id }}')">+</button>
-                        </div>
+                                                    <button type="button"
+                                                            class="qty-plus"
+                                                            onclick="increaseHomeQty('homeQty{{ $barang->id }}', {{ $barang->stok ?? 999 }})">
+                                                        +
+                                                    </button>
+                                                </div>
 
 @if($barang->status=='aktif')
 
@@ -283,6 +292,15 @@ Status : Tidak Tersedia
 </div>
 
 <script>
+
+    function increaseHomeQty(inputId, maxStock) {
+        const input = document.getElementById(inputId);
+        let value = parseInt(input.value || 1);
+
+        if (value < maxStock) {
+            input.value = value + 1;
+        }
+    }
 function increaseQty(inputId){
 
 const input=document.getElementById(inputId);

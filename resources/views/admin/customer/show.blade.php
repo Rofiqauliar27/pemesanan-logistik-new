@@ -4,14 +4,7 @@
 
 @section('content')
 @php
-    $alamatLengkap = collect([
-        $customer->alamat_lengkap ?? null,
-        $customer->kelurahan ?? null,
-        $customer->kecamatan ?? null,
-        $customer->kabupaten ?? null,
-        $customer->provinsi ?? null,
-        $customer->kode_pos ?? null,
-    ])->filter()->implode(', ');
+    $alamatLengkap = $customer->alamat_lengkap ?? '-';
 @endphp
 
 <style>
@@ -149,6 +142,10 @@
                 <span>Nomor Telepon</span>
                 <strong>{{ $customer->telepon ?? '-' }}</strong>
             </div>
+            <div class="customer-info-box">
+    <span>Nama Kapal</span>
+    <strong>{{ $customer->nama_kapal ?? '-' }}</strong>
+</div>
 
             <div class="customer-info-box">
                 <span>Role</span>
@@ -174,22 +171,15 @@
     <div class="admin-card">
         <div class="admin-table-header">
             <div>
-                <h4>Alamat Customer</h4>
-                <p>Informasi alamat lengkap customer.</p>
+                <h4>Lokasi Pengiriman</h4>
+<p>Lokasi pelabuhan atau tujuan pengiriman barang.</p>
             </div>
         </div>
 
         <div class="customer-address-box">
-            <strong>Alamat Lengkap:</strong><br>
-            {{ $alamatLengkap ?: 'Alamat belum dilengkapi.' }}
+            <strong>Lokasi Pengiriman:</strong><br>
+{{ $alamatLengkap ?: 'Lokasi pengiriman belum dilengkapi.' }}
 
-            @if(!empty($customer->google_maps_link))
-                <div class="customer-action-bar">
-                    <a href="{{ $customer->google_maps_link }}" target="_blank" class="btn-customer-primary">
-                        Buka Google Maps
-                    </a>
-                </div>
-            @endif
         </div>
     </div>
 

@@ -120,60 +120,26 @@
                         </div>
 
                         <div class="profile-mini-card">
+    <strong>Nama Kapal</strong>
+    <p>{{ $user->nama_kapal ?? '-' }}</p>
+</div>
+
+                        <div class="profile-mini-card">
                             <strong>Role</strong>
                             <p>{{ $user->role }}</p>
                         </div>
 
-                        <div class="profile-mini-card profile-mini-card-full">
-                            <strong>Alamat Lengkap</strong>
-                            <p>{{ $user->alamat_lengkap ?? '-' }}</p>
-                        </div>
-
-                        <div class="profile-mini-card">
-                            <strong>Provinsi</strong>
-                            <p>{{ $user->provinsi ?? '-' }}</p>
-                        </div>
-
-                        <div class="profile-mini-card">
-                            <strong>Kabupaten / Kota</strong>
-                            <p>{{ $user->kabupaten ?? '-' }}</p>
-                        </div>
-
-                        <div class="profile-mini-card">
-                            <strong>Kecamatan</strong>
-                            <p>{{ $user->kecamatan ?? '-' }}</p>
-                        </div>
-
-                        <div class="profile-mini-card">
-                            <strong>Kelurahan / Desa</strong>
-                            <p>{{ $user->kelurahan ?? '-' }}</p>
-                        </div>
-
-                        <div class="profile-mini-card">
-                            <strong>Kode Pos</strong>
-                            <p>{{ $user->kode_pos ?? '-' }}</p>
-                        </div>
-
-                        <div class="profile-mini-card">
+                         <div class="profile-mini-card">
                             <strong>Tanggal Daftar</strong>
                             <p>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</p>
                         </div>
 
                         <div class="profile-mini-card profile-mini-card-full">
-                            <strong>Google Maps</strong>
-
-                            @if($user->google_maps_link)
-                                <p class="mb-2">
-                                    Lokasi tujuan sudah ditambahkan.
-                                </p>
-
-                                <a href="{{ $user->google_maps_link }}" target="_blank" class="customer-map-btn">
-                                    Buka Lokasi di Google Maps
-                                </a>
-                            @else
-                                <p>Belum ada link Google Maps.</p>
-                            @endif
+                            <strong>Lokasi Pengiriman</strong>
+                            <p>{{ $user->alamat_lengkap ?? '-' }}</p>
                         </div>
+                        
+                                                                 
                     </div>
                 </div>
             @endif

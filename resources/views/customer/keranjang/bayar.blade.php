@@ -11,12 +11,8 @@
         !empty($user->name) &&
         !empty($user->email) &&
         !empty($user->telepon) &&
-        !empty($user->alamat_lengkap) &&
-        !empty($user->kelurahan) &&
-        !empty($user->kecamatan) &&
-        !empty($user->kabupaten) &&
-        !empty($user->provinsi) &&
-        !empty($user->kode_pos);
+        !empty($user->nama_kapal) &&
+        !empty($user->alamat_lengkap);
 
     $statusBayar = $pesananUtama->payment_status ?? 'belum_bayar';
     $statusPesanan = $pesananUtama->status ?? 'pending';

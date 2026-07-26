@@ -80,7 +80,6 @@ class PesananController extends Controller
                 'jumlah' => $request->jumlah,
                 'total_harga' => $totalHarga,
                 'status' => 'pending',
-                'stok_dikurangi' => false,
                 'catatan' => $request->catatan,
                 'order_id' => $orderId,
                 'group_order_id' => $groupOrderId,
@@ -573,8 +572,6 @@ class PesananController extends Controller
             ->get();
 
         foreach ($pesanansFresh as $item) {
-            $statusSebelumnyaLunas = in_array($item->payment_status, $statusLunas);
-            $statusBaruLunas = $paymentStatus === 'sudah_bayar';
 
             $updateData = [
                 'payment_status' => $paymentStatus,
@@ -590,7 +587,7 @@ class PesananController extends Controller
                 $updateData['paid_at'] = $paidAt;
             }
 
-            if ($paymentStatus == 'failed') {
+           if ($paymentStatus == 'failed') {
     $updateData['status'] = 'dibatalkan';
 }
 
@@ -598,58 +595,9 @@ if ($paymentStatus == 'expire') {
     $updateData['status'] = 'expired';
 }
 
-            /*
-             * Kalau pesanan lama sudah lunas, tapi stok_dikurangi masih 0,
-             * jangan potong stok lagi. Cukup tandai agar webhook lama tidak
-             * mengurangi stok saat masuk ulang.
-             */
-            if ($statusSebelumnyaLunas && !$item->stok_dikurangi) {
-                $updateData['stok_dikurangi'] = true;
-            }
+$item->update($updateData);
 
-            /*
-             * Stok hanya dikurangi kalau:
-             * 1. status baru lunas
-             * 2. status sebelumnya belum lunas
-             * 3. stok belum pernah dikurangi
-             */
-            if (
-                $statusBaruLunas &&
-                !$statusSebelumnyaLunas &&
-                !$item->stok_dikurangi
-            ) {
-                if (!$item->barang) {
-                    Log::warning('Barang tidak ditemukan saat pembayaran berhasil', [
-                        'pesanan_id' => $item->id,
-                        'barang_id' => $item->barang_id,
-                    ]);
-
-                    $item->update($updateData);
-                    continue;
-                }
-
-                if ($item->barang->stok < $item->jumlah) {
-                    Log::warning('Stok tidak cukup saat pembayaran berhasil', [
-                        'pesanan_id' => $item->id,
-                        'barang_id' => $item->barang_id,
-                        'stok' => $item->barang->stok,
-                        'jumlah' => $item->jumlah,
-                    ]);
-
-                    $item->update($updateData);
-                    continue;
-                }
-
-                DB::table('barangs')
-                    ->where('id', $item->barang_id)
-                    ->decrement('stok', $item->jumlah);
-
-                $updateData['stok_dikurangi'] = true;
-            }
-
-            $item->update($updateData);
         }
-
         DB::commit();
     } catch (\Exception $e) {
         DB::rollBack();

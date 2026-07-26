@@ -112,12 +112,8 @@ class KeranjangController extends Controller
             !empty($user->name) &&
             !empty($user->email) &&
             !empty($user->telepon) &&
-            !empty($user->alamat_lengkap) &&
-            !empty($user->kelurahan) &&
-            !empty($user->kecamatan) &&
-            !empty($user->kabupaten) &&
-            !empty($user->provinsi) &&
-            !empty($user->kode_pos);
+            !empty($user->alamat_lengkap)
+    ;
 
         if (!$alamatLengkapDiisi) {
             return redirect()->route('customer.profile.edit')
@@ -161,7 +157,6 @@ class KeranjangController extends Controller
                     'jumlah' => $item->jumlah,
                     'total_harga' => $subtotal,
                     'status' => 'pending',
-                    'stok_dikurangi' => false,
                     'catatan' => $request->catatan ?: 'Checkout dari keranjang',
                     'order_id' => $orderId,
                     'group_order_id' => $groupOrderId,
@@ -194,12 +189,10 @@ class KeranjangController extends Controller
                     'email' => $user->email,
                     'phone' => $user->telepon ?? '',
                     'shipping_address' => [
-                        'first_name' => $user->name,
-                        'phone' => $user->telepon ?? '',
-                        'address' => $user->alamat_lengkap ?? '',
-                        'city' => $user->kabupaten ?? '',
-                        'postal_code' => $user->kode_pos ?? '',
-                        'country_code' => 'IDN',
+                    'first_name' => $user->name,
+                    'phone' => $user->telepon ?? '',
+                    'address' => $user->alamat_lengkap ?? '',
+                    'country_code' => 'IDN',
                     ],
                 ],
             ];

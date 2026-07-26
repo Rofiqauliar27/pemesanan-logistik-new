@@ -23,13 +23,11 @@ class User extends Authenticatable
     'email',
     'password',
     'telepon',
+    'nama_kapal',
     'alamat_lengkap',
-    'provinsi',
-    'kabupaten',
-    'kecamatan',
-    'kelurahan',
-    'kode_pos',
-    'google_maps_link',
+    'password',
+    'role',
+   
 ];
 
     /**
